@@ -5,7 +5,7 @@ import { Gallery } from "@/components/Gallery";
 import { CheckIcon, PhoneIcon } from "@/components/Icons";
 import { FinanceSimulator } from "@/components/site/FinanceSimulator";
 import { LeadForm } from "@/components/site/LeadForm";
-import { SectionTitle } from "@/components/site/SectionTitle";
+import { Rail } from "@/components/site/Rail";
 import { StatusBadge } from "@/components/StatusBadge";
 import { VehicleCard } from "@/components/VehicleCard";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
@@ -45,7 +45,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
   if (!v) notFound();
   if (slug !== v.slug) permanentRedirect(vehicleHref(v));
 
-  const similar = await similarVehicles(v);
+  const similar = await similarVehicles(v, 8);
   const monthly = fromMonthly(v, settings.finance);
   const closed = v.status === "vendu" || v.status === "reserve";
   const title = vehicleFullTitle(v);
@@ -251,12 +251,11 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
       </div>
 
       {similar.length > 0 && (
-        <section aria-labelledby="similaires" className="mx-auto max-w-7xl px-4 py-14">
-          <SectionTitle id="similaires" kicker="Vous aimerez aussi" title="Véhicules similaires" link={{ href: `/voitures?marque=${encodeURIComponent(v.brand)}`, label: `Tous les ${v.brand}` }} />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6">
+          <Rail id="similaires" kicker="Vous aimerez aussi" title="Similaires" href={`/voitures?marque=${encodeURIComponent(v.brand)}`}>
             {similar.map((o) => <VehicleCard key={o.id} v={o} finance={settings.finance} orderDelay={settings.orderDelay} />)}
-          </div>
-        </section>
+          </Rail>
+        </div>
       )}
 
       {/* MOBILE ACTION BAR */}

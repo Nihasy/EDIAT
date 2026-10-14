@@ -23,14 +23,19 @@ Un véhicule ne peut pas être mis en ligne sans au moins une photo.
 
 ## Pages publiques
 
-- **Accueil** : recherche rapide (disponibilité, marque, type, budget), les trois façons d'acheter, véhicules du
-  showroom, bloc **Ediat Facility** « Roulez aujourd'hui, payez à votre rythme ! », arrivages, marques, import sur
-  commande en 4 étapes, réassurance, récemment vendus.
-- **/voitures** : catalogue avec filtres (disponibilité, marque, type, carburant, boîte, budget, année, km) et
-  compteurs, recherche texte, tris, pastilles de filtres actifs, pagination. Rien ne correspond → « Le faire
+Mise en page « photos d'abord », pensée pour le téléphone (inspirée des places de marché comme Autowini), vérifiée
+de 360 px à 1440 px.
+
+- **Accueil** : grande bannière photo des véhicules mis en avant (défilement automatique, swipe), recherche,
+  pastilles de disponibilité, icônes par type de véhicule, ronds des marques (logos), rangées de véhicules à faire
+  glisser (showroom, arrivage, sur commande, vendus), bannière **Ediat Facility** « Roulez aujourd'hui, payez à votre
+  rythme ! », import en 4 icônes.
+- **/voitures** : grille de photos en 2 colonnes sur téléphone (3 sur tablette, 4 sur grand écran), barre fixe avec
+  bouton **Filtres** (panneau plein écran sur téléphone, colonne à gauche sur ordinateur), disponibilité et tri.
+  Filtres : marque, type, carburant, boîte, budget, année, km, avec compteurs. Rien ne correspond → « Le faire
   importer » ou WhatsApp.
 - **/voitures/kia-sportage-…-12** : galerie photo (swipe), caractéristiques, équipements, prix, « à partir de … / mois »,
-  simulateur Ediat Facility, demande d'essai / de rappel, véhicules similaires, barre WhatsApp + appel fixée en bas
+  simulateur Ediat Facility, demande d'essai / de rappel, véhicules similaires à faire glisser, barre WhatsApp + appel fixée en bas
   sur mobile, données structurées Google (schema.org `Car`).
 - **/sur-commande** : déroulé de l'import, formulaire de recherche personnalisée (marque, modèle, année, budget…),
   exemples du catalogue sur commande, FAQ.

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DocIcon, ShieldIcon, ShipIcon, KeyIcon } from "@/components/Icons";
 import { LeadForm } from "@/components/site/LeadForm";
+import { Rail } from "@/components/site/Rail";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { VehicleCard } from "@/components/VehicleCard";
 import { publicVehicles, siteSettings } from "@/lib/catalog";
@@ -15,7 +16,7 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
   const sp = await props.searchParams;
   const pre = (k: string) => (typeof sp[k] === "string" ? (sp[k] as string).slice(0, 60) : undefined);
   const [settings, all] = await Promise.all([siteSettings(), publicVehicles()]);
-  const catalogue = all.filter((v) => v.status === "sur_commande").slice(0, 8);
+  const catalogue = all.filter((v) => v.status === "sur_commande").slice(0, 10);
 
   return (
     <>
@@ -25,10 +26,7 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
           <h1 className="font-display mt-3 max-w-3xl text-5xl leading-[0.95] font-bold sm:text-6xl">
             Le véhicule que vous voulez, <span className="text-orange">importé de Corée pour vous.</span>
           </h1>
-          <p className="mt-5 max-w-2xl text-lg text-white/80">
-            Vous choisissez la marque, le modèle, l&apos;année, la couleur et le budget. Nous trouvons, contrôlons et importons.
-            Délai habituel : <strong className="text-white">{settings.orderDelay}</strong>.
-          </p>
+          <p className="mt-4 text-lg text-white/80">Délai habituel : <strong className="text-white">{settings.orderDelay}</strong></p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="#demande" className="btn-primary">Faire ma demande</a>
             {catalogue.length > 0 && <a href="#catalogue" className="btn border border-white/25 text-white hover:border-white">Voir des exemples</a>}
@@ -38,16 +36,16 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
 
       <section className="mx-auto max-w-7xl px-4 py-14">
         <SectionTitle kicker="Étape par étape" title="Comment se passe une commande" />
-        <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
-            { icon: <DocIcon className="h-6 w-6" />, t: "1. Votre cahier des charges", d: "Modèle, année, kilométrage, options, budget. Gratuit et sans engagement." },
-            { icon: <ShieldIcon className="h-6 w-6" />, t: "2. Propositions contrôlées", d: "Nous vous envoyons des véhicules réels en Corée : photos, historique, rapport d'état." },
-            { icon: <ShipIcon className="h-6 w-6" />, t: `3. Acompte de ${settings.orderDepositPct} % & expédition`, d: "Vous validez votre véhicule. Achat, transport maritime et suivi jusqu'à Tamatave." },
-            { icon: <KeyIcon className="h-6 w-6" />, t: "4. Remise des clés", d: "Dédouanement, visite technique, carte grise : vous récupérez un véhicule prêt à rouler." },
+            { icon: <DocIcon className="h-6 w-6" />, t: "1. Votre cahier des charges", d: "Modèle, année, budget. Gratuit." },
+            { icon: <ShieldIcon className="h-6 w-6" />, t: "2. Propositions contrôlées", d: "Photos et rapport d'état des véhicules trouvés." },
+            { icon: <ShipIcon className="h-6 w-6" />, t: `3. Acompte de ${settings.orderDepositPct} % & expédition`, d: "Vous validez, on achète et on expédie." },
+            { icon: <KeyIcon className="h-6 w-6" />, t: "4. Remise des clés", d: "Dédouané, immatriculé, prêt à rouler." },
           ].map((s) => (
-            <li key={s.t} className="card p-6">
+            <li key={s.t} className="card p-4 sm:p-6">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange/10 text-orange-deep">{s.icon}</span>
-              <h3 className="font-display mt-4 text-xl font-semibold">{s.t}</h3>
+              <h3 className="font-display mt-3 text-lg leading-tight font-semibold sm:text-xl">{s.t}</h3>
               <p className="mt-1.5 text-sm text-black/70">{s.d}</p>
             </li>
           ))}
@@ -58,7 +56,7 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 lg:grid-cols-[1fr_1.4fr]">
           <div>
             <SectionTitle kicker="Recherche personnalisée" title="Décrivez votre futur véhicule" />
-            <p className="text-black/75">Plus vous êtes précis, plus nos propositions seront justes. Réponse sous 24 h ouvrées.</p>
+            <p className="text-black/75">Réponse sous 24 h ouvrées.</p>
             <ul className="mt-6 space-y-3 text-sm text-black/75">
               <li>✔ Spécialistes Hyundai, Kia, SsangYong, Daewoo, Chevrolet…</li>
               <li>✔ Prix tout compris annoncé avant l&apos;acompte</li>
@@ -87,12 +85,11 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
       </section>
 
       {catalogue.length > 0 && (
-        <section id="catalogue" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-14">
-          <SectionTitle kicker="Exemples disponibles à l'import" title="Catalogue sur commande" link={{ href: "/voitures?dispo=sur_commande", label: "Tout le catalogue" }} />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div id="catalogue" className="scroll-mt-24">
+          <Rail id="catalogue-titre" kicker="Exemples à importer" title="Catalogue sur commande" href="/voitures?dispo=sur_commande">
             {catalogue.map((v) => <VehicleCard key={v.id} v={v} finance={settings.finance} orderDelay={settings.orderDelay} />)}
-          </div>
-        </section>
+          </Rail>
+        </div>
       )}
 
       <section className="mx-auto max-w-4xl px-4 pb-16">

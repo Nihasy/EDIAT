@@ -1,20 +1,29 @@
 import Link from "next/link";
-import { CalendarIcon, CarIcon, CheckIcon, DocIcon, KeyIcon, ShieldIcon, ShipIcon, WalletIcon } from "@/components/Icons";
-import { HeroSearch } from "@/components/site/HeroSearch";
-import { SectionTitle } from "@/components/site/SectionTitle";
+import { DocIcon, KeyIcon, SearchIcon, ShieldIcon, ShipIcon, WalletIcon } from "@/components/Icons";
+import { BodyIcon } from "@/components/site/BodyIcon";
+import { HeroCarousel, type Slide } from "@/components/site/HeroCarousel";
+import { Rail } from "@/components/site/Rail";
 import { VehicleCard } from "@/components/VehicleCard";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { publicVehicles, siteSettings } from "@/lib/catalog";
-import { formatAr, waLink } from "@/lib/format";
-import { FEATURED_BRANDS, STATUSES, type Vehicle } from "@/lib/vehicle";
+import { fromMonthly } from "@/lib/finance";
+import { formatAr, formatNumber, waLink } from "@/lib/format";
+import { BODIES, FEATURED_BRANDS, STATUSES, vehicleHref, vehicleTitle, type Vehicle } from "@/lib/vehicle";
 
 // Served from the cache, rebuilt after each back-office change.
 export const revalidate = 3600;
 
+const BRAND_LOGOS: Record<string, string> = {
+  Hyundai: "/brands/hyundai.jpg",
+  Kia: "/brands/kia.jpg",
+  SsangYong: "/brands/ssangyong.jpg",
+  Daewoo: "/brands/daewoo.jpg",
+};
+
 function countBy(list: Vehicle[], key: (v: Vehicle) => string) {
   const map = new Map<string, number>();
   for (const v of list) if (key(v)) map.set(key(v), (map.get(key(v)) ?? 0) + 1);
-  return [...map.entries()].sort((a, b) => b[1] - a[1]).map(([value, n]) => ({ value, n }));
+  return map;
 }
 
 export default async function HomePage() {
@@ -23,263 +32,197 @@ export default async function HomePage() {
   const showroom = listed.filter((v) => v.status === "showroom");
   const arrivage = listed.filter((v) => v.status === "arrivage");
   const onOrder = listed.filter((v) => v.status === "sur_commande");
-  const sold = all.filter((v) => v.status === "vendu").slice(0, 4);
+  const sold = all.filter((v) => v.status === "vendu").slice(0, 8);
   const brands = countBy(listed, (v) => v.brand);
-  const counts = { all: listed.length, showroom: showroom.length, sur_commande: onOrder.length };
-  const brandTiles = [...new Set([...FEATURED_BRANDS, ...brands.map((b) => b.value)])].slice(0, 8);
+  const bodies = countBy(listed, (v) => v.body);
   const card = { finance: settings.finance, orderDelay: settings.orderDelay };
+
+  const slides: Slide[] = [...listed.filter((v) => v.featured), ...showroom, ...arrivage, ...onOrder]
+    .filter((v, i, a) => v.images.length && a.indexOf(v) === i && v.status !== "reserve")
+    .slice(0, 6)
+    .map((v) => {
+      const monthly = fromMonthly(v, settings.finance);
+      return {
+        href: vehicleHref(v),
+        image: v.images[0],
+        title: vehicleTitle(v),
+        subtitle: [v.year, v.mileageKm != null ? `${formatNumber(v.mileageKm)} km` : "", v.fuel, v.gearbox].filter(Boolean).join(" · "),
+        price: v.price ? formatAr(v.price) : "Prix sur demande",
+        monthly: monthly ? formatAr(monthly) : null,
+        status: v.status,
+      };
+    });
+  const brandList = [...new Set([...FEATURED_BRANDS, ...[...brands.keys()]])];
+  const bodyList = [...new Set([...[...bodies.keys()], ...BODIES.slice(0, 6)])].filter((b) => BODIES.includes(b)).slice(0, 8);
 
   return (
     <>
-      {/* HERO */}
-      <section className="bg-brand-gradient relative overflow-hidden text-white">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/brand/eg-mark.png"
-          alt=""
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-16 -bottom-24 h-[130%] opacity-[0.12] select-none sm:right-0 lg:right-16 lg:opacity-25"
-        />
-        <div className="relative mx-auto max-w-7xl px-4 pt-10 pb-12 sm:pt-16 lg:pt-20 lg:pb-20">
-          <p className="inline-flex items-center gap-2 rounded-full bg-black/25 px-3 py-1.5 text-xs font-semibold tracking-wide backdrop-blur">
-            <span className="h-2 w-2 rounded-full bg-cyan" aria-hidden="true" /> Importateur de véhicules d&apos;occasion de Corée
-          </p>
-          <h1 className="font-display mt-5 max-w-3xl text-[44px] leading-[0.95] font-bold drop-shadow sm:text-6xl lg:text-7xl">
-            Votre voiture coréenne,
-            <span className="block text-orange">sans mauvaise surprise.</span>
-          </h1>
-          <p className="mt-5 max-w-xl text-base text-white/90 sm:text-lg">
-            Hyundai, Kia, SsangYong, Daewoo… Choisissez au showroom, réservez un arrivage ou faites importer le modèle exact
-            que vous voulez. Et payez à votre rythme avec <strong className="text-white">{settings.finance.name}</strong>.
-          </p>
-          <div className="mt-8 max-w-4xl">
-            <HeroSearch brands={brands} bodies={countBy(listed, (v) => v.body)} counts={counts} />
-          </div>
-          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/90">
-            {["Véhicules contrôlés avant expédition", "Dédouanement et carte grise gérés", "Essai au showroom"].map((t) => (
-              <li key={t} className="flex items-center gap-1.5"><CheckIcon className="h-4 w-4 text-cyan" /> {t}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* 3 WAYS TO BUY */}
-      <section aria-labelledby="formules" className="mx-auto -mt-px max-w-7xl px-4 py-14">
-        <SectionTitle kicker="Comment acheter" id="formules" title="Trois façons d'avoir votre véhicule" />
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              status: "showroom" as const,
-              icon: <KeyIcon className="h-7 w-7" />,
-              title: "Disponible au showroom",
-              text: "Déjà dédouané et immatriculable. Venez l'essayer, repartez avec.",
-              delay: "Immédiat",
-              n: showroom.length,
-              color: "text-emerald-700 bg-emerald-50",
-            },
-            {
-              status: "arrivage" as const,
-              icon: <ShipIcon className="h-7 w-7" />,
-              title: "En cours d'arrivage",
-              text: "Acheté en Corée, en route vers Tamatave. Réservez-le avant tout le monde.",
-              delay: "Quelques semaines",
-              n: arrivage.length,
-              color: "text-cyan-deep bg-cyan/10",
-            },
-            {
-              status: "sur_commande" as const,
-              icon: <DocIcon className="h-7 w-7" />,
-              title: "Sur commande",
-              text: "Dites-nous le modèle, l'année et le budget : on le trouve, on le contrôle, on l'importe.",
-              delay: settings.orderDelay,
-              n: onOrder.length,
-              color: "text-orange-deep bg-orange/10",
-            },
-          ].map((f) => (
-            <Link
-              key={f.status}
-              href={f.status === "sur_commande" ? "/sur-commande" : `/voitures?dispo=${f.status}`}
-              className="card group flex flex-col p-6 transition hover:-translate-y-0.5 hover:border-ink/30 hover:shadow-lg"
-            >
-              <span className={`flex h-12 w-12 items-center justify-center rounded-xl ${f.color}`}>{f.icon}</span>
-              <h3 className="font-display mt-4 text-2xl font-semibold">{f.title}</h3>
-              <p className="mt-2 flex-1 text-[15px] text-black/70">{f.text}</p>
-              <p className="mt-5 flex items-center justify-between border-t border-black/10 pt-4 text-sm">
-                <span className="text-muted">Délai : <strong className="text-ink">{f.delay}</strong></span>
-                <span className="font-semibold text-orange-deep group-hover:underline">
-                  {f.status === "sur_commande" ? "Commander" : `${f.n} véhicule${f.n > 1 ? "s" : ""}`} →
-                </span>
-              </p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* SHOWROOM */}
-      {showroom.length > 0 && (
-        <section aria-labelledby="showroom" className="mx-auto max-w-7xl px-4 pb-14">
-          <SectionTitle
-            kicker="Dispo de suite"
-            id="showroom"
-            title="Disponibles au showroom"
-            link={showroom.length > 8 ? { href: "/voitures?dispo=showroom", label: `Voir les ${showroom.length} véhicules` } : undefined}
-          />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {showroom.slice(0, 8).map((v, i) => (
-              <VehicleCard key={v.id} v={v} {...card} priority={i < 4} />
-            ))}
-          </div>
+      {slides.length ? (
+        <HeroCarousel slides={slides} />
+      ) : (
+        <section className="bg-brand-gradient px-4 py-14 text-white">
+          <h1 className="font-display mx-auto max-w-7xl text-5xl font-bold">Véhicules d&apos;occasion de Corée</h1>
         </section>
       )}
 
-      {/* EDIAT FACILITY */}
-      {settings.finance.enabled && (
-        <section className="bg-swirl">
-          <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-14 lg:grid-cols-2">
-            <div className="bg-orange-gradient relative overflow-hidden rounded-[2rem] p-8 text-white shadow-xl sm:p-10">
-              <span className="font-display pointer-events-none absolute -top-6 right-6 text-[180px] leading-none text-white/90" aria-hidden="true">!</span>
-              <p className="font-display text-6xl leading-[0.9] font-bold sm:text-7xl">Roulez</p>
-              <p className="font-display text-2xl text-white/90">aujourd&apos;hui</p>
-              <p className="font-display mt-2 text-6xl leading-[0.9] font-bold text-[#7fe3ff] sm:text-7xl">Payez</p>
-              <p className="font-display text-2xl text-white/90">à votre rythme.</p>
-              <div className="mt-6 h-1 w-40 rounded-full bg-gradient-to-r from-yellow-300 to-transparent" aria-hidden="true" />
-            </div>
-            <div>
-              <SectionTitle kicker={settings.finance.name} title="Le paiement échelonné, simplement" />
-              <ul className="space-y-3 text-[15px] text-black/75">
-                <li className="flex gap-3"><WalletIcon className="h-6 w-6 shrink-0 text-orange-deep" /> Apport à partir de {settings.finance.minDownPct} % du prix, le reste en mensualités fixes.</li>
-                <li className="flex gap-3"><CalendarIcon className="h-6 w-6 shrink-0 text-orange-deep" /> Durée au choix : {settings.finance.durations.join(", ")} mois.</li>
-                <li className="flex gap-3"><CarIcon className="h-6 w-6 shrink-0 text-orange-deep" /> Vous roulez dès la signature, sur les véhicules du showroom comme sur commande.</li>
-              </ul>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link href="/financement" className="btn-primary">Simuler mes mensualités</Link>
-                <Link href="/voitures" className="btn-ghost">Voir les véhicules éligibles</Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ARRIVAGE */}
-      {arrivage.length > 0 && (
-        <section aria-labelledby="arrivage" className="mx-auto max-w-7xl px-4 py-14">
-          <SectionTitle
-            kicker="Bientôt à Tana"
-            id="arrivage"
-            title="En cours d'arrivage"
-            link={{ href: "/voitures?dispo=arrivage", label: "Tout l'arrivage" }}
-          />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {arrivage.slice(0, 4).map((v) => <VehicleCard key={v.id} v={v} {...card} />)}
-          </div>
-        </section>
-      )}
-
-      {/* BRANDS */}
-      <section aria-labelledby="marques" className="mx-auto max-w-7xl px-4 py-14">
-        <SectionTitle kicker="Nos marques" id="marques" title="Spécialiste des marques coréennes" />
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {brandTiles.map((b) => {
-            const n = brands.find((x) => x.value === b)?.n ?? 0;
-            return (
-              <li key={b}>
-                <Link
-                  href={`/voitures?marque=${encodeURIComponent(b)}`}
-                  className="card flex h-full items-center justify-between gap-2 px-5 py-5 transition hover:border-cyan-deep hover:shadow-md"
-                >
-                  <span className="font-display text-xl font-semibold tracking-wide">{b}</span>
-                  <span className="rounded-full bg-paper px-2.5 py-1 text-xs font-semibold text-muted">{n}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-
-      {/* ON ORDER */}
-      <section aria-labelledby="commande" className="bg-ink text-white">
-        <div className="mx-auto max-w-7xl px-4 py-16">
-          <SectionTitle dark kicker="Import sur commande" id="commande" title={<>Le modèle exact que vous voulez, <span className="text-orange">importé pour vous</span></>} />
-          <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* QUICK SEARCH */}
+      <div className="relative z-10 mx-auto -mt-3 max-w-7xl px-0 sm:mt-5 sm:px-4">
+        <div className="rounded-t-3xl bg-paper px-4 pt-5 pb-1 sm:rounded-3xl sm:bg-white sm:p-5 sm:shadow-xl">
+          <h1 className="sr-only">Ediat Garage, véhicules d&apos;occasion importés de Corée à Antananarivo</h1>
+          <form action="/voitures" role="search" className="flex items-center gap-2 rounded-full bg-white py-1 pr-1 pl-4 shadow-sm ring-1 ring-black/10 focus-within:ring-2 focus-within:ring-cyan-deep sm:bg-paper sm:shadow-none">
+            <SearchIcon className="h-5 w-5 shrink-0 text-muted" />
+            <label htmlFor="home-q" className="sr-only">Rechercher un véhicule</label>
+            <input id="home-q" name="q" type="search" placeholder="Tucson, Sportage, Rexton…" className="min-w-0 flex-1 bg-transparent py-2.5 outline-none" />
+            <button type="submit" className="btn-primary px-5 py-2.5">Chercher</button>
+          </form>
+          <nav aria-label="Disponibilité" className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
             {[
-              { t: "Votre demande", d: "Marque, modèle, année, budget : dites-nous ce que vous cherchez." },
-              { t: "Sélection en Corée", d: "Nous vous proposons des véhicules contrôlés, photos et historique à l'appui." },
-              { t: "Acompte & expédition", d: `Vous validez avec un acompte de ${settings.orderDepositPct} %. Le véhicule est expédié vers Madagascar.` },
-              { t: "Livraison à Tana", d: `Dédouané, immatriculé, prêt à rouler. Délai habituel : ${settings.orderDelay}.` },
-            ].map((s, i) => (
-              <li key={s.t} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-                <span className="font-display text-5xl font-bold text-cyan">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="font-display mt-3 text-xl font-semibold">{s.t}</h3>
-                <p className="mt-2 text-sm text-white/70">{s.d}</p>
-              </li>
-            ))}
-          </ol>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/sur-commande#demande" className="btn-primary">Faire ma demande</Link>
-            {onOrder.length > 0 && (
-              <Link href="/voitures?dispo=sur_commande" className="btn border border-white/25 text-white hover:border-white">
-                Voir le catalogue sur commande ({onOrder.length})
+              { href: "/voitures?dispo=showroom", label: "Dispo de suite", n: showroom.length, dot: "bg-emerald-500" },
+              { href: "/voitures?dispo=arrivage", label: "En arrivage", n: arrivage.length, dot: "bg-cyan" },
+              { href: "/voitures?dispo=sur_commande", label: "Sur commande", n: onOrder.length, dot: "bg-orange" },
+              { href: "/voitures", label: "Tout le stock", n: listed.length, dot: "bg-ink" },
+            ].map((c) => (
+              <Link key={c.href} href={c.href} className="flex shrink-0 items-center gap-2 rounded-full bg-white px-3.5 py-2 text-sm font-semibold ring-1 ring-black/10 hover:ring-ink sm:bg-paper">
+                <span className={`h-2 w-2 rounded-full ${c.dot}`} aria-hidden="true" /> {c.label} <span className="text-muted">{c.n}</span>
               </Link>
-            )}
-          </div>
+            ))}
+          </nav>
         </div>
-      </section>
+      </div>
 
-      {/* TRUST */}
-      <section className="mx-auto max-w-7xl px-4 py-14">
-        <SectionTitle kicker="Pourquoi Ediat Garage" title="Acheter l'esprit tranquille" />
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { icon: <ShipIcon className="h-6 w-6" />, t: "Import direct de Corée", d: "Pas d'intermédiaire caché : nous sélectionnons nous-mêmes chaque véhicule." },
-            { icon: <ShieldIcon className="h-6 w-6" />, t: "Véhicules contrôlés", d: "Kilométrage, carrosserie, moteur et papiers vérifiés avant l'achat." },
-            { icon: <DocIcon className="h-6 w-6" />, t: "Démarches incluses", d: "Dédouanement, visite technique et carte grise pris en charge." },
-            { icon: <WalletIcon className="h-6 w-6" />, t: "Paiement souple", d: `${settings.finance.name} : apport puis mensualités fixes.` },
-          ].map((x) => (
-            <li key={x.t} className="card p-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan/10 text-cyan-deep">{x.icon}</span>
-              <h3 className="mt-4 font-semibold">{x.t}</h3>
-              <p className="mt-1.5 text-sm text-black/65">{x.d}</p>
+      {/* BODY TYPES */}
+      <section aria-label="Par type de véhicule" className="mx-auto max-w-7xl pt-4">
+        <ul className="flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:grid md:grid-cols-8 [&::-webkit-scrollbar]:hidden">
+          {bodyList.map((b) => (
+            <li key={b} className="shrink-0">
+              <Link href={`/voitures?carrosserie=${encodeURIComponent(b)}`} className="flex w-[84px] flex-col items-center gap-1 rounded-2xl bg-white px-2 py-3 text-center ring-1 ring-black/5 transition hover:text-orange-deep hover:ring-orange-deep md:w-auto">
+                <BodyIcon type={b} className="h-7 w-14 text-ink/80" />
+                <span className="text-xs font-semibold">{b}</span>
+                <span className="text-[11px] text-muted">{bodies.get(b) ?? 0}</span>
+              </Link>
             </li>
           ))}
         </ul>
       </section>
 
-      {/* SOLD */}
-      {sold.length > 0 && (
-        <section aria-labelledby="vendus" className="mx-auto max-w-7xl px-4 pb-14">
-          <SectionTitle kicker="Ils roulent déjà" id="vendus" title="Récemment vendus" />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {sold.map((v) => <VehicleCard key={v.id} v={v} {...card} />)}
-          </div>
+      {/* BRANDS */}
+      <section aria-label="Par marque" className="mx-auto max-w-7xl pt-4">
+        <ul className="flex gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden">
+          {brandList.map((b) => (
+            <li key={b} className="shrink-0">
+              <Link href={`/voitures?marque=${encodeURIComponent(b)}`} className="group flex w-[76px] flex-col items-center gap-1.5 sm:w-24">
+                <span className="relative flex h-[72px] w-[72px] items-center justify-center overflow-hidden rounded-full bg-white shadow-sm ring-2 ring-cyan/60 transition group-hover:ring-orange sm:h-24 sm:w-24">
+                  {BRAND_LOGOS[b] ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={BRAND_LOGOS[b]} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="font-display px-1 text-center text-sm leading-tight font-bold text-ink">{b}</span>
+                  )}
+                </span>
+                <span className="text-xs font-semibold">{b} <span className="font-normal text-muted">{brands.get(b) ?? 0}</span></span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {showroom.length > 0 && (
+        <Rail id="showroom" kicker="Dispo de suite" title="Au showroom" count={showroom.length} href="/voitures?dispo=showroom">
+          {showroom.slice(0, 10).map((v, i) => <VehicleCard key={v.id} v={v} {...card} priority={i < 2} />)}
+        </Rail>
+      )}
+
+      {/* EDIAT FACILITY */}
+      {settings.finance.enabled && (
+        <section className="mx-auto max-w-7xl px-4 py-4">
+          <Link href="/financement" className="bg-orange-gradient group relative flex items-center gap-4 overflow-hidden rounded-3xl p-5 text-white shadow-lg sm:p-8">
+            <span className="font-display pointer-events-none absolute -top-8 right-3 text-[150px] leading-none text-white/20 sm:right-10 sm:text-[220px]" aria-hidden="true">!</span>
+            <div className="relative min-w-0 flex-1">
+              <p className="font-display text-[34px] leading-[0.95] font-bold sm:text-6xl">
+                Roulez <span className="text-xl font-semibold text-white/85 sm:text-3xl">aujourd&apos;hui</span>
+                <br />
+                <span className="text-[#9eeaff]">Payez</span> <span className="text-xl font-semibold text-white/85 sm:text-3xl">à votre rythme</span>
+              </p>
+              <p className="mt-2 text-sm text-white/90">{settings.finance.name} · apport dès {settings.finance.minDownPct} % · {settings.finance.durations.join("/")} mois</p>
+            </div>
+            <span className="relative hidden shrink-0 rounded-full bg-white px-5 py-3 text-sm font-semibold text-orange-deep sm:inline-block">Simuler →</span>
+          </Link>
         </section>
       )}
 
-      {/* FINAL CTA */}
-      <section className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="bg-brand-gradient relative overflow-hidden rounded-[2rem] px-6 py-10 text-white sm:px-12">
+      {arrivage.length > 0 && (
+        <Rail id="arrivage" kicker="Bientôt à Tana" title="En arrivage" count={arrivage.length} href="/voitures?dispo=arrivage">
+          {arrivage.slice(0, 10).map((v) => <VehicleCard key={v.id} v={v} {...card} />)}
+        </Rail>
+      )}
+
+      {/* ON ORDER */}
+      <section className="mt-4 bg-ink py-2 text-white">
+        {onOrder.length > 0 && (
+          <div>
+            <Rail dark id="commande" kicker={`Import de Corée · ${settings.orderDelay}`} title="Sur commande" count={onOrder.length} href="/voitures?dispo=sur_commande">
+              {onOrder.slice(0, 10).map((v) => <VehicleCard key={v.id} v={v} {...card} />)}
+            </Rail>
+          </div>
+        )}
+        <div className="mx-auto max-w-7xl px-4 pt-2 pb-8">
+          <ol className="grid grid-cols-4 gap-2 text-center">
+            {[
+              { icon: <DocIcon className="h-6 w-6" />, t: "Votre demande" },
+              { icon: <ShieldIcon className="h-6 w-6" />, t: "Contrôle en Corée" },
+              { icon: <ShipIcon className="h-6 w-6" />, t: "Expédition" },
+              { icon: <KeyIcon className="h-6 w-6" />, t: "Clés en main" },
+            ].map((s, i) => (
+              <li key={s.t} className="flex flex-col items-center gap-1.5">
+                <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-cyan">
+                  {s.icon}
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange text-[11px] font-bold text-white">{i + 1}</span>
+                </span>
+                <span className="text-[11px] leading-tight text-white/80 sm:text-sm">{s.t}</span>
+              </li>
+            ))}
+          </ol>
+          <Link href="/sur-commande#demande" className="btn-primary mt-5 w-full sm:w-auto">Faire importer mon véhicule</Link>
+        </div>
+      </section>
+
+      {/* TRUST */}
+      <section aria-label="Nos engagements" className="mx-auto max-w-7xl px-4 py-6">
+        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+          {[
+            { icon: <ShipIcon className="h-5 w-5" />, t: "Import direct Corée" },
+            { icon: <ShieldIcon className="h-5 w-5" />, t: "Véhicules contrôlés" },
+            { icon: <DocIcon className="h-5 w-5" />, t: "Carte grise incluse" },
+            { icon: <WalletIcon className="h-5 w-5" />, t: "Paiement échelonné" },
+          ].map((x) => (
+            <li key={x.t} className="flex items-center gap-2.5 rounded-2xl bg-white p-3 text-sm font-semibold ring-1 ring-black/5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cyan/10 text-cyan-deep">{x.icon}</span>
+              {x.t}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {sold.length > 0 && (
+        <Rail id="vendus" kicker="Ils roulent déjà" title="Récemment vendus">
+          {sold.map((v) => <VehicleCard key={v.id} v={v} {...card} />)}
+        </Rail>
+      )}
+
+      <section className="mx-auto max-w-7xl px-4 pt-2 pb-10">
+        <div className="bg-brand-gradient relative overflow-hidden rounded-3xl p-6 text-white sm:p-10">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/eg-mark.png" alt="" aria-hidden="true" className="absolute -right-6 -bottom-10 h-56 opacity-20" />
-          <div className="relative max-w-2xl">
-            <h2 className="font-display text-3xl font-bold sm:text-4xl">Vous ne trouvez pas votre véhicule ?</h2>
-            <p className="mt-3 text-white/90">
-              Envoyez-nous le modèle et votre budget{listed.some((v) => v.price) ? ` (nos véhicules commencent à ${formatAr(Math.min(...listed.filter((v) => v.price).map((v) => v.price!)))})` : ""} :
-              nous vous répondons sous 24 h avec des propositions.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/sur-commande#demande" className="btn-primary">Demander un véhicule</Link>
-              <a
-                href={waLink(settings.whatsapp, "Bonjour Ediat Garage, je cherche un véhicule : ")}
-                target="_blank"
-                rel="noopener"
-                className="btn-whatsapp"
-              >
-                <WhatsAppIcon className="h-4 w-4" /> Écrire sur WhatsApp
-              </a>
-            </div>
+          <img src="/brand/eg-mark.png" alt="" aria-hidden="true" className="absolute -right-4 -bottom-8 h-40 opacity-25 sm:h-56" />
+          <h2 className="font-display relative text-3xl font-bold sm:text-4xl">Pas trouvé votre modèle ?</h2>
+          <p className="relative mt-1 text-white/90">On l&apos;importe pour vous.</p>
+          <div className="relative mt-5 flex flex-wrap gap-2">
+            <Link href="/sur-commande#demande" className="btn-primary">Le demander</Link>
+            <a href={waLink(settings.whatsapp, "Bonjour Ediat Garage, je cherche un véhicule : ")} target="_blank" rel="noopener" className="btn-whatsapp">
+              <WhatsAppIcon className="h-4 w-4" /> WhatsApp
+            </a>
           </div>
         </div>
       </section>
     </>
   );
 }
-

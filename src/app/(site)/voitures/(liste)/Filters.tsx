@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useRef, useTransition } from "react";
 import { formatAr, formatNumber } from "@/lib/format";
-import { STATUSES, type VehicleStatus } from "@/lib/vehicle";
+import type { VehicleStatus } from "@/lib/vehicle";
 import { Spinner } from "@/components/ui/Spinner";
 
 type Option = { value: string; n: number };
@@ -59,7 +59,7 @@ export function Filters({ current, facets, total, id }: { current: Record<string
   return (
     <form ref={form} action="/voitures" onSubmit={(e) => { e.preventDefault(); apply(); }} aria-label="Filtres" className="relative">
       {current.q && <input type="hidden" name="q" value={current.q} />}
-      {radios("dispo", facets.dispo, (v) => STATUSES[v as VehicleStatus].label)}
+      {current.dispo && <input type="hidden" name="dispo" value={current.dispo} />}
       {facets.marque.length > 0 && (
         <div className="border-t border-black/10 py-4">
           <label className="label" htmlFor={`${id}-marque`}>Marque</label>
@@ -109,7 +109,6 @@ export function Filters({ current, facets, total, id }: { current: Record<string
 }
 
 const FIELD_LABELS: Record<string, string> = {
-  dispo: "Disponibilité",
   carrosserie: "Type de véhicule",
   carburant: "Carburant",
   boite: "Boîte de vitesses",

@@ -6,8 +6,9 @@ export function SortSelect({ current, options }: { current: Record<string, strin
   const router = useRouter();
   return (
     <label className="flex items-center gap-2 text-sm">
-      <span className="text-muted">Trier par</span>
+      <span className="hidden text-muted sm:inline" aria-hidden="true">Trier</span>
       <select
+        aria-label="Trier les véhicules"
         value={current.tri ?? ""}
         onChange={(e) => {
           const params = new URLSearchParams(current);
@@ -16,7 +17,7 @@ export function SortSelect({ current, options }: { current: Record<string, strin
           else params.delete("tri");
           router.push(`/voitures${params.size ? `?${params}` : ""}`, { scroll: false });
         }}
-        className="rounded-lg border border-black/15 bg-white px-2.5 py-2 font-semibold"
+        className="rounded-full border border-black/10 bg-white px-3 py-2 text-sm font-semibold"
       >
         {options.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
       </select>

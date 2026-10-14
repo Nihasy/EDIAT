@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CheckIcon } from "@/components/Icons";
+import { Rail } from "@/components/site/Rail";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { VehicleCard } from "@/components/VehicleCard";
 import { publicVehicles, siteSettings } from "@/lib/catalog";
@@ -25,7 +26,7 @@ export default async function FinancePage() {
   const eligible = all
     .filter((v) => (v.status === "showroom" || v.status === "arrivage") && fromMonthly(v, f))
     .sort((a, b) => fromMonthly(a, f)! - fromMonthly(b, f)!)
-    .slice(0, 4);
+    .slice(0, 10);
 
   return (
     <>
@@ -38,9 +39,6 @@ export default async function FinancePage() {
               <br />
               <span className="text-orange-deep">Payez</span> <span className="text-3xl font-semibold text-black/60 sm:text-4xl">à votre rythme.</span>
             </h1>
-            <p className="mt-6 max-w-lg text-lg text-black/75">
-              Un apport, puis des mensualités fixes : vous repartez avec votre véhicule sans attendre d&apos;avoir toute la somme.
-            </p>
             <ul className="mt-6 space-y-2 text-[15px]">
               {[
                 `Apport à partir de ${f.minDownPct} % du prix`,
@@ -66,14 +64,14 @@ export default async function FinancePage() {
 
       <section className="mx-auto max-w-7xl px-4 pb-12">
         <SectionTitle kicker="Comment ça marche" title={`${f.name} en 4 étapes`} />
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
-            ["Choisissez", "Un véhicule du showroom, de l'arrivage ou sur commande."],
-            ["Simulez", "Apport et durée : vous connaissez votre mensualité tout de suite."],
-            ["Signez", "Pièces : CIN, justificatif de domicile et de revenus. Vous versez l'apport."],
-            ["Roulez", "Vous repartez avec le véhicule et payez chaque mois."],
+            ["Choisissez", "Showroom, arrivage ou commande."],
+            ["Simulez", "Apport et durée."],
+            ["Signez", "CIN, domicile, revenus."],
+            ["Roulez", "Et payez chaque mois."],
           ].map(([t, d], i) => (
-            <li key={t} className="card p-6">
+            <li key={t} className="card p-4 sm:p-6">
               <span className="font-display text-4xl font-bold text-orange">{i + 1}</span>
               <h3 className="font-display mt-2 text-xl font-semibold">{t}</h3>
               <p className="mt-1 text-sm text-black/70">{d}</p>
@@ -83,12 +81,9 @@ export default async function FinancePage() {
       </section>
 
       {eligible.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pb-16">
-          <SectionTitle kicker="Petites mensualités" title="Disponibles avec Ediat Facility" link={{ href: "/voitures", label: "Tous les véhicules" }} />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {eligible.map((v) => <VehicleCard key={v.id} v={v} finance={f} orderDelay={settings.orderDelay} />)}
-          </div>
-        </section>
+        <Rail id="eligibles" kicker="Petites mensualités" title={`Avec ${f.name}`} href="/voitures">
+          {eligible.map((v) => <VehicleCard key={v.id} v={v} finance={f} orderDelay={settings.orderDelay} />)}
+        </Rail>
       )}
 
       <p className="mx-auto max-w-7xl px-4 pb-12 text-xs text-muted">
