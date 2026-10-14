@@ -80,7 +80,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
             />
             <LinkPendingOverlay />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent lg:bg-gradient-to-r lg:from-black/80 lg:via-black/30" />
-            <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 pb-9 text-white sm:pb-10 lg:top-0 lg:flex lg:flex-col lg:justify-center lg:pb-0">
+            <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 text-white pb-12 sm:pb-12 lg:top-0 lg:flex lg:flex-col lg:justify-center lg:pb-0">
               <StatusBadge status={s.status} className="self-start" />
               <p className="font-display mt-2 text-[34px] leading-none font-bold drop-shadow sm:text-5xl lg:text-6xl">{s.title}</p>
               <p className="mt-1 text-sm text-white/85 sm:text-base">{s.subtitle}</p>
@@ -101,9 +101,9 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
         <>
           <button type="button" onClick={() => go(active - 1)} aria-label="Précédent" className="absolute top-1/2 left-3 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-xl text-ink shadow md:flex">‹</button>
           <button type="button" onClick={() => go(active + 1)} aria-label="Suivant" className="absolute top-1/2 right-3 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-xl text-ink shadow md:flex">›</button>
-          <div className="absolute inset-x-0 bottom-4 flex justify-center sm:bottom-2">
+          <div className="absolute inset-x-0 bottom-3 flex justify-center sm:bottom-1">
             {slides.map((s, i) => (
-              <button key={s.href} type="button" onClick={() => go(i)} aria-label={`Diapositive ${i + 1}`} aria-current={i === active} className="flex h-6 items-center px-1">
+              <button key={s.href} type="button" onClick={() => go(i)} aria-label={`Diapositive ${i + 1}`} aria-current={i === active} className="flex h-8 min-w-8 items-center justify-center">
                 <span className={`block h-1.5 rounded-full transition-all ${i === active ? "w-6 bg-orange" : "w-1.5 bg-white/60"}`} />
               </button>
             ))}

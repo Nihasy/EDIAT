@@ -61,7 +61,7 @@ export default async function Dashboard() {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-display text-2xl font-semibold">Dernières demandes</h2>
-          <Link href="/admin/demandes" className="text-sm font-semibold text-orange-deep">Tout voir →</Link>
+          <Link href="/admin/demandes" className="inline-flex min-h-11 items-center text-sm font-semibold text-orange-deep">Tout voir →</Link>
         </div>
         {leads.items.length ? (
           <ul className="card divide-y divide-black/5">
@@ -84,7 +84,7 @@ export default async function Dashboard() {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-display text-2xl font-semibold">Derniers véhicules modifiés</h2>
-          <Link href="/admin/vehicules" className="text-sm font-semibold text-orange-deep">Tout le stock →</Link>
+          <Link href="/admin/vehicules" className="inline-flex min-h-11 items-center text-sm font-semibold text-orange-deep">Tout le stock →</Link>
         </div>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {vehicles.slice(0, 4).map((v) => (

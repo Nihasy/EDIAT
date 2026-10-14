@@ -41,7 +41,7 @@ export function Filters({ current, facets, total, id }: { current: Record<string
           return (
             <label
               key={o.value || "all"}
-              className={`flex min-h-10 cursor-pointer items-center rounded-full border px-3.5 text-[13px] transition-colors duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-cyan ${
+              className={`flex min-h-11 cursor-pointer items-center rounded-full border px-3.5 text-[13px] transition-colors duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-cyan ${
                 checked ? "border-ink bg-ink font-semibold text-white" : "border-black/15 bg-white hover:border-ink"
               } ${o.n === 0 && !checked ? "opacity-40" : ""}`}
             >

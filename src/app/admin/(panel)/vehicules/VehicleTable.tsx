@@ -29,7 +29,7 @@ function StatusSelect({ ids, value, onDone, label }: { ids: number[]; value: Veh
             router.refresh();
           });
         }}
-        className="rounded-lg border border-black/15 bg-white px-2 py-1.5 text-sm"
+        className="min-h-11 rounded-lg border border-black/15 bg-white px-2 text-sm"
       >
         {value === "" && <option value="">Changer le statut…</option>}
         {STATUS_IDS.map((s) => <option key={s} value={s}>{STATUSES[s].label}</option>)}
@@ -48,8 +48,8 @@ export function VehicleTable({ vehicles }: { vehicles: AdminVehicle[] }) {
   return (
     <div className="space-y-3">
       <div className="flex min-h-11 flex-wrap items-center gap-3">
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={all} onChange={() => setSelected(all ? [] : vehicles.map((v) => v.id))} className="h-4 w-4" />
+        <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm">
+          <input type="checkbox" checked={all} onChange={() => setSelected(all ? [] : vehicles.map((v) => v.id))} className="h-5 w-5" />
           Tout sélectionner ({vehicles.length})
         </label>
         {selected.length > 0 && (
@@ -65,7 +65,9 @@ export function VehicleTable({ vehicles }: { vehicles: AdminVehicle[] }) {
           const margin = v.price && v.costAr ? v.price - v.costAr : null;
           return (
             <li key={v.id} className={`flex flex-wrap items-center gap-3 px-3 py-3 sm:flex-nowrap ${selected.includes(v.id) ? "bg-cyan/5" : ""}`}>
-              <input type="checkbox" checked={selected.includes(v.id)} onChange={() => toggle(v.id)} aria-label={`Sélectionner ${v.brand} ${v.model}`} className="h-4 w-4 shrink-0" />
+              <label className="-m-2 flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center">
+                <input type="checkbox" checked={selected.includes(v.id)} onChange={() => toggle(v.id)} aria-label={`Sélectionner ${v.brand} ${v.model}`} className="h-5 w-5" />
+              </label>
               <Link href={`/admin/vehicules/${v.id}`} className="flex min-w-0 flex-1 items-center gap-3">
                 <span className="bg-brand-gradient h-14 w-20 shrink-0 overflow-hidden rounded-lg">
                   {v.images[0] && <Img src={thumbUrl(v.images[0])} fallback={v.images[0]} alt="" className="h-full w-full object-cover" />}
@@ -85,7 +87,7 @@ export function VehicleTable({ vehicles }: { vehicles: AdminVehicle[] }) {
               <span className="flex w-full items-center justify-between gap-2 sm:w-auto">
                 <StatusSelect ids={[v.id]} value={v.status} label={`Statut de ${v.brand} ${v.model}`} onDone={setMsg} />
                 {STATUSES[v.status].isPublic && (
-                  <a href={vehicleHref(v)} target="_blank" rel="noopener" className="px-2 text-sm text-cyan-deep hover:underline" aria-label="Voir sur le site">↗</a>
+                  <a href={vehicleHref(v)} target="_blank" rel="noopener" className="flex h-11 w-11 items-center justify-center rounded-full text-cyan-deep hover:bg-cyan/10" aria-label="Voir sur le site">↗</a>
                 )}
               </span>
             </li>

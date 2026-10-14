@@ -73,6 +73,7 @@ export function Favorites() {
 
       {data && vehicles.length > 0 && (
         <>
+          <h2 className="sr-only">Véhicules enregistrés</h2>
           <p className="mt-2 text-sm text-muted">Cochez jusqu&apos;à {MAX_COMPARE} véhicules pour les comparer.</p>
           <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
             {vehicles.map((v) => {

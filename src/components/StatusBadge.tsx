@@ -4,7 +4,7 @@ import { DocIcon, KeyIcon, LockIcon, ShipIcon, TagIcon } from "./Icons";
 // One badge per availability: colour + icon + word, so the status never
 // relies on colour alone (and reads on top of any photo).
 const STYLE: Record<VehicleStatus, { cls: string; icon: React.ReactNode }> = {
-  showroom: { cls: "bg-emerald-600 text-white", icon: <KeyIcon /> },
+  showroom: { cls: "bg-emerald-700 text-white", icon: <KeyIcon /> },
   arrivage: { cls: "bg-cyan-deep text-white", icon: <ShipIcon /> },
   sur_commande: { cls: "bg-orange-deep text-white", icon: <DocIcon /> },
   reserve: { cls: "bg-amber-700 text-white", icon: <LockIcon /> },

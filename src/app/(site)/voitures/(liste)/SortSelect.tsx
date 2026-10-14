@@ -17,7 +17,7 @@ export function SortSelect({ current, options }: { current: Record<string, strin
           else params.delete("tri");
           navigate(`/voitures${params.size ? `?${params}` : ""}`);
         }}
-        className="min-h-10 rounded-full border border-black/10 bg-white px-3 text-sm font-semibold"
+        className="min-h-11 rounded-full border border-black/10 bg-white px-3 text-sm font-semibold"
       >
         {options.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
       </select>

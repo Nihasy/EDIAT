@@ -21,7 +21,7 @@ export function Header({ settings }: { settings: Settings }) {
       {settings.announcement && (
         <p className="bg-orange-gradient px-4 py-2 text-center text-[13px] font-medium text-white">{settings.announcement}</p>
       )}
-      <header className="sticky top-0 z-30 bg-ink/95 backdrop-blur supports-[backdrop-filter]:bg-ink/85">
+      <header className="sticky top-0 z-30 bg-ink">
         <div className="relative mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 lg:h-[72px]">
           <Logo />
           <nav aria-label="Menu principal" className="ml-auto lg:ml-8">
@@ -38,7 +38,7 @@ export function Header({ settings }: { settings: Settings }) {
               href={waLink(settings.whatsapp, "Bonjour Ediat Garage, je souhaite des informations.")}
               target="_blank"
               rel="noopener"
-              className="hidden items-center gap-2 rounded-full bg-[#1da851] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#178a43] sm:flex"
+              className="hidden items-center gap-2 rounded-full bg-[#15803d] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#116632] sm:flex"
             >
               <WhatsAppIcon className="h-4 w-4" /> WhatsApp
             </a>

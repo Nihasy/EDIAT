@@ -21,7 +21,7 @@ export function FavoriteButton({ id, label, variant = "photo" }: { id: number; l
       className={
         variant === "photo"
           ? "group/fav relative z-10 flex h-11 w-11 items-center justify-center"
-          : `flex h-12 w-12 shrink-0 items-center justify-center rounded-full border transition-colors duration-200 ${on ? "border-red-200 bg-red-50 text-red-600" : "border-black/15 bg-white text-ink hover:border-ink"}`
+          : `flex h-11 w-11 shrink-0 items-center min-[380px]:h-12 min-[380px]:w-12 justify-center rounded-full border transition-colors duration-200 ${on ? "border-red-200 bg-red-50 text-red-600" : "border-black/15 bg-white text-ink hover:border-ink"}`
       }
     >
       {variant === "photo" ? (

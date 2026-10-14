@@ -23,13 +23,13 @@ export function Rail({
     <section aria-labelledby={id} className="mx-auto max-w-7xl py-6 sm:py-8">
       <div className="mb-3 flex items-end justify-between gap-3 px-4">
         <div className="min-w-0">
-          {kicker && <p className={`truncate text-[11px] font-bold tracking-[0.18em] uppercase ${dark ? "text-cyan" : "text-cyan-deep"}`}>{kicker}</p>}
+          {kicker && <p className={`truncate text-[11px] font-bold tracking-[0.18em] uppercase ${dark ? "text-cyan-light" : "text-cyan-deep"}`}>{kicker}</p>}
           <h2 id={id} className={`font-display truncate text-2xl font-bold sm:text-3xl ${dark ? "text-white" : ""}`}>
             {title} {count != null && <span className={`text-lg font-semibold ${dark ? "text-white/60" : "text-muted"}`}>{count}</span>}
           </h2>
         </div>
         {href && (
-          <Link href={href} className="shrink-0 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-orange-deep ring-1 ring-black/10 hover:ring-orange-deep">
+          <Link href={href} className="inline-flex min-h-11 shrink-0 items-center rounded-full bg-white px-4 text-sm font-semibold text-orange-deep ring-1 ring-black/10 transition-colors duration-200 hover:ring-orange-deep">
             Tout voir →
           </Link>
         )}

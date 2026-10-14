@@ -138,13 +138,13 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
                 <Img src={thumbUrl(src)} fallback={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
               </div>
               {i === 0 && <span className="absolute top-1.5 left-1.5 rounded bg-orange-deep px-1.5 py-0.5 text-[10px] font-bold text-white">PRINCIPALE</span>}
-              <div className="mt-1 flex justify-between gap-1">
-                <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Déplacer à gauche" className="h-9 flex-1 rounded-md bg-black/5 text-sm disabled:opacity-30">←</button>
+              <div className="mt-1 grid grid-cols-2 gap-1 sm:grid-cols-4">
+                <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Déplacer à gauche" className="h-11 rounded-md bg-black/5 text-sm disabled:opacity-30">←</button>
                 {i > 0 && (
-                  <button type="button" onClick={() => { setImages((l) => [src, ...l.filter((x) => x !== src)]); setDirty(true); }} className="flex h-9 flex-1 items-center justify-center rounded-md bg-black/5" title="Photo principale" aria-label="Mettre en photo principale"><StarIcon className="h-4 w-4 text-orange-deep" /></button>
+                  <button type="button" onClick={() => { setImages((l) => [src, ...l.filter((x) => x !== src)]); setDirty(true); }} className="flex h-11 items-center justify-center rounded-md bg-black/5" title="Photo principale" aria-label="Mettre en photo principale"><StarIcon className="h-4 w-4 text-orange-deep" /></button>
                 )}
-                <button type="button" onClick={() => move(i, 1)} disabled={i === images.length - 1} aria-label="Déplacer à droite" className="h-9 flex-1 rounded-md bg-black/5 text-sm disabled:opacity-30">→</button>
-                <button type="button" onClick={() => { setImages((l) => l.filter((x) => x !== src)); setDirty(true); }} aria-label="Supprimer la photo" className="h-9 flex-1 rounded-md bg-red-50 text-sm text-red-700">✕</button>
+                <button type="button" onClick={() => move(i, 1)} disabled={i === images.length - 1} aria-label="Déplacer à droite" className="h-11 rounded-md bg-black/5 text-sm disabled:opacity-30">→</button>
+                <button type="button" onClick={() => { setImages((l) => l.filter((x) => x !== src)); setDirty(true); }} aria-label="Supprimer la photo" className="h-11 rounded-md bg-red-50 text-sm text-red-700">✕</button>
               </div>
             </div>
           ))}
@@ -227,7 +227,7 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
           <textarea name="description" rows={5} defaultValue={vehicle?.description} className="input" />
         </Field>
         <div className="mt-5">
-          <span className="label">Équipements (un par ligne)</span>
+          <label htmlFor="equipment" className="label">Équipements (un par ligne)</label>
           <div className="mb-2 flex flex-wrap gap-1.5">
             {EQUIPMENT.map((e) => (
               <button
@@ -235,13 +235,13 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
                 type="button"
                 aria-pressed={lines.includes(e)}
                 onClick={() => toggleEquipment(e)}
-                className={`rounded-full border px-2.5 py-1 text-xs transition ${lines.includes(e) ? "border-cyan-deep bg-cyan-deep text-white" : "border-black/15 hover:border-ink"}`}
+                className={`min-h-10 rounded-full border px-3 text-xs transition-colors duration-200 ${lines.includes(e) ? "border-cyan-deep bg-cyan-deep text-white" : "border-black/15 hover:border-ink"}`}
               >
                 {lines.includes(e) ? "✓ " : "+ "}{e}
               </button>
             ))}
           </div>
-          <textarea name="equipment" rows={5} value={equipment} onChange={(e) => setEquipment(e.target.value)} className="input" />
+          <textarea id="equipment" name="equipment" rows={5} value={equipment} onChange={(e) => setEquipment(e.target.value)} className="input" />
         </div>
       </Section>
 

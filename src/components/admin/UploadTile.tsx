@@ -38,7 +38,7 @@ export function PendingTiles({ count, className }: { count: number; className: s
   return (
     <>
       {Array.from({ length: count }, (_, i) => (
-        <div key={i} aria-hidden="true" className={`flex items-center justify-center rounded-lg bg-black/[0.07] text-black/40 motion-safe:animate-pulse ${className}`}>
+        <div key={i} aria-hidden="true" className={`shimmer flex items-center justify-center rounded-lg text-black/50 ${className}`}>
           <Spinner className="h-5 w-5" />
         </div>
       ))}

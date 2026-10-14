@@ -1,8 +1,8 @@
 import { LEAD_STATUSES, type LeadStatus } from "@/lib/leads-shared";
 
 const TONES = {
-  orange: "bg-orange/15 text-orange-deep",
-  cyan: "bg-cyan/15 text-cyan-deep",
+  orange: "bg-orange/15 text-[#9c360b]",
+  cyan: "bg-cyan/15 text-[#005a71]",
   green: "bg-emerald-100 text-emerald-800",
   grey: "bg-black/5 text-black/60",
 } as const;

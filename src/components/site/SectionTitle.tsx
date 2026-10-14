@@ -19,7 +19,7 @@ export function SectionTitle({
     <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
       <div>
         {kicker && (
-          <p className={`flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase ${dark ? "text-cyan" : "text-cyan-deep"}`}>
+          <p className={`flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase ${dark ? "text-cyan-light" : "text-cyan-deep"}`}>
             <span className="h-0.5 w-6 bg-orange" aria-hidden="true" /> {kicker}
           </p>
         )}

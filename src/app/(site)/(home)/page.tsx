@@ -82,8 +82,8 @@ export default async function HomePage() {
               { href: "/voitures?dispo=sur_commande", label: "Sur commande", n: onOrder.length, dot: "bg-orange" },
               { href: "/voitures", label: "Tout le stock", n: listed.length, dot: "bg-ink" },
             ].map((c) => (
-              <Link key={c.href} href={c.href} className="flex shrink-0 items-center gap-2 rounded-full bg-white px-3.5 py-2 text-sm font-semibold ring-1 ring-black/10 hover:ring-ink sm:bg-paper">
-                <span className={`h-2 w-2 rounded-full ${c.dot}`} aria-hidden="true" /> {c.label} <span className="text-muted">{c.n}</span>
+              <Link key={c.href} href={c.href} className="flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-white px-4 text-sm font-semibold ring-1 ring-black/10 transition-colors duration-200 hover:ring-ink sm:bg-paper">
+                <span className={`h-2.5 w-2.5 rounded-full ${c.dot}`} aria-hidden="true" /> {c.label} <span className="text-muted">{c.n}</span>
               </Link>
             ))}
           </nav>

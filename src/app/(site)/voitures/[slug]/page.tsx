@@ -100,7 +100,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <div className="mx-auto max-w-7xl px-4 pt-4">
-        <nav aria-label="Fil d'Ariane" className="text-sm text-muted [&_a]:inline-block [&_a]:py-1.5">
+        <nav aria-label="Fil d'Ariane" className="text-sm text-muted [&_a]:inline-block [&_a]:px-1 [&_a]:py-3">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li><Link href="/" className="hover:text-ink">Accueil</Link></li>
             <li aria-hidden="true">/</li>
@@ -152,9 +152,9 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
             {/* Price summary on phones (the side box is for large screens). */}
             <div className="mt-5 rounded-2xl border border-black/10 bg-white p-4 lg:hidden">
               {v.oldPrice && v.price && v.oldPrice > v.price && <p className="text-sm text-muted line-through">{formatAr(v.oldPrice)}</p>}
-              <p className={`font-display text-3xl font-bold ${closed ? "text-black/40" : ""}`}>{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
+              <p className={`font-display text-3xl font-bold ${closed ? "text-muted" : ""}`}>{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
               {monthly && !closed && (
-                <a href="#financement" className="bg-orange-gradient mt-2 block rounded-full px-4 py-2 text-center text-sm text-white">
+                <a href="#financement" className="bg-orange-gradient mt-2 block rounded-full px-4 py-3 text-center text-sm text-white">
                   à partir de <strong>{formatAr(monthly)}</strong> / mois
                 </a>
               )}
@@ -232,7 +232,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
               <div className="p-5">
                 <p className="text-sm text-muted">{closed ? STATUSES[v.status].label : "Prix TTC"}</p>
                 {v.oldPrice && v.price && v.oldPrice > v.price && <p className="text-muted line-through">{formatAr(v.oldPrice)}</p>}
-                <p className={`font-display text-4xl font-bold ${closed ? "text-black/40" : ""}`}>{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
+                <p className={`font-display text-4xl font-bold ${closed ? "text-muted" : ""}`}>{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
                 {monthly && !closed && (
                   <a href="#financement" className="bg-orange-gradient mt-3 block rounded-full px-4 py-2 text-center text-sm text-white">
                     à partir de <strong>{formatAr(monthly)}</strong> / mois
@@ -273,14 +273,14 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
 
       {/* MOBILE ACTION BAR */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white/95 px-4 py-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur lg:hidden">
-        <div className="mx-auto flex max-w-xl items-center gap-3">
+        <div className="mx-auto flex max-w-xl items-center gap-2 min-[380px]:gap-3">
           <div className="min-w-0 flex-1">
-            <p className="font-display truncate text-lg leading-tight font-bold">{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
+            <p className="font-display truncate text-base leading-tight font-bold min-[380px]:text-lg">{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
             {monthly && !closed ? <p className="truncate text-xs text-orange-deep">dès {formatAr(monthly)} / mois</p> : <p className="truncate text-xs text-muted">{STATUSES[v.status].short}</p>}
           </div>
           <FavoriteButton id={v.id} label={title} variant="plain" />
-          <a href={telLink(settings.phone)} aria-label="Appeler" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-black/15"><PhoneIcon className="h-5 w-5" /></a>
-          <a href={waLink(settings.whatsapp, waText)} target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp" className="btn-whatsapp h-12 shrink-0 px-4"><WhatsAppIcon className="h-5 w-5" /> <span className="hidden min-[400px]:inline">WhatsApp</span></a>
+          <a href={telLink(settings.phone)} aria-label="Appeler" className="flex h-11 w-11 shrink-0 items-center min-[380px]:h-12 min-[380px]:w-12 justify-center rounded-full border border-black/15"><PhoneIcon className="h-5 w-5" /></a>
+          <a href={waLink(settings.whatsapp, waText)} target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp" className="btn-whatsapp h-11 shrink-0 px-3.5 min-[380px]:h-12 min-[380px]:px-4"><WhatsAppIcon className="h-5 w-5" /> <span className="hidden min-[400px]:inline">WhatsApp</span></a>
         </div>
       </div>
     </div>

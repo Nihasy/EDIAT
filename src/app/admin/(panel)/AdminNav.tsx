@@ -22,7 +22,7 @@ export function AdminNav({ newLeads }: { newLeads: number }) {
             key={it.href}
             href={it.href}
             aria-current={active ? "page" : undefined}
-            className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 whitespace-nowrap transition ${active ? "bg-orange-deep text-white" : "text-white/80 hover:bg-white/10 hover:text-white"}`}
+            className={`flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 whitespace-nowrap transition-colors duration-200 ${active ? "bg-orange-deep text-white" : "text-white/80 hover:bg-white/10 hover:text-white"}`}
           >
             {it.label}
             {it.href === "/admin/demandes" && newLeads > 0 && (
@@ -31,7 +31,7 @@ export function AdminNav({ newLeads }: { newLeads: number }) {
           </Link>
         );
       })}
-      <Link href="/" target="_blank" className="shrink-0 rounded-full px-3 py-2 whitespace-nowrap text-white/50 hover:text-white">
+      <Link href="/" target="_blank" className="flex min-h-11 shrink-0 items-center rounded-full px-3 whitespace-nowrap text-white/70 hover:text-white">
         Voir le site ↗
       </Link>
     </nav>

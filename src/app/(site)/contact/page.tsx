@@ -39,7 +39,7 @@ export default async function ContactPage(props: PageProps<"/contact">) {
         <aside className="space-y-4">
           <div className="rounded-2xl bg-ink p-6 text-white">
             <h2 className="font-display text-2xl font-semibold">Ediat Garage</h2>
-            <ul className="mt-4 space-y-4 text-sm text-white/85">
+            <ul className="mt-4 space-y-2 text-sm text-white/85 [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center [&_li]:items-center">
               <li className="flex gap-3"><PinIcon className="h-5 w-5 shrink-0 text-orange" /> <span className="whitespace-pre-line">{settings.address}</span></li>
               <li className="flex gap-3"><PhoneIcon className="h-5 w-5 shrink-0 text-orange" /> <a href={telLink(settings.phone)} className="hover:text-white">{displayPhone(settings.phone)}</a></li>
               <li className="flex gap-3"><ClockIcon className="h-5 w-5 shrink-0 text-orange" /> <span className="whitespace-pre-line">{settings.hours}</span></li>

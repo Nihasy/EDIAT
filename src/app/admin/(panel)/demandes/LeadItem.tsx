@@ -74,7 +74,7 @@ export function LeadItem({ lead }: { lead: Lead }) {
           value={status}
           disabled={pending}
           onChange={(e) => { const s = e.target.value as LeadStatus; setStatus(s); save(s, note); }}
-          className="rounded-lg border border-black/15 bg-white px-2 py-2 text-sm"
+          className="min-h-11 rounded-lg border border-black/15 bg-white px-2 text-sm"
         >
           {(Object.keys(LEAD_STATUSES) as LeadStatus[]).map((s) => <option key={s} value={s}>{LEAD_STATUSES[s].label}</option>)}
         </select>
@@ -93,7 +93,7 @@ export function LeadItem({ lead }: { lead: Lead }) {
             if (!confirm("Supprimer cette demande ?")) return;
             start(async () => { await removeLead(lead.id); router.refresh(); });
           }}
-          className="text-sm text-red-700 hover:underline"
+          className="min-h-11 px-2 text-sm text-red-700 hover:underline"
         >
           Supprimer
         </button>

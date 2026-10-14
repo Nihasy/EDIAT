@@ -8,7 +8,7 @@ export function Logo({ href = "/", dark = true, className = "" }: { href?: strin
       <img src="/brand/eg-mark.png" alt="" width={639} height={818} className="h-10 w-auto drop-shadow-sm" />
       <span className="flex flex-col leading-none">
         <span className={`font-display text-[22px] font-bold tracking-wide ${dark ? "text-white" : "text-ink"}`}>Ediat</span>
-        <span className={`font-display text-[11px] font-semibold tracking-[0.32em] ${dark ? "text-cyan" : "text-cyan-deep"}`}>Garage</span>
+        <span className={`font-display text-[11px] font-semibold tracking-[0.32em] ${dark ? "text-cyan-light" : "text-cyan-deep"}`}>Garage</span>
       </span>
     </Link>
   );

@@ -27,7 +27,7 @@ export default async function EditVehicle(props: PageProps<"/admin/vehicules/[id
 
   return (
     <div>
-      <Link href="/admin/vehicules" className="text-sm text-muted hover:text-ink">← Véhicules</Link>
+      <Link href="/admin/vehicules" className="inline-flex min-h-11 items-center text-sm text-muted hover:text-ink">← Véhicules</Link>
       <div className="mt-1 mb-6 flex flex-wrap items-center gap-3">
         <h1 className="font-display text-3xl font-bold">{vehicle.brand} {vehicle.model} {vehicle.year ?? ""}</h1>
         <StatusBadge status={vehicle.status} long />

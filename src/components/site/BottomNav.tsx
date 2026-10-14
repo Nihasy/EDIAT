@@ -45,7 +45,7 @@ export function BottomNav({ whatsappHref, financeName }: { whatsappHref: string;
           </li>
         ))}
         <li>
-          <a href={whatsappHref} target="_blank" rel="noopener" className="flex h-16 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold text-[#178a43]">
+          <a href={whatsappHref} target="_blank" rel="noopener" className="flex h-16 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold text-[#15803d]">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#25D366] text-white shadow">
               <WhatsAppIcon className="h-[18px] w-[18px]" />
             </span>

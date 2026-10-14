@@ -63,7 +63,7 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
             {Object.entries(base).filter(([k]) => k !== "q").map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
             <label htmlFor="q" className="sr-only">Rechercher un modèle</label>
             <input id="q" name="q" type="search" defaultValue={f.q ?? ""} placeholder="Modèle, année, diesel…" className="min-w-0 flex-1 bg-transparent py-2 outline-none" />
-            <button type="submit" aria-label="Rechercher" className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white"><SearchIcon className="h-4 w-4" /></button>
+            <button type="submit" aria-label="Rechercher" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-white"><SearchIcon className="h-5 w-5" /></button>
           </form>
         </div>
       </div>
@@ -102,15 +102,16 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
             <ul className="mb-3 flex flex-wrap gap-2">
               {chips.map(([k, v]) => (
                 <li key={k}>
-                  <Link href={href(base, { [k]: "" })} className="chip bg-ink/90 text-white hover:bg-ink" aria-label={`Retirer le filtre ${v}`}>
+                  <Link href={href(base, { [k]: "" })} className="chip min-h-10 px-3.5 bg-ink/90 text-white hover:bg-ink" aria-label={`Retirer le filtre ${v}`}>
                     {(CHIP_LABEL[k] ?? ((x: string) => x))(v)} <span aria-hidden="true">×</span>
                   </Link>
                 </li>
               ))}
-              {chips.length > 1 && <li><Link href={href({}, { dispo: f.dispo ?? "" })} className="chip hover:bg-black/10">Tout effacer</Link></li>}
+              {chips.length > 1 && <li><Link href={href({}, { dispo: f.dispo ?? "" })} className="chip min-h-10 px-3.5 hover:bg-black/10">Tout effacer</Link></li>}
             </ul>
           )}
 
+          <h2 className="sr-only">Résultats</h2>
           {result.items.length ? (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
               {result.items.map((v, i) => (

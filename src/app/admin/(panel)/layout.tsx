@@ -18,12 +18,12 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
           <Logo href="/admin" />
           <AdminNav newLeads={counts.nouveau ?? 0} />
           <form action={logout} className="ml-auto">
-            <SubmitButton pendingLabel="Déconnexion…" className="inline-flex items-center gap-2 py-2 text-sm text-white/60 hover:text-white">Déconnexion</SubmitButton>
+            <SubmitButton pendingLabel="Déconnexion…" className="inline-flex min-h-11 items-center gap-2 text-sm text-white/70 hover:text-white">Déconnexion</SubmitButton>
           </form>
         </div>
         <div className="h-[3px] bg-[linear-gradient(90deg,var(--color-orange)_0_60%,var(--color-cyan)_60%_100%)]" aria-hidden="true" />
       </header>
-      <div className="mx-auto max-w-7xl px-4 py-8">{children}</div>
+      <main id="contenu" className="mx-auto max-w-7xl px-4 py-8">{children}</main>
     </div>
   );
 }

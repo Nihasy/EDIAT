@@ -27,7 +27,7 @@ export function Footer({ settings }: { settings: Settings }) {
         </div>
         <div>
           <h2 className="font-display text-base tracking-wide text-white">Véhicules</h2>
-          <ul className="mt-3 space-y-2 text-sm">
+          <ul className="mt-2 text-sm [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center">
             <li><Link href="/voitures?dispo=showroom" className="hover:text-white">Disponibles au showroom</Link></li>
             <li><Link href="/voitures?dispo=arrivage" className="hover:text-white">En cours d&apos;arrivage</Link></li>
             <li><Link href="/voitures?dispo=sur_commande" className="hover:text-white">Catalogue sur commande</Link></li>
@@ -38,7 +38,7 @@ export function Footer({ settings }: { settings: Settings }) {
         </div>
         <div>
           <h2 className="font-display text-base tracking-wide text-white">Services</h2>
-          <ul className="mt-3 space-y-2 text-sm">
+          <ul className="mt-2 text-sm [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center">
             <li><Link href="/sur-commande" className="hover:text-white">Import sur commande</Link></li>
             <li><Link href="/financement" className="hover:text-white">{settings.finance.name} : payez à votre rythme</Link></li>
             <li><Link href="/contact?sujet=reprise" className="hover:text-white">Reprise de votre véhicule</Link></li>
@@ -47,9 +47,9 @@ export function Footer({ settings }: { settings: Settings }) {
         </div>
         <div>
           <h2 className="font-display text-base tracking-wide text-white">Showroom</h2>
-          <ul className="mt-3 space-y-3 text-sm">
+          <ul className="mt-2 space-y-1 text-sm [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center [&_li]:items-center">
             <li className="flex gap-2">
-              <PinIcon className="mt-0.5 h-4 w-4 shrink-0 text-orange" />
+              <PinIcon className="h-4 w-4 shrink-0 text-orange" />
               {settings.mapsUrl ? (
                 <a href={settings.mapsUrl} target="_blank" rel="noopener" className="hover:text-white">{settings.address}</a>
               ) : (
@@ -57,7 +57,7 @@ export function Footer({ settings }: { settings: Settings }) {
               )}
             </li>
             <li className="flex gap-2">
-              <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-orange" />
+              <PhoneIcon className="h-4 w-4 shrink-0 text-orange" />
               <a href={telLink(settings.phone)} className="hover:text-white">{displayPhone(settings.phone)}</a>
             </li>
             <li className="flex gap-2">

@@ -102,11 +102,11 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
             ["Puis-je payer en plusieurs fois ?", `Oui : avec ${settings.finance.name}, apport puis mensualités, y compris pour une commande.`],
             ["Les véhicules sont-ils à volant à gauche ?", "Oui, uniquement des véhicules conduite à gauche, conformes à l'immatriculation à Madagascar."],
           ].map(([q, a]) => (
-            <details key={q} className="group px-5 py-4">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
+            <details key={q} className="group px-5">
+              <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 font-semibold">
                 {q} <span className="text-orange-deep transition group-open:rotate-45" aria-hidden="true">+</span>
               </summary>
-              <p className="mt-2 text-[15px] text-black/70">{a}</p>
+              <p className="pb-4 text-[15px] text-black/70">{a}</p>
             </details>
           ))}
         </div>

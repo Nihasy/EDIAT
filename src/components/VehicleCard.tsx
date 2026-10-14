@@ -82,7 +82,7 @@ export function VehicleCard({
           {v.oldPrice && v.price && v.oldPrice > v.price && !closed && (
             <p className="text-[11px] text-muted line-through">{formatAr(v.oldPrice)}</p>
           )}
-          <p className={`font-display text-[17px] leading-tight font-bold sm:text-xl ${closed ? "text-black/45" : v.oldPrice && v.price && v.oldPrice > v.price ? "text-red-700" : "text-ink"}`}>
+          <p className={`font-display text-[17px] leading-tight font-bold sm:text-xl ${closed ? "text-muted" : v.oldPrice && v.price && v.oldPrice > v.price ? "text-red-700" : "text-ink"}`}>
             {closed ? STATUSES[v.status].short : v.price ? formatAr(v.price) : "Sur demande"}
           </p>
           {monthly && !closed && (

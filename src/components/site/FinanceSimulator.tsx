@@ -65,7 +65,7 @@ export function FinanceSimulator({
             step={5}
             value={downPct}
             onChange={(e) => setDownPct(Number(e.target.value))}
-            className="w-full accent-[var(--color-orange-deep)]"
+            className="h-11 w-full accent-[var(--color-orange-deep)]"
           />
           <p className="flex justify-between text-xs text-muted"><span>Min. {settings.minDownPct} %</span><span>90 %</span></p>
         </div>
@@ -78,7 +78,7 @@ export function FinanceSimulator({
                 type="button"
                 aria-pressed={months === m}
                 onClick={() => setMonths(m)}
-                className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${months === m ? "border-ink bg-ink text-white" : "border-black/15 bg-white hover:border-ink"}`}
+                className={`min-h-11 rounded-full border px-4 text-sm font-semibold transition-colors duration-200 ${months === m ? "border-ink bg-ink text-white" : "border-black/15 bg-white hover:border-ink"}`}
               >
                 {m} mois
               </button>

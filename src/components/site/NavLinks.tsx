@@ -14,7 +14,7 @@ export function NavLinks({ links }: { links: { href: string; label: string }[] }
             <Link
               href={l.href}
               aria-current={active ? "page" : undefined}
-              className="font-display relative rounded-full px-3 py-2 text-[15px] tracking-wide text-white/85 transition hover:text-white aria-[current=page]:text-orange"
+              className="font-display relative flex min-h-11 items-center rounded-full px-3 text-[15px] tracking-wide text-white/85 transition hover:text-white aria-[current=page]:text-orange aria-[current=page]:underline aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
             >
               {l.label}
             </Link>

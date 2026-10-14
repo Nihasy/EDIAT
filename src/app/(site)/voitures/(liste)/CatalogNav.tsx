@@ -51,7 +51,7 @@ export function NavChip({ href, active, children }: { href: string; active: bool
         e.preventDefault();
         navigate(href);
       }}
-      className={`flex min-h-10 shrink-0 items-center rounded-full px-4 text-sm font-semibold ring-1 transition-colors duration-200 ${active ? "bg-orange-deep text-white ring-orange-deep" : "bg-white ring-black/10 hover:ring-ink"}`}
+      className={`flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-semibold ring-1 transition-colors duration-200 ${active ? "bg-orange-deep text-white ring-orange-deep" : "bg-white ring-black/10 hover:ring-ink"}`}
     >
       {children}
     </a>

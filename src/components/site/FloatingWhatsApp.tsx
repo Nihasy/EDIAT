@@ -9,6 +9,7 @@ export function FloatingWhatsApp({ href }: { href: string }) {
   const pathname = usePathname();
   if (/^\/voitures\/[^/]+$/.test(pathname)) return null;
   return (
+    <aside aria-label="Contact rapide">
     <a
       href={href}
       target="_blank"
@@ -18,5 +19,6 @@ export function FloatingWhatsApp({ href }: { href: string }) {
     >
       <WhatsAppIcon className="h-7 w-7" />
     </a>
+    </aside>
   );
 }

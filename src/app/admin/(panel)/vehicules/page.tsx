@@ -22,7 +22,7 @@ export default async function VehiclesAdmin(props: PageProps<"/admin/vehicules">
         key={s || "all"}
         href={`/admin/vehicules${params.size ? `?${params}` : ""}`}
         aria-current={statut === s ? "page" : undefined}
-        className={`shrink-0 rounded-full px-3 py-1.5 text-sm whitespace-nowrap ${statut === s ? "bg-ink font-semibold text-white" : "bg-white text-black/70 hover:bg-black/5"}`}
+        className={`flex min-h-11 shrink-0 items-center rounded-full px-3.5 text-sm whitespace-nowrap ${statut === s ? "bg-ink font-semibold text-white" : "bg-white text-black/70 hover:bg-black/5"}`}
       >
         {label} <span className={statut === s ? "text-white/60" : "text-muted"}>{n}</span>
       </Link>
@@ -43,7 +43,7 @@ export default async function VehiclesAdmin(props: PageProps<"/admin/vehicules">
         <form className="ml-auto flex w-full gap-2 sm:w-auto">
           {statut && <input type="hidden" name="statut" value={statut} />}
           <label htmlFor="admin-q" className="sr-only">Rechercher</label>
-          <input id="admin-q" name="q" defaultValue={q} placeholder="Marque, modèle, réf., année…" className="input sm:w-64" />
+          <input id="admin-q" name="q" type="search" defaultValue={q} placeholder="Marque, modèle, réf., année…" className="input sm:w-64" />
           <button className="btn-dark">OK</button>
         </form>
       </div>

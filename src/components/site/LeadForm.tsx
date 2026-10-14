@@ -43,7 +43,7 @@ export function LeadForm({
   if (state?.ok) {
     return (
       <div role="status" className={`rounded-2xl p-6 text-center ${dark ? "bg-white/10 text-white" : "bg-emerald-50 text-ink"}`}>
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white">
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-700 text-white">
           <CheckIcon className="h-6 w-6" />
         </span>
         <p className="font-display mt-3 text-2xl font-semibold">Merci{state.name ? ` ${state.name}` : ""} !</p>

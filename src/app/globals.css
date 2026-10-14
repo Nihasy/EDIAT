@@ -6,9 +6,10 @@
   --color-graphite: #565c5c; /* logo background */
   --color-paper: #f4f5f6;
   --color-orange: #e97135; /* logo "E": accents, on dark backgrounds */
-  --color-orange-deep: #c9491a; /* buttons and text on light (4.7:1 with white) */
+  --color-orange-deep: #b43f0e; /* buttons and text on light (5.7:1 with white) */
   --color-cyan: #00add7; /* logo "G": accents, on dark backgrounds */
-  --color-cyan-deep: #007896; /* links and text on light (5:1) */
+  --color-cyan-deep: #006f8b; /* links and text on light (5.6:1) */
+  --color-cyan-light: #5fd0ee; /* small text on dark backgrounds (8.9:1 on charcoal) */
   --color-muted: #6b7072; /* 4.6:1 on paper */
   --font-sans: var(--font-inter);
   --font-display: var(--font-oswald);
@@ -68,11 +69,11 @@ body {
 }
 
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition disabled:opacity-50;
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 @utility btn-primary {
-  @apply btn bg-orange-deep text-white shadow-sm shadow-orange/30 hover:bg-[#b23f14];
+  @apply btn bg-orange-deep text-white shadow-sm shadow-orange/30 hover:bg-[#9c360b];
 }
 
 @utility btn-dark {
@@ -80,7 +81,7 @@ body {
 }
 
 @utility btn-cyan {
-  @apply btn bg-cyan-deep text-white hover:bg-[#00657e];
+  @apply btn bg-cyan-deep text-white hover:bg-[#005a71];
 }
 
 @utility btn-ghost {
@@ -88,7 +89,7 @@ body {
 }
 
 @utility btn-whatsapp {
-  @apply btn bg-[#1da851] text-white hover:bg-[#178a43];
+  @apply btn bg-[#15803d] text-white hover:bg-[#116632];
 }
 
 @utility card {
