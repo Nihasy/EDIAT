@@ -84,7 +84,7 @@ export function LeadItem({ lead }: { lead: Lead }) {
           onChange={(e) => setNote(e.target.value)}
           onBlur={() => note !== lead.adminNote && save(status, note)}
           placeholder="Note interne (rappelé le…, budget…)"
-          className="input min-w-0 flex-1 py-2"
+          className="input min-h-11 min-w-0 flex-1 py-2"
         />
         <span className="flex w-24 items-center gap-1 text-xs text-muted" aria-live="polite">{pending ? <Spinner /> : saved}</span>
         <button

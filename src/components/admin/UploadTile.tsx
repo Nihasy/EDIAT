@@ -17,16 +17,18 @@ export function useUploads(onUploaded: (url: string) => Promise<void> | void) {
     setError("");
     setProgress({ done: 0, total: list.length });
     startTransition(async () => {
-      try {
-        for (const [i, file] of list.entries()) {
+      // One bad file does not stop the others: each failure is listed.
+      const failed: string[] = [];
+      for (const [i, file] of list.entries()) {
+        try {
           await onUploaded(await uploadImage(file));
-          setProgress({ done: i + 1, total: list.length });
+        } catch (err) {
+          failed.push(list.length > 1 ? `${file.name} : ${(err as Error).message}` : (err as Error).message);
         }
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setProgress(null);
+        setProgress({ done: i + 1, total: list.length });
       }
+      setError(failed.join("\n"));
+      setProgress(null);
     });
   }
 

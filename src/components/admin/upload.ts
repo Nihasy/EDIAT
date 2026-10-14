@@ -10,12 +10,22 @@ async function shrink(file: File, maxSide = 1600, quality = 0.85): Promise<Blob>
   return new Promise((resolve) => canvas.toBlob((b) => resolve(b ?? file), "image/jpeg", quality));
 }
 
+const UNREADABLE =
+  "Photo illisible : envoyez un JPG, PNG ou WEBP. (Photos d'iPhone en HEIC : Réglages → Appareil photo → Formats → « Le plus compatible ».)";
+
 export async function uploadImage(file: File): Promise<string> {
-  const blob = await shrink(file);
+  if (/\.(heic|heif)$/i.test(file.name) || /hei[cf]/i.test(file.type)) throw new Error(UNREADABLE);
+  let blob: Blob;
+  try {
+    blob = await shrink(file);
+  } catch {
+    // The browser could not decode it: not an image, or a damaged file.
+    throw new Error(UNREADABLE);
+  }
   const body = new FormData();
   body.append("file", new File([blob], "image.jpg", { type: blob.type || file.type }));
   // Light version for lists and grids (~40-80 KB instead of several hundred).
-  const thumb = await shrink(file, 720, 0.8);
+  const thumb = await shrink(file, 720, 0.8).catch(() => blob);
   if (thumb.type === "image/jpeg") body.append("thumb", new File([thumb], "thumb.jpg", { type: "image/jpeg" }));
   const res = await fetch("/api/upload", { method: "POST", body });
   const data = await res.json().catch(() => ({ error: "Erreur d'envoi" }));

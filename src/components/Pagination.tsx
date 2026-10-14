@@ -22,7 +22,7 @@ export function Pagination({
           ‹ <span className="ml-1 hidden sm:inline">Précédent</span>
         </Link>
       ) : (
-        <span className={`${base} border border-black/10 text-black/30`} aria-hidden="true">‹ <span className="ml-1 hidden sm:inline">Précédent</span></span>
+        <span className={`${base} border border-black/10 text-black/55`} aria-hidden="true">‹ <span className="ml-1 hidden sm:inline">Précédent</span></span>
       )}
       {pageWindow(page, pageCount).map((p, i) =>
         p === "…" ? (
@@ -40,7 +40,7 @@ export function Pagination({
           <span className="mr-1 hidden sm:inline">Suivant</span> ›
         </Link>
       ) : (
-        <span className={`${base} border border-black/10 text-black/30`} aria-hidden="true"><span className="mr-1 hidden sm:inline">Suivant</span> ›</span>
+        <span className={`${base} border border-black/10 text-black/55`} aria-hidden="true"><span className="mr-1 hidden sm:inline">Suivant</span> ›</span>
       )}
     </nav>
   );

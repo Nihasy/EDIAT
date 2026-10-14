@@ -151,7 +151,7 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
           <PendingTiles count={uploads.remaining} className="aspect-[4/3]" />
           <UploadTile label="Ajouter des photos" className="aspect-[4/3]" pending={uploads.pending} progress={uploads.progress} onFiles={uploads.upload} />
         </div>
-        {uploads.error && <p role="alert" className="mt-3 text-sm text-red-700">{uploads.error}</p>}
+        {uploads.error && <p role="alert" className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm whitespace-pre-line text-red-700">{uploads.error}</p>}
         <p className="mt-3 text-xs text-muted">Conseil : 8 à 15 photos — 3/4 avant, 3/4 arrière, profil, intérieur, tableau de bord (kilométrage), moteur, coffre.</p>
       </Section>
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { DocIcon, KeyIcon, SearchIcon, ShieldIcon, ShipIcon, WalletIcon } from "@/components/Icons";
 import { BodyIcon } from "@/components/site/BodyIcon";
 import { HeroCarousel, type Slide } from "@/components/site/HeroCarousel";
@@ -10,8 +11,8 @@ import { fromMonthly } from "@/lib/finance";
 import { formatAr, formatNumber, waLink } from "@/lib/format";
 import { BODIES, FEATURED_BRANDS, STATUSES, vehicleHref, vehicleTitle, type Vehicle } from "@/lib/vehicle";
 
-// Served from the cache, rebuilt after each back-office change.
-export const revalidate = 3600;
+// Rendered on each visit from the cached catalogue (lib/catalog): the
+// database is not read, and a change made in the back-office shows at once.
 
 const BRAND_LOGOS: Record<string, string> = {
   Hyundai: "/brands/hyundai.jpg",
@@ -27,6 +28,7 @@ function countBy(list: Vehicle[], key: (v: Vehicle) => string) {
 }
 
 export default async function HomePage() {
+  await connection();
   const [all, settings] = await Promise.all([publicVehicles(), siteSettings()]);
   const listed = all.filter((v) => STATUSES[v.status].listed);
   const showroom = listed.filter((v) => v.status === "showroom");

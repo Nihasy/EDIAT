@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { CheckIcon } from "@/components/Icons";
 import { Rail } from "@/components/site/Rail";
 import { SectionTitle } from "@/components/site/SectionTitle";
@@ -9,7 +10,6 @@ import { publicVehicles, siteSettings } from "@/lib/catalog";
 import { fromMonthly } from "@/lib/finance";
 import { FinanceRequest } from "./FinanceRequest";
 
-export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await siteSettings();
@@ -20,6 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FinancePage() {
+  await connection();
   const [settings, all] = await Promise.all([siteSettings(), publicVehicles()]);
   const f = settings.finance;
   if (!f.enabled) notFound();

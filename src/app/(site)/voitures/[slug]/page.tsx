@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
+import { connection } from "next/server";
 import { Gallery } from "@/components/Gallery";
 import { CalendarIcon, CheckIcon, FuelIcon, GaugeIcon, GearIcon, PhoneIcon } from "@/components/Icons";
 import { FavoriteButton } from "@/components/FavoriteButton";
@@ -18,14 +19,10 @@ import { formatAr, formatKm, formatNumber, telLink, waLink } from "@/lib/format"
 import { siteUrl } from "@/lib/site";
 import { idFromSlug, STATUSES, vehicleFullTitle, vehicleHref, vehicleTitle } from "@/lib/vehicle";
 
-// Rendered on first visit, then served from the cache until the catalogue changes.
-export const revalidate = 3600;
-
-export function generateStaticParams() {
-  return [];
-}
-
+// Rendered on each visit from the cached catalogue (lib/catalog): the
+// database is not read, and a change made in the back-office shows at once.
 async function load(slug: string) {
+  await connection();
   const id = idFromSlug(slug);
   return Number.isInteger(id) ? publicVehicle(id) : null;
 }

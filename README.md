@@ -114,6 +114,17 @@ Les tables sont créées automatiquement au premier chargement.
 | `ADMIN_SECRET` | Optionnel : clé de signature des sessions (sinon dérivée du mot de passe). |
 | `SITE_URL` | Optionnel : adresse publique utilisée dans les liens partagés et le sitemap. |
 
+## Tests
+
+Parcours vérifiés de bout en bout (Playwright, base neuve avec 24 véhicules, 158 contrôles) : catalogue (filtres,
+tris, pagination, recherche avec accents et fautes de casse, cas absurdes dans l'adresse), fiche (prix barré,
+mensualité, plein écran, 404, redirections), formulaires (erreurs, champ piège anti-robots, limite de 8 demandes /
+heure, textes piégés affichés en texte), demandes dans le back-office (statut, note, recherche par téléphone sous
+toute forme, suppression), véhicules (validations, photos invalides, miniatures, doublons de référence, actions
+groupées, duplication, suppression), paramètres (valeurs invalides, financement désactivé), favoris et comparatif
+(stockage corrompu, véhicule retiré), accès protégé au back-office et blocage après 10 mauvais mots de passe.
+Accessibilité et affichage contrôlés de 320 à 1920 px (axe-core, chevauchements, zones tactiles, clavier).
+
 ## Technique
 
 Next.js 16 (App Router, Server Actions), Tailwind CSS 4, Neon Postgres / PGlite, Vercel Blob.

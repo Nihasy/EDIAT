@@ -30,11 +30,11 @@ export default async function LeadsAdmin(props: PageProps<"/admin/demandes">) {
       <p className="mt-1 text-sm text-muted">Tous les formulaires du site arrivent ici : intérêt, essai, import sur commande, financement, reprise, contact.</p>
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <Link href={href({ statut: "", page: "" })} aria-current={!statut ? "page" : undefined} className={`flex min-h-11 items-center rounded-full px-3.5 text-sm ${!statut ? "bg-ink font-semibold text-white" : "bg-white hover:bg-black/5"}`}>
-          Toutes <span className="opacity-60">{all}</span>
+          Toutes <span className="opacity-80">{all}</span>
         </Link>
         {(Object.keys(LEAD_STATUSES) as (keyof typeof LEAD_STATUSES)[]).map((s) => (
           <Link key={s} href={href({ statut: s, page: "" })} aria-current={statut === s ? "page" : undefined} className={`flex min-h-11 items-center rounded-full px-3.5 text-sm ${statut === s ? "bg-ink font-semibold text-white" : "bg-white hover:bg-black/5"}`}>
-            {LEAD_STATUSES[s].label} <span className="opacity-60">{counts[s] ?? 0}</span>
+            {LEAD_STATUSES[s].label} <span className="opacity-80">{counts[s] ?? 0}</span>
           </Link>
         ))}
         <form className="ml-auto flex w-full gap-2 sm:w-auto">

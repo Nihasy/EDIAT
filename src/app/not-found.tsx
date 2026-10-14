@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { BottomNav } from "@/components/site/BottomNav";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
@@ -8,6 +9,7 @@ import { waLink } from "@/lib/format";
 // Unknown addresses: same header, footer and tab bar as the rest of the site,
 // so the visitor can carry on browsing.
 export default async function NotFound() {
+  await connection();
   const settings = await siteSettings();
   const wa = waLink(settings.whatsapp, "Bonjour Ediat Garage, je souhaite des informations.");
   return (
