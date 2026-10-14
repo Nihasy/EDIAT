@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/* Ediat Garage — brand colours taken from the EG logo. */
+@theme inline {
+  --color-ink: #1f2224; /* charcoal, header and footer */
+  --color-graphite: #565c5c; /* logo background */
+  --color-paper: #f4f5f6;
+  --color-orange: #e97135; /* logo "E": accents, on dark backgrounds */
+  --color-orange-deep: #c9491a; /* buttons and text on light (4.7:1 with white) */
+  --color-cyan: #00add7; /* logo "G": accents, on dark backgrounds */
+  --color-cyan-deep: #007896; /* links and text on light (5:1) */
+  --color-muted: #6b7072; /* 4.6:1 on paper */
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-oswald);
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* iOS Safari zooms the whole page when a focused field is under 16px. */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+.font-display {
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* The grey gradient of the logo: light edges, dark centre. */
+.bg-brand-gradient {
+  background: linear-gradient(90deg, #9a9c9c 0%, #5b6060 38%, #4f5454 55%, #8f9292 100%);
+}
+
+.bg-orange-gradient {
+  background: linear-gradient(100deg, #ef7d2e 0%, #d4441c 100%);
+}
+
+/* Swirls of the Ediat Facility posters, as a light background pattern. */
+.bg-swirl {
+  background-color: #f7f7f8;
+  background-image:
+    radial-gradient(120% 60% at 0% 0%, rgba(0, 0, 0, 0.035) 0 40%, transparent 41%),
+    radial-gradient(90% 50% at 100% 100%, rgba(0, 0, 0, 0.035) 0 40%, transparent 41%);
+}
+
+@utility input {
+  @apply w-full rounded-lg border border-black/15 bg-white px-3 py-2.5 text-[15px] outline-none focus:border-cyan-deep focus:ring-2 focus:ring-cyan/25;
+}
+
+@utility label {
+  @apply mb-1 block text-xs font-semibold tracking-wide text-black/60 uppercase;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition disabled:opacity-50;
+}
+
+@utility btn-primary {
+  @apply btn bg-orange-deep text-white shadow-sm shadow-orange/30 hover:bg-[#b23f14];
+}
+
+@utility btn-dark {
+  @apply btn bg-ink text-white hover:bg-black;
+}
+
+@utility btn-cyan {
+  @apply btn bg-cyan-deep text-white hover:bg-[#00657e];
+}
+
+@utility btn-ghost {
+  @apply btn border border-black/15 bg-white text-ink hover:border-ink;
+}
+
+@utility btn-whatsapp {
+  @apply btn bg-[#1da851] text-white hover:bg-[#178a43];
+}
+
+@utility card {
+  @apply rounded-2xl border border-black/10 bg-white;
+}
+
+@utility chip {
+  @apply inline-flex items-center gap-1 rounded-full bg-black/[0.05] px-2.5 py-1 text-xs font-medium text-black/70;
+}
