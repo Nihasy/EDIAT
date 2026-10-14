@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { Img } from "@/components/ui/Img";
 import { useFormAction } from "@/components/useFormAction";
+import { StarIcon } from "@/components/Icons";
 import { fromMonthly, type FinanceSettings } from "@/lib/finance";
 import { formatAr, formatNumber, parseAmount } from "@/lib/format";
 import { thumbUrl } from "@/lib/images";
@@ -124,7 +125,7 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
           </Field>
           <label className="flex items-center gap-2 self-center pt-4 text-sm font-medium">
             <input type="checkbox" name="featured" defaultChecked={vehicle?.featured} className="h-4 w-4 accent-[var(--color-orange-deep)]" />
-            ★ Coup de cœur (mis en avant)
+            <StarIcon className="h-4 w-4 text-orange-deep" /> Coup de cœur (mis en avant)
           </label>
         </div>
       </Section>
@@ -133,14 +134,14 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
           {images.map((src, i) => (
             <div key={src} className="group relative">
-              <div className={`aspect-[4/3] overflow-hidden rounded-lg border-2 ${i === 0 ? "border-orange-deep" : "border-transparent"}`}>
+              <div className={`shimmer aspect-[4/3] overflow-hidden rounded-lg border-2 ${i === 0 ? "border-orange-deep" : "border-transparent"}`}>
                 <Img src={thumbUrl(src)} fallback={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
               </div>
               {i === 0 && <span className="absolute top-1.5 left-1.5 rounded bg-orange-deep px-1.5 py-0.5 text-[10px] font-bold text-white">PRINCIPALE</span>}
               <div className="mt-1 flex justify-between gap-1">
                 <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Déplacer à gauche" className="h-9 flex-1 rounded-md bg-black/5 text-sm disabled:opacity-30">←</button>
                 {i > 0 && (
-                  <button type="button" onClick={() => { setImages((l) => [src, ...l.filter((x) => x !== src)]); setDirty(true); }} className="h-9 flex-1 rounded-md bg-black/5 text-xs" title="Photo principale">★</button>
+                  <button type="button" onClick={() => { setImages((l) => [src, ...l.filter((x) => x !== src)]); setDirty(true); }} className="flex h-9 flex-1 items-center justify-center rounded-md bg-black/5" title="Photo principale" aria-label="Mettre en photo principale"><StarIcon className="h-4 w-4 text-orange-deep" /></button>
                 )}
                 <button type="button" onClick={() => move(i, 1)} disabled={i === images.length - 1} aria-label="Déplacer à droite" className="h-9 flex-1 rounded-md bg-black/5 text-sm disabled:opacity-30">→</button>
                 <button type="button" onClick={() => { setImages((l) => l.filter((x) => x !== src)); setDirty(true); }} aria-label="Supprimer la photo" className="h-9 flex-1 rounded-md bg-red-50 text-sm text-red-700">✕</button>

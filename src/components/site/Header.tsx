@@ -3,6 +3,7 @@ import type { Settings } from "@/lib/settings-shared";
 import { PhoneIcon } from "../Icons";
 import { Logo } from "../Logo";
 import { WhatsAppIcon } from "../WhatsAppIcon";
+import { HeaderFavorites } from "./HeaderFavorites";
 import { MobileMenu } from "./MobileMenu";
 import { NavLinks } from "./NavLinks";
 
@@ -41,7 +42,8 @@ export function Header({ settings }: { settings: Settings }) {
             >
               <WhatsAppIcon className="h-4 w-4" /> WhatsApp
             </a>
-            <MobileMenu links={[{ href: "/", label: "Accueil" }, ...NAV]} />
+            <HeaderFavorites />
+            <MobileMenu links={[{ href: "/", label: "Accueil" }, ...NAV, { href: "/favoris", label: "Mes favoris" }]} />
           </div>
         </div>
         <div className="h-[3px] bg-[linear-gradient(90deg,var(--color-orange)_0_60%,var(--color-cyan)_60%_100%)]" aria-hidden="true" />

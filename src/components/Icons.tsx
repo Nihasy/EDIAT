@@ -62,3 +62,39 @@ export const CameraIcon = ({ className }: P) => (
 export const MenuIcon = ({ className }: P) => (
   <svg {...base(className)}><path d="M4 7h16M4 12h16M4 17h16" /></svg>
 );
+export const HeartIcon = ({ className, filled = false }: P & { filled?: boolean }) => (
+  <svg {...base(className)} fill={filled ? "currentColor" : "none"}><path d="M12 20s-7-4.4-9-9.1C1.7 7.6 3.9 4.5 7.2 4.5c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.3 0 5.5 3.1 4.2 6.4C19 15.6 12 20 12 20z" /></svg>
+);
+export const LockIcon = ({ className }: P) => (
+  <svg {...base(className)}><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+);
+export const TagIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z" /><circle cx="8" cy="8" r="1.5" /></svg>
+);
+export const ArrowDownIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+);
+export const StarIcon = ({ className }: P) => (
+  <svg {...base(className)} fill="currentColor" stroke="none"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" /></svg>
+);
+export const SparkIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18" /></svg>
+);
+export const HomeIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" /></svg>
+);
+export const ExpandIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg>
+);
+export const ShareIcon = ({ className }: P) => (
+  <svg {...base(className)}><circle cx="18" cy="5" r="2.5" /><circle cx="6" cy="12" r="2.5" /><circle cx="18" cy="19" r="2.5" /><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4" /></svg>
+);
+export const MailIcon = ({ className }: P) => (
+  <svg {...base(className)}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>
+);
+export const RefreshIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20v-4h-4" /></svg>
+);
+export const CompareIcon = ({ className }: P) => (
+  <svg {...base(className)}><rect x="3" y="4" width="7" height="16" rx="1.5" /><rect x="14" y="4" width="7" height="16" rx="1.5" /></svg>
+);

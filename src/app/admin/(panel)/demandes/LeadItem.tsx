@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { removeLead, saveLead } from "@/app/admin/actions";
+import { LeadKindIcon } from "@/components/admin/LeadKindIcon";
 import { LeadStatusBadge } from "@/components/admin/LeadStatusBadge";
 import { PhoneIcon } from "@/components/Icons";
 import { Spinner } from "@/components/ui/Spinner";
@@ -30,14 +31,14 @@ export function LeadItem({ lead }: { lead: Lead }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="flex flex-wrap items-center gap-2">
-            <span aria-hidden="true">{LEAD_KINDS[lead.kind].icon}</span>
+            <LeadKindIcon kind={lead.kind} />
             <strong className="text-lg">{lead.name}</strong>
             <LeadStatusBadge status={lead.status} />
           </p>
           <p className="text-sm text-muted">{LEAD_KINDS[lead.kind].label} · {formatDateTime(lead.createdAt)}</p>
           {lead.vehicleLabel && (
             <p className="mt-1 text-sm">
-              🚗 {lead.vehicleId ? <Link href={`/admin/vehicules/${lead.vehicleId}`} className="font-semibold text-cyan-deep hover:underline">{lead.vehicleLabel}</Link> : lead.vehicleLabel}
+              {lead.vehicleId ? <Link href={`/admin/vehicules/${lead.vehicleId}`} className="font-semibold text-cyan-deep hover:underline">{lead.vehicleLabel}</Link> : lead.vehicleLabel}
             </p>
           )}
         </div>

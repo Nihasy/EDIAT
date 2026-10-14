@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { STATUSES, type VehicleStatus } from "@/lib/vehicle";
+import { LinkPendingOverlay } from "../LinkPendingOverlay";
 import { StatusBadge } from "../StatusBadge";
 
 export type Slide = {
@@ -67,7 +68,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
             href={s.href}
             aria-roledescription="diapositive"
             aria-label={`${i + 1} sur ${count} : ${s.title}, ${s.price}`}
-            className="relative block aspect-[4/3] max-h-[78vh] w-full shrink-0 snap-center overflow-hidden sm:aspect-[16/9] lg:aspect-[21/8]"
+            className="shimmer-dark relative block aspect-[4/3] max-h-[78dvh] w-full shrink-0 snap-center overflow-hidden sm:aspect-[16/9] lg:aspect-[21/8]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -77,6 +78,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
               fetchPriority={i === 0 ? "high" : "auto"}
               className="absolute inset-0 h-full w-full object-cover"
             />
+            <LinkPendingOverlay />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent lg:bg-gradient-to-r lg:from-black/80 lg:via-black/30" />
             <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 pb-9 text-white sm:pb-10 lg:top-0 lg:flex lg:flex-col lg:justify-center lg:pb-0">
               <StatusBadge status={s.status} className="self-start" />

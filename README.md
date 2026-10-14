@@ -44,6 +44,23 @@ de 360 px à 1440 px.
 
 Chaque formulaire enregistre une **demande** dans le back-office, puis propose de continuer sur WhatsApp.
 
+- **/favoris** : les véhicules gardés avec le cœur (enregistrés dans le navigateur, sans compte) et un
+  **comparatif** de 2 ou 3 véhicules (meilleur prix, plus faible kilométrage et année la plus récente en vert).
+
+### Ergonomie (règles UI UX Pro Max)
+
+- **Badges** : statut = couleur + icône + mot (jamais la couleur seule) ; arguments de vente (prix en baisse en %,
+  coup de cœur, nouveau, faible kilométrage) au plus 1 par carte, 4 sur la fiche.
+- **Chargements** : photos en fondu sur un fond animé discret ; squelettes à la forme exacte des cartes ; la carte
+  ou la bannière touchée affiche un indicateur pendant l'ouverture ; le catalogue s'estompe avec « Mise à jour… »
+  pendant un changement de filtre ; animations coupées si l'appareil demande moins de mouvement.
+- **Navigation** : barre d'onglets en bas d'écran sur téléphone et tablette (Accueil, Véhicules, Favoris, Facility,
+  WhatsApp), remplacée sur la fiche véhicule par la barre Favori / Appeler / WhatsApp ; photos en plein écran
+  (swipe, flèches, vignettes, Échap) ; bouton Partager (menu de partage du téléphone, sinon copie du lien).
+- Zones tactiles de 44 px, icônes SVG (aucun emoji dans l'interface), défilement doux.
+
+Le skill est installé dans `.claude/skills/ui-ux-pro-max/` à la racine du dépôt (données et guide).
+
 ## Back-office (`/admin`)
 
 - **Tableau de bord** : stock par statut, valeur du showroom, ventes et marge du mois, demandes à traiter.

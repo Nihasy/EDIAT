@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LeadKindIcon } from "@/components/admin/LeadKindIcon";
 import { LeadStatusBadge } from "@/components/admin/LeadStatusBadge";
 import { StatusBadge } from "@/components/StatusBadge";
 import { formatAr, formatDateTime } from "@/lib/format";
@@ -67,7 +68,7 @@ export default async function Dashboard() {
             {leads.items.map((l) => (
               <li key={l.id}>
                 <Link href={`/admin/demandes#d${l.id}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 hover:bg-paper">
-                  <span aria-hidden="true">{LEAD_KINDS[l.kind].icon}</span>
+                  <LeadKindIcon kind={l.kind} />
                   <span className="font-semibold">{l.name}</span>
                   <span className="text-sm text-muted">{LEAD_KINDS[l.kind].label}{l.vehicleLabel ? ` · ${l.vehicleLabel}` : ""}</span>
                   <span className="ml-auto flex items-center gap-3 text-xs text-muted">{formatDateTime(l.createdAt)} <LeadStatusBadge status={l.status} /></span>

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// <img> with a pulsing placeholder (its own background) until loaded.
+// <img> that fades in once loaded; the container shows the placeholder
+// (shimmer) behind it, so nothing jumps or blinks.
 // `fallback`: used once if `src` fails (e.g. an old photo without thumbnail).
 export function Img({
   className = "",
@@ -48,7 +49,7 @@ export function Img({
         if (fallback && current !== fallback) setCurrent(fallback);
         else setFailed(true);
       }}
-      className={`${failed ? "invisible" : loaded ? "" : "bg-black/[0.07] motion-safe:animate-pulse"} ${className}`}
+      className={`transition-opacity duration-300 ${failed ? "invisible" : loaded ? "opacity-100" : "opacity-0"} ${className}`}
       {...rest}
     />
   );

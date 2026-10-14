@@ -7,6 +7,7 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { readFilters, searchVehicles, siteSettings, SORTS } from "@/lib/catalog";
 import { formatAr, formatNumber, waLink } from "@/lib/format";
 import { isStatus, PUBLIC_DISPO, STATUSES } from "@/lib/vehicle";
+import { CatalogNav, NavChip, PendingResults } from "./CatalogNav";
 import { Filters } from "./Filters";
 import { FilterSheet } from "./FilterSheet";
 import { SortSelect } from "./SortSelect";
@@ -51,6 +52,7 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
   const activeCount = Object.keys(base).filter((k) => k !== "tri" && k !== "q").length;
 
   return (
+    <CatalogNav>
     <div className="mx-auto max-w-7xl pb-10">
       <div className="px-4 pt-4 sm:pt-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
@@ -76,14 +78,9 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
             const on = (f.dispo ?? "") === d.id;
             const n = d.id ? result.facets.dispo.find((x) => x.value === d.id)?.n : undefined;
             return (
-              <Link
-                key={d.id || "all"}
-                href={href(base, { dispo: d.id })}
-                aria-current={on ? "true" : undefined}
-                className={`shrink-0 rounded-full px-3.5 py-2 text-sm font-semibold ring-1 transition ${on ? "bg-orange-deep text-white ring-orange-deep" : "bg-white ring-black/10 hover:ring-ink"}`}
-              >
-                {d.label}{n != null && <span className={on ? "text-white/75" : "text-muted"}> {n}</span>}
-              </Link>
+              <NavChip key={d.id || "all"} href={href(base, { dispo: d.id })} active={on}>
+                {d.label}{n != null && <span className={on ? "ml-1 text-white/75" : "ml-1 text-muted"}>{n}</span>}
+              </NavChip>
             );
           })}
           <div className="ml-auto shrink-0 pl-2">
@@ -100,6 +97,7 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
         </aside>
 
         <section aria-label="Résultats" className="min-w-0">
+          <PendingResults>
           {chips.length > 0 && (
             <ul className="mb-3 flex flex-wrap gap-2">
               {chips.map(([k, v]) => (
@@ -136,8 +134,10 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
           )}
 
           <Pagination page={result.page} pageCount={result.pages} hrefFor={(p) => href(base, { page: p > 1 ? String(p) : "" })} />
+          </PendingResults>
         </section>
       </div>
     </div>
+    </CatalogNav>
   );
 }

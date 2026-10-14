@@ -44,7 +44,7 @@ export function FilterSheet({ active, total, children }: { active: number; total
         className="fixed inset-0 z-50 lg:hidden"
       >
         <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} aria-hidden="true" />
-        <div className="absolute inset-x-0 bottom-0 flex max-h-[92vh] flex-col rounded-t-3xl bg-white shadow-2xl sm:inset-x-auto sm:top-0 sm:right-0 sm:max-h-none sm:w-[420px] sm:rounded-none">
+        <div className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] flex-col rounded-t-3xl bg-white shadow-2xl sm:inset-x-auto sm:top-0 sm:right-0 sm:max-h-none sm:w-[420px] sm:rounded-none">
           <div className="flex items-center justify-between border-b border-black/10 px-5 py-3">
             <p className="font-display text-xl font-bold">Filtres</p>
             <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="flex h-10 w-10 items-center justify-center rounded-full text-2xl hover:bg-black/5">×</button>

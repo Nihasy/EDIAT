@@ -1,12 +1,12 @@
 // Requests sent from the public forms (client-safe definitions).
 
 export const LEAD_KINDS = {
-  vehicule: { label: "Intérêt pour un véhicule", icon: "🚗" },
-  essai: { label: "Demande d'essai / visite", icon: "🔑" },
-  sur_commande: { label: "Recherche sur commande", icon: "🚢" },
-  financement: { label: "Demande Ediat Facility", icon: "💳" },
-  reprise: { label: "Reprise de véhicule", icon: "🔁" },
-  contact: { label: "Message", icon: "✉️" },
+  vehicule: { label: "Intérêt pour un véhicule" },
+  essai: { label: "Demande d'essai / visite" },
+  sur_commande: { label: "Recherche sur commande" },
+  financement: { label: "Demande Ediat Facility" },
+  reprise: { label: "Reprise de véhicule" },
+  contact: { label: "Message" },
 } as const;
 
 export type LeadKind = keyof typeof LEAD_KINDS;

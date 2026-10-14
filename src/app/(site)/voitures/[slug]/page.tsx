@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Gallery } from "@/components/Gallery";
-import { CheckIcon, PhoneIcon } from "@/components/Icons";
+import { CalendarIcon, CheckIcon, FuelIcon, GaugeIcon, GearIcon, PhoneIcon } from "@/components/Icons";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { ShareButton } from "@/components/ShareButton";
+import { VehicleBadges } from "@/components/VehicleBadges";
 import { FinanceSimulator } from "@/components/site/FinanceSimulator";
 import { LeadForm } from "@/components/site/LeadForm";
 import { Rail } from "@/components/site/Rail";
@@ -94,7 +97,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
   };
 
   return (
-    <div className="pb-24 lg:pb-0">
+    <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <div className="mx-auto max-w-7xl px-4 pt-4">
         <nav aria-label="Fil d'Ariane" className="text-sm text-muted [&_a]:inline-block [&_a]:py-1.5">
@@ -112,26 +115,36 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
 
       <div className="mx-auto grid max-w-7xl gap-8 px-0 pt-2 sm:px-4 lg:grid-cols-[1fr_380px]">
         <div className="min-w-0">
-          <Gallery images={v.images} alt={title} />
+          <Gallery
+            images={v.images}
+            alt={title}
+            overlay={
+              <>
+                <StatusBadge status={v.status} long className="absolute top-3 left-3" />
+                <div className="absolute top-1 right-1 flex">
+                  <ShareButton title={title} url={url} />
+                  <FavoriteButton id={v.id} label={title} />
+                </div>
+              </>
+            }
+          />
 
           <div className="mt-6 px-4 sm:px-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge status={v.status} long />
-              {v.featured && !closed && <span className="rounded-full bg-orange/10 px-2.5 py-1 text-xs font-bold text-orange-deep">★ Coup de cœur</span>}
-            </div>
+            <VehicleBadges v={v} max={4} size="md" />
             <h1 className="font-display mt-3 text-4xl leading-tight font-bold sm:text-5xl">{vehicleTitle(v)}</h1>
             <p className="mt-1 text-lg text-muted">{[v.version, v.year].filter(Boolean).join(" · ")}</p>
 
-            <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <ul className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
               {[
-                ["Année", v.year ? String(v.year) : "—"],
-                ["Kilométrage", v.mileageKm != null ? `${formatNumber(v.mileageKm)} km` : "—"],
-                ["Carburant", v.fuel || "—"],
-                ["Boîte", v.gearbox || "—"],
-              ].map(([k, val]) => (
-                <li key={k} className="rounded-xl border border-black/10 bg-white px-4 py-3">
-                  <p className="text-xs text-muted uppercase">{k}</p>
-                  <p className="mt-0.5 font-semibold">{val}</p>
+                { k: "Année", val: v.year ? String(v.year) : "—", icon: <CalendarIcon className="h-6 w-6" /> },
+                { k: "Kilométrage", val: v.mileageKm != null ? `${formatNumber(v.mileageKm)} km` : "—", icon: <GaugeIcon className="h-6 w-6" /> },
+                { k: "Carburant", val: v.fuel || "—", icon: <FuelIcon className="h-6 w-6" /> },
+                { k: "Boîte", val: v.gearbox || "—", icon: <GearIcon className="h-6 w-6" /> },
+              ].map(({ k, val, icon }) => (
+                <li key={k} className="flex flex-col items-center gap-1 rounded-2xl bg-white px-1 py-3 text-center ring-1 ring-black/5 sm:py-4">
+                  <span className="text-cyan-deep">{icon}</span>
+                  <span className="text-[13px] leading-tight font-bold sm:text-[15px]">{val}</span>
+                  <span className="text-[10px] tracking-wide text-muted uppercase sm:text-[11px]">{k}</span>
                 </li>
               ))}
             </ul>
@@ -265,8 +278,9 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
             <p className="font-display truncate text-lg leading-tight font-bold">{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
             {monthly && !closed ? <p className="truncate text-xs text-orange-deep">dès {formatAr(monthly)} / mois</p> : <p className="truncate text-xs text-muted">{STATUSES[v.status].short}</p>}
           </div>
-          <a href={telLink(settings.phone)} aria-label="Appeler" className="flex h-12 w-12 items-center justify-center rounded-full border border-black/15"><PhoneIcon className="h-5 w-5" /></a>
-          <a href={waLink(settings.whatsapp, waText)} target="_blank" rel="noopener" className="btn-whatsapp h-12"><WhatsAppIcon className="h-5 w-5" /> WhatsApp</a>
+          <FavoriteButton id={v.id} label={title} variant="plain" />
+          <a href={telLink(settings.phone)} aria-label="Appeler" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-black/15"><PhoneIcon className="h-5 w-5" /></a>
+          <a href={waLink(settings.whatsapp, waText)} target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp" className="btn-whatsapp h-12 shrink-0 px-4"><WhatsAppIcon className="h-5 w-5" /> <span className="hidden min-[400px]:inline">WhatsApp</span></a>
         </div>
       </div>
     </div>

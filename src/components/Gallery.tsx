@@ -2,14 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import { thumbUrl } from "@/lib/images";
+import { ExpandIcon } from "./Icons";
+import { Lightbox } from "./Lightbox";
 import { Img } from "./ui/Img";
 
 // Vehicle photo gallery: swipe (native scroll-snap), arrows, dots, a "2 / 5"
 // counter, keyboard arrows and light thumbnails. Only the first photo loads
 // eagerly; the others load as they come into view.
-export function Gallery({ images, alt }: { images: string[]; alt: string }) {
+export function Gallery({ images, alt, overlay }: { images: string[]; alt: string; overlay?: React.ReactNode }) {
   const track = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [viewer, setViewer] = useState<number | null>(null);
   // Photo we are animating to: while set, intermediate scroll positions are
   // ignored (no flickering counter, and arrows pressed mid-animation start
   // from the photo being shown, not from one passed on the way).
@@ -82,12 +85,13 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
           onTouchStart={release}
           onWheel={release}
           aria-label="Photos du véhicule, utilisez les flèches pour naviguer"
-          className="flex aspect-[4/3] snap-x snap-mandatory overflow-x-auto overflow-y-hidden bg-white md:rounded-2xl [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink [&::-webkit-scrollbar]:hidden"
+          className="shimmer flex aspect-[4/3] max-h-[72vh] w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden md:rounded-2xl [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink [&::-webkit-scrollbar]:hidden"
         >
           {images.map((src, i) => (
             <div
               key={src}
-              className="h-full w-full shrink-0 snap-center"
+              onClick={() => setViewer(i)}
+              className="h-full w-full shrink-0 cursor-zoom-in snap-center"
               role="group"
               aria-roledescription="photo"
               aria-label={`${i + 1} sur ${count}`}
@@ -104,6 +108,14 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
           ))}
         </div>
 
+        {overlay}
+        <button
+          type="button"
+          onClick={() => setViewer(active)}
+          className="absolute right-3 bottom-3 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-black/60 px-3.5 text-sm font-semibold text-white backdrop-blur transition-colors duration-200 hover:bg-black/80"
+        >
+          <ExpandIcon className="h-4 w-4" /> {count > 1 ? `${count} photos` : "Agrandir"}
+        </button>
         {count > 1 && (
           <>
             <button
@@ -122,10 +134,10 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
             >
               ›
             </button>
-            <span className="absolute top-3 right-3 rounded-full bg-ink/80 px-2.5 py-1 text-xs font-semibold text-white tabular-nums" aria-live="polite">
+            <span className="absolute bottom-3 left-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white tabular-nums backdrop-blur" aria-live="polite">
               {active + 1} / {count}
             </span>
-            <div className="absolute inset-x-0 bottom-3 flex justify-center gap-1.5" aria-hidden="true">
+            <div className="absolute inset-x-0 bottom-5 flex justify-center gap-1.5 sm:hidden" aria-hidden="true">
               {images.map((src, i) => (
                 <span key={src} className={`h-1.5 rounded-full transition-all ${i === active ? "w-5 bg-white" : "w-1.5 bg-white/50"}`} />
               ))}
@@ -134,6 +146,17 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
         )}
       </div>
 
+      {viewer !== null && (
+        <Lightbox
+          images={images}
+          alt={alt}
+          start={viewer}
+          onClose={(i) => {
+            setViewer(null);
+            go(i);
+          }}
+        />
+      )}
       {count > 1 && (
         <div className="mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:px-0 [&::-webkit-scrollbar]:hidden" role="tablist" aria-label="Choisir une photo">
           {images.map((src, i) => (
@@ -144,7 +167,7 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
               onClick={() => go(i)}
               aria-label={`Photo ${i + 1}`}
               aria-selected={i === active}
-              className={`aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-lg border-2 bg-white transition sm:w-24 ${i === active ? "border-orange" : "border-transparent opacity-70 hover:opacity-100"}`}
+              className={`shimmer aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-lg border-2 transition sm:w-24 ${i === active ? "border-orange" : "border-transparent opacity-70 hover:opacity-100"}`}
             >
               <Img src={thumbUrl(src)} fallback={src} alt="" loading="lazy" className="h-full w-full object-cover" />
             </button>

@@ -1,10 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useRef, useTransition } from "react";
+import { useRef } from "react";
 import { formatAr, formatNumber } from "@/lib/format";
 import type { VehicleStatus } from "@/lib/vehicle";
 import { Spinner } from "@/components/ui/Spinner";
+import { useCatalogNav } from "./CatalogNav";
 
 type Option = { value: string; n: number };
 export type Facets = {
@@ -20,9 +20,8 @@ const KMS = [50_000, 80_000, 100_000, 150_000, 200_000];
 
 // Filters apply as soon as they change (GET form: also works without JS).
 export function Filters({ current, facets, total, id }: { current: Record<string, string>; facets: Facets; total: number; id: string }) {
-  const router = useRouter();
   const form = useRef<HTMLFormElement>(null);
-  const [pending, start] = useTransition();
+  const { pending, navigate } = useCatalogNav();
   const year = new Date().getFullYear();
 
   function apply() {
@@ -30,7 +29,7 @@ export function Filters({ current, facets, total, id }: { current: Record<string
     const params = new URLSearchParams();
     for (const [k, v] of data.entries()) if (typeof v === "string" && v) params.set(k, v);
     if (current.tri) params.set("tri", current.tri);
-    start(() => router.push(`/voitures${params.size ? `?${params}` : ""}`, { scroll: false }));
+    navigate(`/voitures${params.size ? `?${params}` : ""}`);
   }
 
   const radios = (name: string, options: Option[], labelOf: (v: string) => string = (v) => v) => (
@@ -42,7 +41,7 @@ export function Filters({ current, facets, total, id }: { current: Record<string
           return (
             <label
               key={o.value || "all"}
-              className={`cursor-pointer rounded-full border px-3 py-1.5 text-[13px] transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-cyan ${
+              className={`flex min-h-10 cursor-pointer items-center rounded-full border px-3.5 text-[13px] transition-colors duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-cyan ${
                 checked ? "border-ink bg-ink font-semibold text-white" : "border-black/15 bg-white hover:border-ink"
               } ${o.n === 0 && !checked ? "opacity-40" : ""}`}
             >

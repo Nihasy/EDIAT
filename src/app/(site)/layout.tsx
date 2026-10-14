@@ -1,3 +1,4 @@
+import { BottomNav } from "@/components/site/BottomNav";
 import { FloatingWhatsApp } from "@/components/site/FloatingWhatsApp";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
@@ -14,7 +15,10 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
       <Header settings={settings} />
       <main id="contenu" className="flex-1">{children}</main>
       <Footer settings={settings} />
+      {/* Room for the bottom bar (tab bar, or the action bar of vehicle pages). */}
+      <div className="h-[calc(4.5rem+env(safe-area-inset-bottom))] bg-ink lg:hidden" aria-hidden="true" />
       <FloatingWhatsApp href={waLink(settings.whatsapp, "Bonjour Ediat Garage, je souhaite des informations.")} />
+      <BottomNav whatsappHref={waLink(settings.whatsapp, "Bonjour Ediat Garage, je souhaite des informations.")} financeName={settings.finance.enabled ? settings.finance.name : null} />
     </>
   );
 }

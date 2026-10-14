@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useCatalogNav } from "./CatalogNav";
 
 export function SortSelect({ current, options }: { current: Record<string, string>; options: readonly { id: string; label: string }[] }) {
-  const router = useRouter();
+  const { navigate } = useCatalogNav();
   return (
     <label className="flex items-center gap-2 text-sm">
       <span className="hidden text-muted sm:inline" aria-hidden="true">Trier</span>
@@ -15,9 +15,9 @@ export function SortSelect({ current, options }: { current: Record<string, strin
           params.delete("page");
           if (e.target.value) params.set("tri", e.target.value);
           else params.delete("tri");
-          router.push(`/voitures${params.size ? `?${params}` : ""}`, { scroll: false });
+          navigate(`/voitures${params.size ? `?${params}` : ""}`);
         }}
-        className="rounded-full border border-black/10 bg-white px-3 py-2 text-sm font-semibold"
+        className="min-h-10 rounded-full border border-black/10 bg-white px-3 text-sm font-semibold"
       >
         {options.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
       </select>
