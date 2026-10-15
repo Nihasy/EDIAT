@@ -4,10 +4,6 @@
 
 const OWN = /(vehicles-\d+-[a-f0-9]+)\.(jpg|png|webp|gif)$/;
 
-export function isOwnUpload(url: string) {
-  return OWN.test(url);
-}
-
 export function thumbUrl(url: string | null | undefined): string {
   if (!url) return "";
   return OWN.test(url) ? url.replace(OWN, "$1-t.jpg") : url;

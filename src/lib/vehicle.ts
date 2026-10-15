@@ -139,7 +139,7 @@ export function vehicleFullTitle(v: Pick<Vehicle, "brand" | "model" | "version" 
 export function vehicleSlug(v: Pick<Vehicle, "id" | "brand" | "model" | "version" | "year">) {
   const words = vehicleFullTitle(v)
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")

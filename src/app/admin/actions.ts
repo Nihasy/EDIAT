@@ -18,7 +18,6 @@ import {
   deleteVehicle,
   getAdminVehicle,
   refExists,
-  setVehicleImages,
   setVehiclesStatus,
   updateVehicle,
   type VehicleInput,
@@ -200,17 +199,6 @@ export async function changeStatus(ids: number[], status: VehicleStatus): Promis
   await setVehiclesStatus(valid, status);
   refreshSite();
   return { ok: "Statut mis à jour." };
-}
-
-export async function saveImages(id: number, images: string[]): Promise<FormState> {
-  await requireAdmin();
-  if (!isDbId(id)) return { error: "Véhicule invalide." };
-  if (!Array.isArray(images) || images.length > MAX_IMAGES || images.some((u) => typeof u !== "string" || !isAllowedImageUrl(u))) {
-    return { error: "Photos invalides." };
-  }
-  await setVehicleImages(id, images);
-  refreshSite();
-  return { ok: "Photos enregistrées." };
 }
 
 export async function removeVehicle(id: number) {

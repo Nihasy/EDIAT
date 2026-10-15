@@ -168,10 +168,6 @@ export async function setVehiclesStatus(ids: number[], status: VehicleStatus) {
   );
 }
 
-export async function setVehicleImages(id: number, images: string[]) {
-  await query(`UPDATE vehicles SET images = $2, updated_at = NOW() WHERE id = $1`, [id, JSON.stringify(images)]);
-}
-
 export async function deleteVehicle(id: number) {
   await query(`DELETE FROM vehicles WHERE id = $1`, [id]);
 }
@@ -191,7 +187,3 @@ export async function listAdminVehicles() {
   return rows.map(toAdminVehicle);
 }
 
-export async function vehicleCounts() {
-  const rows = await query(`SELECT status, COUNT(*)::int AS n FROM vehicles GROUP BY status`);
-  return Object.fromEntries(rows.map((r) => [r.status, r.n])) as Partial<Record<VehicleStatus, number>>;
-}

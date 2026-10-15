@@ -49,10 +49,6 @@ export function telLink(phone: string) {
   return `tel:+${phone.replace(/\D/g, "")}`;
 }
 
-export function formatDate(d: string | Date) {
-  return new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Indian/Antananarivo" });
-}
-
 export function formatDateTime(d: string | Date) {
   return new Date(d).toLocaleString("fr-FR", {
     day: "numeric",
@@ -65,9 +61,5 @@ export function formatDateTime(d: string | Date) {
 
 // Accent- and case-insensitive text for search and slugs.
 export function fold(s: string) {
-  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-}
-
-export function slugify(s: string) {
-  return fold(s).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }

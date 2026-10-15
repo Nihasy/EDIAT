@@ -151,11 +151,6 @@ export async function searchVehicles(f: Filters) {
   };
 }
 
-// Brands present on the site, for the search box of the home page.
-export async function brandOptions() {
-  return count((await publicVehicles()).filter((v) => STATUSES[v.status].listed), (v) => v.brand);
-}
-
 export async function similarVehicles(v: Vehicle, n = 4) {
   const list = (await publicVehicles()).filter((o) => o.id !== v.id && STATUSES[o.status].listed);
   const score = (o: Vehicle) =>
