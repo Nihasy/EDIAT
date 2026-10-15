@@ -5,9 +5,6 @@ avec un back-office pour gérer le stock et les demandes clients. Charte graphiq
 `#E97135`, cyan `#00ADD7`, gris anthracite du fond du logo, titres en capitales condensées (Oswald), comme les
 affiches Ediat Facility.
 
-> Cette application est dans le dossier `ediat-garage/`, à côté du site 261 WEAR (racine du dépôt). Les deux sont
-> indépendantes.
-
 ## Les trois disponibilités (fonctionnement « à la Moto Import »)
 
 | Statut | Sur le site | Infos affichées |
@@ -59,7 +56,8 @@ Chaque formulaire enregistre une **demande** dans le back-office, puis propose d
   (swipe, flèches, vignettes, Échap) ; bouton Partager (menu de partage du téléphone, sinon copie du lien).
 - Zones tactiles de 44 px, icônes SVG (aucun emoji dans l'interface), défilement doux.
 
-Le skill est installé dans `.claude/skills/ui-ux-pro-max/` à la racine du dépôt (données et guide).
+Le skill est installé dans `.claude/skills/ui-ux-pro-max/` (données et guide) ; le serveur MCP 21st.dev est déclaré
+dans `.mcp.json`.
 
 ## Back-office (`/admin`)
 
@@ -88,16 +86,15 @@ si une mensualité est saisie sur le véhicule. Réglages par défaut : apport 3
 ## Lancer en local
 
 ```bash
-cd ediat-garage
 npm install
 npm run dev          # http://localhost:3000 — back-office : /admin (mot de passe local : ediat)
 ```
 
-En local, la base (PGlite) et les photos sont stockées dans `ediat-garage/.data/`.
+En local, la base (PGlite) et les photos sont stockées dans `.data/`.
 
 ## Mise en ligne sur Vercel
 
-1. **Add New → Project**, importer ce dépôt GitHub, et régler **Root Directory = `ediat-garage`**.
+1. **Add New → Project**, importer ce dépôt GitHub (Next.js est détecté automatiquement).
 2. **Storage → Neon (Postgres)** : créer une base et la connecter au projet (ajoute `DATABASE_URL`).
 3. **Storage → Blob** : créer un store et le connecter (ajoute `BLOB_READ_WRITE_TOKEN`) pour les photos.
 4. **Settings → Environment Variables** : `ADMIN_PASSWORD` (long et secret), et `SITE_URL` une fois le nom de
