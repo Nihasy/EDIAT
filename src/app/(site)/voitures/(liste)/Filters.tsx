@@ -47,7 +47,7 @@ export function Filters({ current, facets, total, id }: { current: Record<string
             >
               <input type="radio" name={name} value={o.value} defaultChecked={checked} onChange={apply} className="sr-only" />
               {o.value ? labelOf(o.value) : "Tous"}
-              {o.n >= 0 && <span className={checked ? "text-white/70" : "text-muted"}> {o.n}</span>}
+              {o.n >= 0 && <span className={`ml-1 tabular-nums ${checked ? "text-white/70" : "text-muted"}`}>{o.n}</span>}
             </label>
           );
         })}

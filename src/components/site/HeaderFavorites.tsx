@@ -14,7 +14,7 @@ export function HeaderFavorites() {
     >
       <HeartIcon className="h-[22px] w-[22px]" filled={ids.length > 0} />
       {ids.length > 0 && (
-        <span className="absolute top-1 right-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">{ids.length}</span>
+        <span className="absolute top-1 right-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-1 text-[11px] font-bold text-white">{ids.length}</span>
       )}
     </Link>
   );

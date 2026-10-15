@@ -3,7 +3,7 @@ import Link from "next/link";
 // EG mark (from the official logo) + "EDIAT GARAGE" wordmark.
 export function Logo({ href = "/", dark = true, className = "" }: { href?: string; dark?: boolean; className?: string }) {
   return (
-    <Link href={href} aria-label="Ediat Garage — accueil" className={`flex items-center gap-2.5 ${className}`}>
+    <Link href={href} aria-label="Ediat Garage — accueil" className={`flex min-h-11 items-center gap-2.5 ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/brand/eg-mark.png" alt="" width={639} height={818} className="h-10 w-auto drop-shadow-sm" />
       <span className="flex flex-col leading-none">

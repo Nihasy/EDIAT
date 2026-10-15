@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { connection } from "next/server";
-import { DocIcon, KeyIcon, SearchIcon, ShieldIcon, ShipIcon, WalletIcon } from "@/components/Icons";
+import { ArrowRightIcon, DocIcon, KeyIcon, SearchIcon, ShieldIcon, ShipIcon, WalletIcon } from "@/components/Icons";
 import { BodyIcon } from "@/components/site/BodyIcon";
 import { HeroCarousel, type Slide } from "@/components/site/HeroCarousel";
 import { Rail } from "@/components/site/Rail";
@@ -68,8 +68,8 @@ export default async function HomePage() {
       )}
 
       {/* QUICK SEARCH */}
-      <div className="relative z-10 mx-auto -mt-3 max-w-7xl px-0 sm:mt-5 sm:px-4">
-        <div className="rounded-t-3xl bg-paper px-4 pt-5 pb-1 sm:rounded-3xl sm:bg-white sm:p-5 sm:shadow-xl">
+      <div className="relative z-10 mx-auto -mt-3 max-w-7xl px-0 sm:-mt-10 sm:px-4 short:mt-4">
+        <div className="rounded-t-3xl bg-paper px-4 pt-5 pb-1 sm:rounded-3xl sm:bg-white sm:p-5 sm:shadow-[0_24px_60px_-20px_rgba(31,34,36,0.45)] sm:ring-1 sm:ring-black/5">
           <h1 className="sr-only">Ediat Garage, véhicules d&apos;occasion importés de Corée à Antananarivo</h1>
           <form action="/voitures" role="search" className="flex items-center gap-2 rounded-full bg-white py-1 pr-1 pl-4 shadow-sm ring-1 ring-black/10 focus-within:ring-2 focus-within:ring-cyan-deep sm:bg-paper sm:shadow-none">
             <SearchIcon className="h-5 w-5 shrink-0 text-muted" />
@@ -93,14 +93,14 @@ export default async function HomePage() {
       </div>
 
       {/* BODY TYPES */}
-      <section aria-label="Par type de véhicule" className="mx-auto max-w-7xl pt-4">
+      <section aria-label="Par type de véhicule" className="reveal mx-auto max-w-7xl pt-5">
         <ul className="flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:grid md:grid-cols-8 [&::-webkit-scrollbar]:hidden">
           {bodyList.map((b) => (
             <li key={b} className="shrink-0">
-              <Link href={`/voitures?carrosserie=${encodeURIComponent(b)}`} className="flex w-[84px] flex-col items-center gap-1 rounded-2xl bg-white px-2 py-3 text-center ring-1 ring-black/5 transition hover:text-orange-deep hover:ring-orange-deep md:w-auto">
-                <BodyIcon type={b} className="h-7 w-14 text-ink/80" />
+              <Link href={`/voitures?carrosserie=${encodeURIComponent(b)}`} className="group/body flex w-[84px] flex-col items-center gap-1 rounded-2xl bg-white px-2 py-3 text-center ring-1 ring-black/5 transition-[color,box-shadow,transform] duration-300 ease-(--ease-out) hover:text-orange-deep hover:shadow-lg hover:ring-orange-deep md:w-auto [@media(hover:hover)]:hover:-translate-y-0.5">
+                <BodyIcon type={b} className="h-7 w-14 text-ink/80 transition-colors duration-300 group-hover/body:text-orange-deep" />
                 <span className="text-xs font-semibold">{b}</span>
-                <span className="text-[11px] text-muted">{bodies.get(b) ?? 0}</span>
+                <span className="text-xs text-muted tabular-nums">{bodies.get(b) ?? 0}</span>
               </Link>
             </li>
           ))}
@@ -108,12 +108,12 @@ export default async function HomePage() {
       </section>
 
       {/* BRANDS */}
-      <section aria-label="Par marque" className="mx-auto max-w-7xl pt-4">
+      <section aria-label="Par marque" className="reveal mx-auto max-w-7xl pt-5">
         <ul className="flex gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden">
           {brandList.map((b) => (
             <li key={b} className="shrink-0">
               <Link href={`/voitures?marque=${encodeURIComponent(b)}`} className="group flex w-[76px] flex-col items-center gap-1.5 sm:w-24">
-                <span className="relative flex h-[72px] w-[72px] items-center justify-center overflow-hidden rounded-full bg-white shadow-sm ring-2 ring-cyan/60 transition group-hover:ring-orange sm:h-24 sm:w-24">
+                <span className="relative flex h-[72px] w-[72px] items-center justify-center overflow-hidden rounded-full bg-white shadow-sm ring-2 ring-cyan/60 transition-[box-shadow,transform] duration-300 ease-(--ease-out) group-hover:shadow-lg group-hover:ring-orange sm:h-24 sm:w-24 [@media(hover:hover)]:group-hover:-translate-y-0.5">
                   {BRAND_LOGOS[b] ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={BRAND_LOGOS[b]} alt="" className="h-full w-full object-cover" />
@@ -136,8 +136,10 @@ export default async function HomePage() {
 
       {/* EDIAT FACILITY */}
       {settings.finance.enabled && (
-        <section className="mx-auto max-w-7xl px-4 py-4">
-          <Link href="/financement" className="bg-orange-gradient group relative flex items-center gap-4 overflow-hidden rounded-3xl p-5 text-white shadow-lg sm:p-8">
+        <section className="reveal mx-auto max-w-7xl px-4 py-4">
+          <Link href="/financement" className="bg-orange-gradient group relative flex items-center gap-4 overflow-hidden rounded-3xl p-5 text-white shadow-[0_24px_50px_-20px_rgba(212,68,28,0.65)] transition-transform duration-300 ease-(--ease-out) sm:p-8 [@media(hover:hover)]:hover:-translate-y-1">
+            {/* Light sweep across the banner on hover. */}
+            <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-white/15 opacity-0 transition-[left,opacity] duration-500 ease-(--ease-out) group-hover:left-[120%] group-hover:opacity-100" aria-hidden="true" />
             <span className="font-display pointer-events-none absolute -top-8 right-3 text-[150px] leading-none text-white/20 sm:right-10 sm:text-[220px]" aria-hidden="true">!</span>
             <div className="relative min-w-0 flex-1">
               <p className="font-display text-[34px] leading-[0.95] font-bold sm:text-6xl">
@@ -147,7 +149,7 @@ export default async function HomePage() {
               </p>
               <p className="mt-2 text-sm text-white/90">{settings.finance.name} · apport dès {settings.finance.minDownPct} % · {settings.finance.durations.join("/")} mois</p>
             </div>
-            <span className="relative hidden shrink-0 rounded-full bg-white px-5 py-3 text-sm font-semibold text-orange-deep sm:inline-block">Simuler →</span>
+            <span className="relative hidden shrink-0 items-center gap-1.5 rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-orange-deep shadow-lg transition-transform duration-300 ease-(--ease-out) group-hover:translate-x-1 sm:inline-flex">Simuler <ArrowRightIcon className="h-4 w-4" /></span>
           </Link>
         </section>
       )}
@@ -167,39 +169,46 @@ export default async function HomePage() {
             </Rail>
           </div>
         )}
-        <div className="mx-auto max-w-7xl px-4 pt-2 pb-8">
-          <ol className="grid grid-cols-4 gap-2 text-center">
+        <div className="reveal mx-auto max-w-7xl px-4 pt-2 pb-10">
+          <ol className="relative grid grid-cols-4 gap-2 text-center">
+            {/* Route line behind the steps. */}
+            <span className="absolute top-6 right-[12.5%] left-[12.5%] h-px bg-gradient-to-r from-cyan/60 via-white/25 to-orange/70 sm:top-7" aria-hidden="true" />
             {[
               { icon: <DocIcon className="h-6 w-6" />, t: "Votre demande" },
               { icon: <ShieldIcon className="h-6 w-6" />, t: "Contrôle en Corée" },
               { icon: <ShipIcon className="h-6 w-6" />, t: "Expédition" },
               { icon: <KeyIcon className="h-6 w-6" />, t: "Clés en main" },
             ].map((s, i) => (
-              <li key={s.t} className="flex flex-col items-center gap-1.5">
-                <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-cyan">
+              <li key={s.t} className="relative flex flex-col items-center gap-2">
+                <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#2a2e31] text-cyan ring-1 ring-white/15 sm:h-14 sm:w-14">
                   {s.icon}
-                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange text-[11px] font-bold text-white">{i + 1}</span>
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange text-[11px] font-bold text-ink">{i + 1}</span>
                 </span>
-                <span className="text-[11px] leading-tight text-white/80 sm:text-sm">{s.t}</span>
+                <span className="text-xs leading-tight font-medium text-white/85 sm:text-sm">{s.t}</span>
               </li>
             ))}
           </ol>
-          <Link href="/sur-commande#demande" className="btn-primary mt-5 w-full sm:w-auto">Faire importer mon véhicule</Link>
+          <div className="mt-7 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-4">
+            <Link href="/sur-commande#demande" className="btn-primary w-full sm:w-auto">Faire importer mon véhicule</Link>
+            <p className="text-xs text-white/65">Délai {settings.orderDelay} · acompte {settings.orderDepositPct} %</p>
+          </div>
         </div>
       </section>
 
       {/* TRUST */}
-      <section aria-label="Nos engagements" className="mx-auto max-w-7xl px-4 py-6">
-        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+      <section aria-labelledby="engagements" className="reveal mx-auto max-w-7xl px-4 pt-10 pb-4">
+        <h2 id="engagements" className="sr-only">Nos engagements</h2>
+        <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
-            { icon: <ShipIcon className="h-5 w-5" />, t: "Import direct Corée" },
-            { icon: <ShieldIcon className="h-5 w-5" />, t: "Véhicules contrôlés" },
-            { icon: <DocIcon className="h-5 w-5" />, t: "Carte grise incluse" },
-            { icon: <WalletIcon className="h-5 w-5" />, t: "Paiement échelonné" },
+            { icon: <ShipIcon className="h-5 w-5" />, t: "Import direct Corée", d: "Sans intermédiaire, au juste prix." },
+            { icon: <ShieldIcon className="h-5 w-5" />, t: "Véhicules contrôlés", d: "Inspectés avant l'expédition." },
+            { icon: <DocIcon className="h-5 w-5" />, t: "Carte grise incluse", d: "Dédouanement et papiers en règle." },
+            { icon: <WalletIcon className="h-5 w-5" />, t: "Paiement échelonné", d: `Avec ${settings.finance.name}.` },
           ].map((x) => (
-            <li key={x.t} className="flex items-center gap-2.5 rounded-2xl bg-white p-3 text-sm font-semibold ring-1 ring-black/5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cyan/10 text-cyan-deep">{x.icon}</span>
-              {x.t}
+            <li key={x.t} className="rounded-2xl bg-white p-4 ring-1 ring-black/5 sm:p-5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan/10 text-cyan-deep">{x.icon}</span>
+              <p className="mt-3 text-sm leading-tight font-bold sm:text-base">{x.t}</p>
+              <p className="mt-1 text-xs leading-snug text-muted sm:text-sm">{x.d}</p>
             </li>
           ))}
         </ul>
@@ -211,7 +220,7 @@ export default async function HomePage() {
         </Rail>
       )}
 
-      <section className="mx-auto max-w-7xl px-4 pt-2 pb-10">
+      <section className="reveal mx-auto max-w-7xl px-4 pt-2 pb-10">
         <div className="bg-brand-gradient relative overflow-hidden rounded-3xl p-6 text-white sm:p-10">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/eg-mark.png" alt="" aria-hidden="true" className="absolute -right-4 -bottom-8 h-40 opacity-25 sm:h-56" />

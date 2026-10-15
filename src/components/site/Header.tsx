@@ -4,6 +4,7 @@ import { PhoneIcon } from "../Icons";
 import { Logo } from "../Logo";
 import { WhatsAppIcon } from "../WhatsAppIcon";
 import { HeaderFavorites } from "./HeaderFavorites";
+import { HeaderShell } from "./HeaderShell";
 import { MobileMenu } from "./MobileMenu";
 import { NavLinks } from "./NavLinks";
 
@@ -21,7 +22,7 @@ export function Header({ settings }: { settings: Settings }) {
       {settings.announcement && (
         <p className="bg-orange-gradient px-4 py-2 text-center text-[13px] font-medium text-white">{settings.announcement}</p>
       )}
-      <header className="sticky top-0 z-30 bg-ink">
+      <HeaderShell>
         <div className="relative mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 lg:h-[72px]">
           <Logo />
           <nav aria-label="Menu principal" className="ml-auto lg:ml-8">
@@ -30,7 +31,7 @@ export function Header({ settings }: { settings: Settings }) {
           <div className="ml-auto flex items-center gap-2 lg:ml-auto">
             <a
               href={telLink(settings.phone)}
-              className="hidden items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold text-white/85 hover:text-white xl:flex"
+              className="hidden min-h-11 items-center gap-2 rounded-full px-3 text-sm font-semibold text-white/85 transition-colors duration-200 hover:text-white xl:flex"
             >
               <PhoneIcon className="h-4 w-4 text-cyan" /> {displayPhone(settings.phone)}
             </a>
@@ -38,7 +39,7 @@ export function Header({ settings }: { settings: Settings }) {
               href={waLink(settings.whatsapp, "Bonjour Ediat Garage, je souhaite des informations.")}
               target="_blank"
               rel="noopener"
-              className="hidden items-center gap-2 rounded-full bg-[#15803d] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#116632] sm:flex"
+              className="hidden min-h-11 items-center gap-2 rounded-full bg-[#15803d] px-4 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#116632] sm:flex"
             >
               <WhatsAppIcon className="h-4 w-4" /> WhatsApp
             </a>
@@ -46,8 +47,8 @@ export function Header({ settings }: { settings: Settings }) {
             <MobileMenu links={[{ href: "/", label: "Accueil" }, ...NAV, { href: "/favoris", label: "Mes favoris" }]} />
           </div>
         </div>
-        <div className="h-[3px] bg-[linear-gradient(90deg,var(--color-orange)_0_60%,var(--color-cyan)_60%_100%)]" aria-hidden="true" />
-      </header>
+        <div className="h-[3px] bg-[linear-gradient(90deg,var(--color-orange)_0_60%,var(--color-cyan)_60%_100%)] header-rule transition-opacity duration-300" aria-hidden="true" />
+      </HeaderShell>
     </>
   );
 }

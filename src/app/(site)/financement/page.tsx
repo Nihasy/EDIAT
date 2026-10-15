@@ -59,11 +59,11 @@ export default async function FinancePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-12">
+      <section className="reveal mx-auto max-w-7xl px-4 py-12">
         <FinanceRequest settings={f} whatsapp={settings.whatsapp} />
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-12">
+      <section className="reveal mx-auto max-w-7xl px-4 pb-12">
         <SectionTitle kicker="Comment ça marche" title={`${f.name} en 4 étapes`} />
         <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[

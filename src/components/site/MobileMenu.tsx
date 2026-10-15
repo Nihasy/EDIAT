@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MenuIcon } from "../Icons";
+import { CloseIcon, MenuIcon } from "../Icons";
 
 export function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ export function MobileMenu({ links }: { links: { href: string; label: string }[]
         aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
         className="flex h-11 w-11 items-center justify-center rounded-full text-white hover:bg-white/10"
       >
-        {open ? <span className="text-2xl leading-none">×</span> : <MenuIcon className="h-6 w-6" />}
+        {open ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
       </button>
       {open && (
         <nav id="mobile-menu" aria-label="Menu principal" className="absolute inset-x-0 top-full border-t border-white/10 bg-ink px-4 pb-5 shadow-xl">

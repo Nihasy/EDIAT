@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { Img } from "@/components/ui/Img";
 import { useFormAction } from "@/components/useFormAction";
-import { StarIcon } from "@/components/Icons";
+import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, StarIcon } from "@/components/Icons";
 import { fromMonthly, type FinanceSettings } from "@/lib/finance";
 import { formatAr, formatNumber, parseAmount } from "@/lib/format";
 import { thumbUrl } from "@/lib/images";
@@ -131,20 +131,20 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
       </Section>
 
       <Section title="Photos" aside={<span className="text-sm text-muted">{images.length} photo{images.length > 1 ? "s" : ""} · la 1re est la photo principale</span>}>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {images.map((src, i) => (
             <div key={src} className="group relative">
               <div className={`shimmer aspect-[4/3] overflow-hidden rounded-lg border-2 ${i === 0 ? "border-orange-deep" : "border-transparent"}`}>
                 <Img src={thumbUrl(src)} fallback={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
               </div>
-              {i === 0 && <span className="absolute top-1.5 left-1.5 rounded bg-orange-deep px-1.5 py-0.5 text-[10px] font-bold text-white">PRINCIPALE</span>}
-              <div className="mt-1 grid grid-cols-2 gap-1 sm:grid-cols-4">
-                <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Déplacer à gauche" className="h-11 rounded-md bg-black/5 text-sm disabled:opacity-30">←</button>
+              {i === 0 && <span className="absolute top-1.5 left-1.5 rounded bg-orange-deep px-1.5 py-0.5 text-[11px] font-bold text-white">PRINCIPALE</span>}
+              <div className="mt-1 grid grid-cols-2 gap-1 md:grid-cols-4">
+                <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Déplacer à gauche" className="flex h-11 items-center justify-center rounded-md bg-black/5 disabled:opacity-30"><ChevronLeftIcon className="h-5 w-5" /></button>
                 {i > 0 && (
                   <button type="button" onClick={() => { setImages((l) => [src, ...l.filter((x) => x !== src)]); setDirty(true); }} className="flex h-11 items-center justify-center rounded-md bg-black/5" title="Photo principale" aria-label="Mettre en photo principale"><StarIcon className="h-4 w-4 text-orange-deep" /></button>
                 )}
-                <button type="button" onClick={() => move(i, 1)} disabled={i === images.length - 1} aria-label="Déplacer à droite" className="h-11 rounded-md bg-black/5 text-sm disabled:opacity-30">→</button>
-                <button type="button" onClick={() => { setImages((l) => l.filter((x) => x !== src)); setDirty(true); }} aria-label="Supprimer la photo" className="h-11 rounded-md bg-red-50 text-sm text-red-700">✕</button>
+                <button type="button" onClick={() => move(i, 1)} disabled={i === images.length - 1} aria-label="Déplacer à droite" className="flex h-11 items-center justify-center rounded-md bg-black/5 disabled:opacity-30"><ChevronRightIcon className="h-5 w-5" /></button>
+                <button type="button" onClick={() => { setImages((l) => l.filter((x) => x !== src)); setDirty(true); }} aria-label="Supprimer la photo" className="flex h-11 items-center justify-center rounded-md bg-red-50 text-red-700"><CloseIcon className="h-5 w-5" /></button>
               </div>
             </div>
           ))}
@@ -235,7 +235,7 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
                 type="button"
                 aria-pressed={lines.includes(e)}
                 onClick={() => toggleEquipment(e)}
-                className={`min-h-10 rounded-full border px-3 text-xs transition-colors duration-200 ${lines.includes(e) ? "border-cyan-deep bg-cyan-deep text-white" : "border-black/15 hover:border-ink"}`}
+                className={`min-h-11 rounded-full border px-3 text-xs transition-colors duration-200 ${lines.includes(e) ? "border-cyan-deep bg-cyan-deep text-white" : "border-black/15 hover:border-ink"}`}
               >
                 {lines.includes(e) ? "✓ " : "+ "}{e}
               </button>

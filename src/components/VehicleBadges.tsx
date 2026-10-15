@@ -23,7 +23,7 @@ export function VehicleBadges({ v, max = 2, size = "sm", className = "" }: { v: 
       {points.map((p) => (
         <span
           key={p.key}
-          className={`inline-flex items-center gap-1 rounded-md font-bold shadow-sm ring-1 ring-black/5 ${size === "sm" ? "px-1.5 py-0.5 text-[10px] sm:text-[11px]" : "px-2.5 py-1 text-xs"} ${p.cls}`}
+          className={`inline-flex items-center gap-1 rounded-md font-bold shadow-sm ring-1 ring-black/5 ${size === "sm" ? "px-1.5 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs"} ${p.cls}`}
         >
           <span className={`[&>svg]:h-full [&>svg]:w-full ${size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5"}`}>{p.icon}</span>
           {p.label}

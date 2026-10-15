@@ -17,7 +17,7 @@ export function StatusBadge({ status, long = false, small = false, className = "
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-md font-bold whitespace-nowrap shadow-sm ring-1 ring-white/25 ${
-        small ? "max-w-[calc(100%-3.25rem)] px-1.5 py-0.5 text-[10px] sm:px-2 sm:text-[11px]" : "px-2.5 py-1 text-xs tracking-wide"
+        small ? "max-w-[calc(100%-3.25rem)] px-1.5 py-0.5 text-[11px] sm:px-2" : "px-2.5 py-1 text-xs tracking-wide"
       } ${s.cls} ${className}`}
     >
       <span className={`[&>svg]:h-full [&>svg]:w-full ${small ? "h-3 w-3" : "h-3.5 w-3.5"}`}>{s.icon}</span>

@@ -97,7 +97,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <div className="mx-auto max-w-7xl px-4 pt-4">
-        <nav aria-label="Fil d'Ariane" className="text-sm text-muted [&_a]:inline-block [&_a]:px-1 [&_a]:py-3">
+        <nav aria-label="Fil d'Ariane" className="text-sm text-muted [&_a]:inline-block [&_a]:min-w-11 [&_a]:px-1 [&_a]:py-3 [&_a]:text-center">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li><Link href="/" className="hover:text-ink">Accueil</Link></li>
             <li aria-hidden="true">/</li>
@@ -115,6 +115,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
           <Gallery
             images={v.images}
             alt={title}
+            morphName={`vehicle-photo-${v.id}`}
             overlay={
               <>
                 <StatusBadge status={v.status} long className="absolute top-3 left-3" />
@@ -141,7 +142,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
                 <li key={k} className="flex flex-col items-center gap-1 rounded-2xl bg-white px-1 py-3 text-center ring-1 ring-black/5 sm:py-4">
                   <span className="text-cyan-deep">{icon}</span>
                   <span className="text-[13px] leading-tight font-bold sm:text-[15px]">{val}</span>
-                  <span className="text-[10px] tracking-wide text-muted uppercase sm:text-[11px]">{k}</span>
+                  <span className="text-[11px] tracking-wide text-muted uppercase">{k}</span>
                 </li>
               ))}
             </ul>
@@ -163,7 +164,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
               <a href="#contact" className="btn-dark mt-3 w-full">{v.status === "showroom" ? "Réserver un essai" : "Être rappelé"}</a>
             </div>
 
-            <section aria-labelledby="carac" className="mt-10">
+            <section aria-labelledby="carac" className="reveal mt-10">
               <h2 id="carac" className="font-display text-2xl font-semibold">Caractéristiques</h2>
               <dl className="mt-4 grid overflow-hidden rounded-2xl border border-black/10 bg-white sm:grid-cols-2">
                 {specs.map(([k, val]) => (
@@ -176,14 +177,14 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
             </section>
 
             {v.description && (
-              <section aria-labelledby="desc" className="mt-10">
+              <section aria-labelledby="desc" className="reveal mt-10">
                 <h2 id="desc" className="font-display text-2xl font-semibold">Le mot du vendeur</h2>
                 <p className="mt-3 text-[15px] leading-relaxed whitespace-pre-line text-black/80">{v.description}</p>
               </section>
             )}
 
             {v.equipment.length > 0 && (
-              <section aria-labelledby="equip" className="mt-10">
+              <section aria-labelledby="equip" className="reveal mt-10">
                 <h2 id="equip" className="font-display text-2xl font-semibold">Équipements</h2>
                 <ul className="mt-4 grid gap-x-6 gap-y-2 sm:grid-cols-2">
                   {v.equipment.map((e) => (
@@ -194,7 +195,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
             )}
 
             {monthly && !closed && v.price && (
-              <section id="financement" aria-labelledby="fin" className="mt-10 scroll-mt-24 rounded-2xl border border-black/10 bg-white p-5 sm:p-6">
+              <section id="financement" aria-labelledby="fin" className="reveal mt-10 scroll-mt-4 rounded-2xl border border-black/10 bg-white p-5 sm:p-6">
                 <h2 id="fin" className="font-display text-2xl font-semibold">
                   Payez à votre rythme avec <span className="text-orange-deep">{settings.finance.name}</span>
                 </h2>
@@ -204,7 +205,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
               </section>
             )}
 
-            <section id="contact" aria-labelledby="rdv" className="mt-10 scroll-mt-24 rounded-2xl bg-ink p-5 text-white sm:p-6">
+            <section id="contact" aria-labelledby="rdv" className="reveal mt-10 scroll-mt-4 rounded-2xl bg-ink p-5 text-white sm:p-6">
               <h2 id="rdv" className="font-display text-2xl font-semibold">
                 {closed ? "Je veux un véhicule similaire" : v.status === "showroom" ? "Réserver un essai au showroom" : "Réserver ce véhicule"}
               </h2>
@@ -231,7 +232,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
                 {v.oldPrice && v.price && v.oldPrice > v.price && <p className="text-muted line-through">{formatAr(v.oldPrice)}</p>}
                 <p className={`font-display text-4xl font-bold ${closed ? "text-muted" : ""}`}>{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
                 {monthly && !closed && (
-                  <a href="#financement" className="bg-orange-gradient mt-3 block rounded-full px-4 py-2 text-center text-sm text-white">
+                  <a href="#financement" className="bg-orange-gradient mt-3 flex min-h-11 items-center justify-center rounded-full px-4 text-center text-sm text-white">
                     à partir de <strong>{formatAr(monthly)}</strong> / mois
                   </a>
                 )}

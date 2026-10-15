@@ -62,7 +62,7 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
           <form action="/voitures" role="search" className="flex w-full items-center gap-2 rounded-full bg-white py-1 pr-1 pl-4 ring-1 ring-black/10 focus-within:ring-2 focus-within:ring-cyan-deep sm:w-80">
             {Object.entries(base).filter(([k]) => k !== "q").map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
             <label htmlFor="q" className="sr-only">Rechercher un modèle</label>
-            <input id="q" name="q" type="search" defaultValue={f.q ?? ""} placeholder="Modèle, année, diesel…" className="min-w-0 flex-1 bg-transparent py-2 outline-none" />
+            <input id="q" name="q" type="search" defaultValue={f.q ?? ""} placeholder="Modèle, année, diesel…" className="min-h-11 min-w-0 flex-1 bg-transparent outline-none" />
             <button type="submit" aria-label="Rechercher" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-white"><SearchIcon className="h-5 w-5" /></button>
           </form>
         </div>
@@ -91,7 +91,7 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
 
       <div className="mt-4 grid gap-6 px-4 lg:grid-cols-[260px_1fr]">
         <aside className="hidden lg:block">
-          <div className="sticky top-36 max-h-[calc(100vh-10rem)] overflow-y-auto rounded-2xl bg-white px-5 pb-2 ring-1 ring-black/5">
+          <div className="sticky top-36 max-h-[calc(100dvh-10rem)] overflow-y-auto rounded-2xl bg-white px-5 pb-2 ring-1 ring-black/5">
             <Filters key={JSON.stringify(f)} id="d" current={f} facets={result.facets} total={result.total} />
           </div>
         </aside>
@@ -115,7 +115,10 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
           {result.items.length ? (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
               {result.items.map((v, i) => (
-                <VehicleCard key={v.id} v={v} finance={settings.finance} orderDelay={settings.orderDelay} priority={i < 4} />
+                // Wrapper carries the scroll reveal: an animation on the card itself would cancel its hover lift.
+                <div key={v.id} className="reveal">
+                  <VehicleCard v={v} finance={settings.finance} orderDelay={settings.orderDelay} priority={i < 4} />
+                </div>
               ))}
             </div>
           ) : (

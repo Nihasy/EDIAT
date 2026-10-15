@@ -26,7 +26,7 @@ export const viewport: Viewport = { themeColor: "#1f2224" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="fr" className={`${inter.variable} ${oswald.variable} h-full antialiased`}>
+    <html lang="fr" data-scroll-behavior="smooth" className={`${inter.variable} ${oswald.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         {children}
         {/* The analytics script only exists on Vercel: elsewhere it is a 404. */}

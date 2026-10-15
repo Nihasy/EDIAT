@@ -23,6 +23,7 @@ export function BottomNav({ whatsappHref, financeName }: { whatsappHref: string;
   return (
     <nav
       aria-label="Navigation rapide"
+      style={{ viewTransitionName: "tab-bar" }}
       className="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_20px_rgba(0,0,0,0.06)] backdrop-blur lg:hidden"
     >
       <ul className="mx-auto grid max-w-xl grid-cols-5">
@@ -37,7 +38,7 @@ export function BottomNav({ whatsappHref, financeName }: { whatsappHref: string;
               {it.icon}
               {it.label}
               {!!it.count && (
-                <span className="absolute top-2 left-1/2 ml-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
+                <span className="absolute top-2 left-1/2 ml-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-1 text-[11px] font-bold text-white">
                   {it.count}
                 </span>
               )}

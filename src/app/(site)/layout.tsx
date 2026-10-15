@@ -2,6 +2,7 @@ import { BottomNav } from "@/components/site/BottomNav";
 import { FloatingWhatsApp } from "@/components/site/FloatingWhatsApp";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
+import { PageTransition } from "@/components/site/PageTransition";
 import { siteSettings } from "@/lib/catalog";
 import { waLink } from "@/lib/format";
 
@@ -13,7 +14,9 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
         Aller au contenu
       </a>
       <Header settings={settings} />
-      <main id="contenu" className="flex-1">{children}</main>
+      <main id="contenu" data-site-main className="flex-1">
+        <PageTransition>{children}</PageTransition>
+      </main>
       <Footer settings={settings} />
       {/* Room for the bottom bar (tab bar, or the action bar of vehicle pages). */}
       <div className="h-[calc(4.5rem+env(safe-area-inset-bottom))] bg-ink lg:hidden" aria-hidden="true" />

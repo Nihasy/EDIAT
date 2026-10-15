@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { ChevronLeftIcon, ChevronRightIcon, CloseIcon } from "./Icons";
 
 // Full-screen photo viewer: black background, swipe or arrows, counter,
 // thumbnails, Escape to close. Opens on the photo that was tapped.
@@ -55,7 +56,7 @@ export function Lightbox({ images, alt, start, onClose }: { images: string[]; al
     <div role="dialog" aria-modal="true" aria-label={`Photos de ${alt}`} className="fixed inset-0 z-[60] flex flex-col bg-black text-white">
       <div className="flex items-center justify-between px-3 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2">
         <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-semibold tabular-nums" aria-live="polite">{active + 1} / {count}</span>
-        <button ref={closeBtn} type="button" onClick={() => onClose(active)} aria-label="Fermer" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl hover:bg-white/20">×</button>
+        <button ref={closeBtn} type="button" onClick={() => onClose(active)} aria-label="Fermer" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20"><CloseIcon className="h-6 w-6" /></button>
       </div>
       <div className="relative min-h-0 flex-1">
         <div ref={track} className="flex h-full snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -68,8 +69,8 @@ export function Lightbox({ images, alt, start, onClose }: { images: string[]; al
         </div>
         {count > 1 && (
           <>
-            <button type="button" onClick={() => go(active - 1)} aria-label="Photo précédente" className="absolute top-1/2 left-3 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-2xl hover:bg-white/30 md:flex">‹</button>
-            <button type="button" onClick={() => go(active + 1)} aria-label="Photo suivante" className="absolute top-1/2 right-3 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-2xl hover:bg-white/30 md:flex">›</button>
+            <button type="button" onClick={() => go(active - 1)} aria-label="Photo précédente" className="absolute top-1/2 left-3 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-2xl hover:bg-white/30 md:flex"><ChevronLeftIcon className="h-6 w-6" /></button>
+            <button type="button" onClick={() => go(active + 1)} aria-label="Photo suivante" className="absolute top-1/2 right-3 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-2xl hover:bg-white/30 md:flex"><ChevronRightIcon className="h-6 w-6" /></button>
           </>
         )}
       </div>

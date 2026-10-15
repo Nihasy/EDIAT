@@ -98,3 +98,15 @@ export const RefreshIcon = ({ className }: P) => (
 export const CompareIcon = ({ className }: P) => (
   <svg {...base(className)}><rect x="3" y="4" width="7" height="16" rx="1.5" /><rect x="14" y="4" width="7" height="16" rx="1.5" /></svg>
 );
+export const ChevronLeftIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M15 18l-6-6 6-6" /></svg>
+);
+export const ChevronRightIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M9 18l6-6-6-6" /></svg>
+);
+export const ArrowRightIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+);
+export const CloseIcon = ({ className }: P) => (
+  <svg {...base(className)}><path d="M6 6l12 12M18 6L6 18" /></svg>
+);

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ViewTransition } from "react";
 import { fromMonthly, type FinanceSettings } from "@/lib/finance";
 import { formatAr, formatNumber } from "@/lib/format";
 import { thumbUrl } from "@/lib/images";
@@ -30,25 +31,26 @@ export function VehicleCard({
   const delay = v.status === "sur_commande" ? v.eta || orderDelay : v.status === "arrivage" ? v.eta : "";
   const title = vehicleTitle(v);
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-xl bg-white text-ink shadow-[0_1px_3px_rgba(0,0,0,0.08)] ring-1 ring-black/5 transition-shadow duration-200 hover:shadow-xl sm:rounded-2xl">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-xl bg-white text-ink shadow-[0_1px_3px_rgba(0,0,0,0.08)] ring-1 ring-black/5 transition-[box-shadow,transform] duration-300 ease-(--ease-out) sm:rounded-2xl [@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:shadow-[0_18px_40px_-12px_rgba(31,34,36,0.35)]">
       <div className="shimmer relative aspect-[4/3] overflow-hidden">
         {photo ? (
           <>
-            <Img
-              src={thumbUrl(photo)}
-              fallback={photo}
-              alt={`${title} ${v.year ?? ""}`}
-              loading={priority ? "eager" : "lazy"}
-              className={`absolute inset-0 h-full w-full object-cover ${closed ? "grayscale-[70%]" : ""}`}
-            />
+            {/* Same name as the first photo of the vehicle page: it flies there. */}
+            <ViewTransition name={`vehicle-photo-${v.id}`} share="morph" default="none">
+              <span className="absolute inset-0 transition-transform duration-500 ease-(--ease-out) [@media(hover:hover)]:group-hover:scale-105">
+                <Img
+                  src={thumbUrl(photo)}
+                  fallback={photo}
+                  alt={`${title} ${v.year ?? ""}`}
+                  loading={priority ? "eager" : "lazy"}
+                  className={`absolute inset-0 h-full w-full object-cover ${closed ? "grayscale-[70%]" : ""}`}
+                />
+              </span>
+            </ViewTransition>
             {second && !closed && (
-              <Img
-                src={thumbUrl(second)}
-                fallback={second}
-                alt=""
-                loading="lazy"
-                className="absolute inset-0 hidden h-full w-full object-cover [@media(hover:hover)]:block [@media(hover:hover)]:opacity-0! [@media(hover:hover)]:group-hover:opacity-100!"
-              />
+              <span className="pointer-events-none absolute inset-0 hidden transition-[opacity,scale] duration-500 ease-(--ease-out) [@media(hover:hover)]:block [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:scale-105 [@media(hover:hover)]:group-hover:opacity-100">
+                <Img src={thumbUrl(second)} fallback={second} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+              </span>
             )}
           </>
         ) : (
@@ -80,7 +82,7 @@ export function VehicleCard({
         <p className="mt-0.5 truncate text-[12px] text-muted sm:text-[13px]">{facts.join(" · ") || v.version}</p>
         <div className="mt-auto pt-2">
           {v.oldPrice && v.price && v.oldPrice > v.price && !closed && (
-            <p className="text-[11px] text-muted line-through">{formatAr(v.oldPrice)}</p>
+            <p className="text-xs text-muted line-through">{formatAr(v.oldPrice)}</p>
           )}
           <p className={`font-display text-[17px] leading-tight font-bold sm:text-xl ${closed ? "text-muted" : v.oldPrice && v.price && v.oldPrice > v.price ? "text-red-700" : "text-ink"}`}>
             {closed ? STATUSES[v.status].short : v.price ? formatAr(v.price) : "Sur demande"}
@@ -91,7 +93,7 @@ export function VehicleCard({
             </p>
           )}
           {delay && !closed && (
-            <p className="mt-1 flex items-center gap-1 truncate text-[11px] text-muted sm:text-xs">
+            <p className="mt-1 flex items-center gap-1 truncate text-xs text-muted">
               <ClockIcon className="h-3.5 w-3.5 shrink-0 text-cyan-deep" />
               <span className="sr-only">{v.status === "arrivage" ? "Arrivée prévue :" : "Délai :"}</span>
               {v.status === "arrivage" ? `Arrivée ${delay}` : delay}

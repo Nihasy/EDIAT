@@ -34,7 +34,7 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14">
+      <section className="reveal mx-auto max-w-7xl px-4 py-14">
         <SectionTitle kicker="Étape par étape" title="Comment se passe une commande" />
         <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
@@ -52,7 +52,7 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
         </ol>
       </section>
 
-      <section id="demande" className="scroll-mt-24 bg-swirl">
+      <section id="demande" className="reveal scroll-mt-4 bg-swirl">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 lg:grid-cols-[1fr_1.4fr]">
           <div>
             <SectionTitle kicker="Recherche personnalisée" title="Décrivez votre futur véhicule" />
@@ -85,14 +85,14 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
       </section>
 
       {catalogue.length > 0 && (
-        <div id="catalogue" className="scroll-mt-24">
+        <div id="catalogue" className="scroll-mt-4">
           <Rail id="catalogue-titre" kicker="Exemples à importer" title="Catalogue sur commande" href="/voitures?dispo=sur_commande">
             {catalogue.map((v) => <VehicleCard key={v.id} v={v} finance={settings.finance} orderDelay={settings.orderDelay} />)}
           </Rail>
         </div>
       )}
 
-      <section className="mx-auto max-w-4xl px-4 pb-16">
+      <section className="reveal mx-auto max-w-4xl px-4 pb-16">
         <SectionTitle kicker="Questions fréquentes" title="Bon à savoir" />
         <div className="divide-y divide-black/10 rounded-2xl border border-black/10 bg-white">
           {[

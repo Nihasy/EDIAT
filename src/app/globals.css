@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Short landscape screens (phone held sideways): layouts sized on the
+   height must fit between the header and the tab bar. */
+@custom-variant short (@media (max-height: 520px) and (orientation: landscape));
+
 /* Ediat Garage — brand colours taken from the EG logo. */
 @theme inline {
   --color-ink: #1f2224; /* charcoal, header and footer */
@@ -17,6 +21,14 @@
 
 html {
   scroll-behavior: smooth;
+  /* The scrollbar space is always kept: a short page (or a loading state)
+     does not shift the layout sideways, and page transitions are not
+     cancelled by the viewport changing width mid-animation. */
+  scrollbar-gutter: stable;
+}
+/* Public site: anchors and route changes land below the sticky header. */
+html:has([data-site-main]) {
+  scroll-padding-top: 5rem;
 }
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -61,7 +73,7 @@ body {
 }
 
 @utility input {
-  @apply w-full rounded-lg border border-black/15 bg-white px-3 py-2.5 text-[15px] outline-none focus:border-cyan-deep focus:ring-2 focus:ring-cyan/25;
+  @apply min-h-11 w-full rounded-lg border border-black/15 bg-white px-3 py-2.5 text-[15px] outline-none focus:border-cyan-deep focus:ring-2 focus:ring-cyan/25;
 }
 
 @utility label {
@@ -126,6 +138,166 @@ body {
   .shimmer,
   .shimmer-dark {
     animation: none;
+  }
+}
+
+/* HEADER: charcoal glass; see-through over a photo banner until scrolled. */
+.site-header {
+  background-color: rgb(31 34 36 / 0.9);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.18);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  backdrop-filter: blur(20px) saturate(1.5);
+  transition:
+    background-color 300ms var(--ease-out),
+    box-shadow 300ms var(--ease-out);
+}
+body:has([data-hero-overlay]) .site-header:not([data-scrolled="true"]) {
+  background-color: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+body:has([data-hero-overlay]) .site-header:not([data-scrolled="true"]) .header-rule {
+  opacity: 0;
+}
+
+/* MOTION
+   One easing family for the whole site; exits faster than entrances. Every
+   effect below is decoration: content stays readable without it, and it is
+   switched off when the visitor prefers reduced motion. */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-exit: 160ms;
+  --duration-enter: 260ms;
+  --duration-move: 420ms;
+}
+
+/* Sections rise into place as they scroll into view (scroll-driven, no
+   JavaScript). Browsers without support simply show them. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero: the photo of the current slide slowly pushes in, its text arrives in
+   steps, and the active dot fills up until the next slide. */
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fill-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-active="true"] .hero-photo {
+    animation: ken-burns 9s var(--ease-out) both;
+  }
+  [data-active="true"] .hero-in {
+    animation: rise-in 700ms var(--ease-out) both;
+  }
+  [data-active="true"] .hero-in:nth-child(2) { animation-delay: 80ms; }
+  [data-active="true"] .hero-in:nth-child(3) { animation-delay: 160ms; }
+  [data-active="true"] .hero-in:nth-child(4) { animation-delay: 240ms; }
+  [data-active="true"] .hero-in:nth-child(5) { animation-delay: 320ms; }
+}
+.hero-progress {
+  transform-origin: left;
+  animation: fill-x 6s linear both;
+}
+[data-paused="true"] .hero-progress {
+  animation-play-state: paused;
+}
+
+/* VIEW TRANSITIONS
+   Page changes: the content fades and rises slightly, the header and tab bar
+   stay put. A vehicle photo flies from its card to the vehicle page. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+/* Fixed chrome stays above the page content while it animates. */
+::view-transition-group(site-header),
+::view-transition-group(tab-bar) {
+  z-index: 10;
+}
+::view-transition-old(.page) {
+  animation: var(--duration-exit) ease-out both vt-fade reverse;
+}
+::view-transition-new(.page) {
+  animation:
+    var(--duration-enter) ease-out var(--duration-exit) both vt-fade,
+    var(--duration-move) var(--ease-out) both vt-rise;
+}
+::view-transition-group(.morph) {
+  animation-duration: var(--duration-move);
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: vt-blur;
+}
+/* Photos of the other cards (no partner on the next page) leave and arrive
+   with the page, not at the browser's default pace. */
+::view-transition-old(.morph):only-child {
+  animation: var(--duration-exit) ease-out both vt-fade reverse;
+}
+::view-transition-new(.morph):only-child {
+  animation: var(--duration-enter) ease-out var(--duration-exit) both vt-fade;
+}
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes vt-rise {
+  from {
+    transform: translateY(12px);
+  }
+}
+@keyframes vt-blur {
+  40% {
+    filter: blur(2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
 

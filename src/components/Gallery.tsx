@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, ViewTransition } from "react";
 import { thumbUrl } from "@/lib/images";
-import { ExpandIcon } from "./Icons";
+import { ChevronLeftIcon, ChevronRightIcon, ExpandIcon } from "./Icons";
 import { Lightbox } from "./Lightbox";
+import { PhotoBackdrop } from "./ui/PhotoBackdrop";
 import { Img } from "./ui/Img";
 
 // Vehicle photo gallery: swipe (native scroll-snap), arrows, dots, a "2 / 5"
 // counter, keyboard arrows and light thumbnails. Only the first photo loads
 // eagerly; the others load as they come into view.
-export function Gallery({ images, alt, overlay }: { images: string[]; alt: string; overlay?: React.ReactNode }) {
+// `morphName`: the first photo shares this view-transition name with the
+// vehicle card, so the card photo flies into place on navigation.
+export function Gallery({ images, alt, overlay, morphName }: { images: string[]; alt: string; overlay?: React.ReactNode; morphName?: string }) {
   const track = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [viewer, setViewer] = useState<number | null>(null);
@@ -85,25 +88,40 @@ export function Gallery({ images, alt, overlay }: { images: string[]; alt: strin
           onTouchStart={release}
           onWheel={release}
           aria-label="Photos du véhicule, utilisez les flèches pour naviguer"
-          className="shimmer flex aspect-[4/3] max-h-[72vh] w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden md:rounded-2xl [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink [&::-webkit-scrollbar]:hidden"
+          className="shimmer flex aspect-[4/3] max-h-[72svh] w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden md:rounded-2xl [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink [&::-webkit-scrollbar]:hidden"
         >
           {images.map((src, i) => (
             <div
               key={src}
               onClick={() => setViewer(i)}
-              className="h-full w-full shrink-0 cursor-zoom-in snap-center"
+              className="relative h-full w-full shrink-0 cursor-zoom-in snap-center overflow-hidden bg-ink"
               role="group"
               aria-roledescription="photo"
               aria-label={`${i + 1} sur ${count}`}
             >
-              <Img
-                src={src}
-                alt={i === 0 ? alt : `${alt}, photo ${i + 1}`}
-                loading={i === 0 ? "eager" : "lazy"}
-                fetchPriority={i === 0 ? "high" : "auto"}
-                draggable={false}
-                className="h-full w-full object-cover"
-              />
+              {/* Whole photo, never cropped (phone shots are often upright): the
+                  gaps are filled with a blurred copy of the photo. */}
+              <PhotoBackdrop src={thumbUrl(src)} />
+              {i === 0 && morphName ? (
+                <ViewTransition name={morphName} share="morph" default="none">
+                  <div className="relative h-full w-full">
+                    {/* The card thumbnail (already in the browser cache) shows
+                        at once; the full photo fades in over it. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={thumbUrl(src)} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-contain" />
+                    <Img src={src} alt={alt} loading="eager" fetchPriority="high" draggable={false} className="relative h-full w-full object-contain" />
+                  </div>
+                </ViewTransition>
+              ) : (
+                <Img
+                  src={src}
+                  alt={i === 0 ? alt : `${alt}, photo ${i + 1}`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "auto"}
+                  draggable={false}
+                  className="relative h-full w-full object-contain"
+                />
+              )}
             </div>
           ))}
         </div>
@@ -122,24 +140,24 @@ export function Gallery({ images, alt, overlay }: { images: string[]; alt: strin
               type="button"
               onClick={() => go(active - 1)}
               aria-label="Photo précédente"
-              className="absolute top-1/2 left-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-ink shadow-md transition hover:bg-white md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
+              className="absolute top-1/2 left-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-ink shadow-md transition hover:bg-white [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
             >
-              ‹
+              <ChevronLeftIcon className="h-5 w-5" />
             </button>
             <button
               type="button"
               onClick={() => go(active + 1)}
               aria-label="Photo suivante"
-              className="absolute top-1/2 right-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-ink shadow-md transition hover:bg-white md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
+              className="absolute top-1/2 right-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-ink shadow-md transition hover:bg-white [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
             >
-              ›
+              <ChevronRightIcon className="h-5 w-5" />
             </button>
             <span className="absolute bottom-3 left-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white tabular-nums backdrop-blur" aria-live="polite">
               {active + 1} / {count}
             </span>
             <div className="absolute inset-x-0 bottom-5 flex justify-center gap-1.5 sm:hidden" aria-hidden="true">
               {images.map((src, i) => (
-                <span key={src} className={`h-1.5 rounded-full transition-all ${i === active ? "w-5 bg-white" : "w-1.5 bg-white/50"}`} />
+                <span key={src} className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${i === active ? "w-5 bg-white" : "w-1.5 bg-white/50"}`} />
               ))}
             </div>
           </>

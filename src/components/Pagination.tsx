@@ -14,7 +14,7 @@ export function Pagination({
   label?: string;
 }) {
   if (pageCount <= 1) return null;
-  const base = "flex h-10 min-w-10 items-center justify-center rounded-full px-3 text-sm font-semibold transition";
+  const base = "flex h-11 min-w-11 items-center justify-center rounded-full px-3 text-sm font-semibold transition";
   return (
     <nav aria-label={label} className="mt-10 flex flex-wrap items-center justify-center gap-1.5">
       {page > 1 ? (
