@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
+import { CloseIcon } from "@/components/Icons";
+import { useDialog } from "@/components/useDialog";
 
 // Phones and tablets: filters open in a full-height panel from a button in the
 // sticky toolbar. Large screens show them in the sidebar instead. The panel is
@@ -11,17 +13,8 @@ const noop = () => () => {};
 export function FilterSheet({ active, total, children }: { active: number; total: number; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const mounted = useSyncExternalStore(noop, () => true, () => false);
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
+  const dialog = useRef<HTMLDivElement>(null);
+  useDialog(dialog, open, () => setOpen(false));
   return (
     <>
       <button
@@ -36,6 +29,7 @@ export function FilterSheet({ active, total, children }: { active: number; total
       </button>
       {mounted && createPortal(
       <div
+        ref={dialog}
         id="filter-sheet"
         role="dialog"
         aria-modal="true"
@@ -47,7 +41,7 @@ export function FilterSheet({ active, total, children }: { active: number; total
         <div className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] flex-col rounded-t-3xl bg-white shadow-2xl sm:inset-x-auto sm:top-0 sm:right-0 sm:max-h-none sm:w-[420px] sm:rounded-none">
           <div className="flex items-center justify-between border-b border-black/10 px-5 py-3">
             <p className="font-display text-xl font-bold">Filtres</p>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="flex h-11 w-11 items-center justify-center rounded-full text-2xl hover:bg-black/5">×</button>
+            <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="flex h-11 w-11 items-center justify-center rounded-full hover:bg-black/5"><CloseIcon className="h-6 w-6" /></button>
           </div>
           <div className="flex-1 overflow-y-auto px-5">{children}</div>
           <div className="border-t border-black/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">

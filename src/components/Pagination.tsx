@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { pageWindow } from "@/lib/pagination";
+import { ChevronLeftIcon, ChevronRightIcon } from "./Icons";
 
 // Accessible numbered pagination. `hrefFor(page)` keeps the other URL params.
 export function Pagination({
@@ -18,11 +19,11 @@ export function Pagination({
   return (
     <nav aria-label={label} className="mt-10 flex flex-wrap items-center justify-center gap-1.5">
       {page > 1 ? (
-        <Link href={hrefFor(page - 1)} rel="prev" className={`${base} border border-black/15 bg-white hover:border-ink`}>
-          ‹ <span className="ml-1 hidden sm:inline">Précédent</span>
+        <Link href={hrefFor(page - 1)} rel="prev" aria-label="Page précédente" className={`${base} border border-black/15 bg-white hover:border-ink`}>
+          <ChevronLeftIcon className="h-4 w-4" /> <span className="ml-1 hidden sm:inline">Précédent</span>
         </Link>
       ) : (
-        <span className={`${base} border border-black/10 text-black/55`} aria-hidden="true">‹ <span className="ml-1 hidden sm:inline">Précédent</span></span>
+        <span className={`${base} border border-black/10 text-black/55`} aria-hidden="true"><ChevronLeftIcon className="h-4 w-4" /> <span className="ml-1 hidden sm:inline">Précédent</span></span>
       )}
       {pageWindow(page, pageCount).map((p, i) =>
         p === "…" ? (
@@ -36,11 +37,11 @@ export function Pagination({
         ),
       )}
       {page < pageCount ? (
-        <Link href={hrefFor(page + 1)} rel="next" className={`${base} border border-black/15 bg-white hover:border-ink`}>
-          <span className="mr-1 hidden sm:inline">Suivant</span> ›
+        <Link href={hrefFor(page + 1)} rel="next" aria-label="Page suivante" className={`${base} border border-black/15 bg-white hover:border-ink`}>
+          <span className="mr-1 hidden sm:inline">Suivant</span> <ChevronRightIcon className="h-4 w-4" />
         </Link>
       ) : (
-        <span className={`${base} border border-black/10 text-black/55`} aria-hidden="true"><span className="mr-1 hidden sm:inline">Suivant</span> ›</span>
+        <span className={`${base} border border-black/10 text-black/55`} aria-hidden="true"><span className="mr-1 hidden sm:inline">Suivant</span> <ChevronRightIcon className="h-4 w-4" /></span>
       )}
     </nav>
   );

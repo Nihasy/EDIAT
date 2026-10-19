@@ -27,7 +27,11 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [autoplay, setAutoplay] = useState(false);
+  // Furthest slide reached: photos load one slide ahead, not all six at once
+  // (each is a full-size photo, a lot of data on a phone connection).
+  const [reached, setReached] = useState(0);
   const count = slides.length;
+  if (active > reached) setReached(active);
 
   useEffect(() => {
     const el = track.current;
@@ -95,7 +99,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
             aria-label={`${i + 1} sur ${count} : ${s.title}, ${s.price}`}
             className="shimmer-dark relative block h-[74svh] min-h-[460px] w-full shrink-0 snap-center overflow-hidden sm:h-auto sm:min-h-0 sm:aspect-[16/9] lg:aspect-auto lg:h-[88svh] lg:max-h-[900px] lg:min-h-[560px] short:aspect-auto short:h-[calc(100svh-4.5rem)] short:min-h-[260px] lg:short:h-svh"
           >
-            <HeroPhoto src={s.image} eager={i === 0} />
+            {i <= reached + 1 && <HeroPhoto src={s.image} eager={i === 0} />}
             <LinkPendingOverlay />
             {/* Top shade for the header, bottom shade for the text. */}
             <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/60 to-transparent" aria-hidden="true" />

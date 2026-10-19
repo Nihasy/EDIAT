@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { saveVehicle, type FormState } from "@/app/admin/actions";
 import { PendingTiles, UploadTile, useUploads } from "@/components/admin/UploadTile";
 import { Button } from "@/components/ui/Button";
@@ -66,6 +66,15 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
   const [financing, setFinancing] = useState(vehicle?.financing ?? true);
   const [monthlyOverride, setMonthlyOverride] = useState(vehicle?.monthlyOverride ? formatNumber(vehicle.monthlyOverride) : "");
   const [dirty, setDirty] = useState(false);
+  // A refused save (validation error) is still unsaved.
+  const unsaved = dirty || (!pending && !!state?.error);
+  // Closing the tab or reloading with unsaved changes asks for confirmation.
+  useEffect(() => {
+    if (!unsaved) return;
+    const onLeave = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", onLeave);
+    return () => window.removeEventListener("beforeunload", onLeave);
+  }, [unsaved]);
   const uploads = useUploads((url) => {
     setImages((list) => [...list, url]);
     setDirty(true);
@@ -258,7 +267,7 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
           <div className="min-w-0 flex-1">
             <FormMessage error={state?.error} ok={!dirty ? state?.ok : undefined} />
           </div>
-          {dirty && <span className="text-sm text-orange-deep">Modifications non enregistrées</span>}
+          {unsaved && <span className="text-sm text-orange-deep">Modifications non enregistrées</span>}
         </div>
       </div>
     </form>

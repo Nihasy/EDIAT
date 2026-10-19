@@ -176,15 +176,14 @@ export function Gallery({ images, alt, overlay, morphName }: { images: string[];
         />
       )}
       {count > 1 && (
-        <div className="mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:px-0 [&::-webkit-scrollbar]:hidden" role="tablist" aria-label="Choisir une photo">
+        <div className="mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:px-0 [&::-webkit-scrollbar]:hidden" role="group" aria-label="Choisir une photo">
           {images.map((src, i) => (
             <button
               key={src}
               type="button"
-              role="tab"
               onClick={() => go(i)}
               aria-label={`Photo ${i + 1}`}
-              aria-selected={i === active}
+              aria-current={i === active}
               className={`shimmer aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-lg border-2 transition sm:w-24 ${i === active ? "border-orange" : "border-transparent opacity-70 hover:opacity-100"}`}
             >
               <Img src={thumbUrl(src)} fallback={src} alt="" loading="lazy" className="h-full w-full object-cover" />

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: { default: "Ediat Garage — Véhicules d'occasion importés de Corée", template: "%s · Ediat Garage" },
   description,
   applicationName: "Ediat Garage",
-  appleWebApp: { title: "Ediat Garage", statusBarStyle: "black-translucent" },
+  appleWebApp: { title: "Ediat Garage", statusBarStyle: "black" },
   openGraph: { type: "website", locale: "fr_FR", siteName: "Ediat Garage", description },
   twitter: { card: "summary_large_image" },
 };

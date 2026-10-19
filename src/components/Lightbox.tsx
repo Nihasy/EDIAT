@@ -2,25 +2,22 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { thumbUrl } from "@/lib/images";
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon } from "./Icons";
+import { useDialog } from "./useDialog";
 
 // Full-screen photo viewer: black background, swipe or arrows, counter,
 // thumbnails, Escape to close. Opens on the photo that was tapped.
 export function Lightbox({ images, alt, start, onClose }: { images: string[]; alt: string; start: number; onClose: (index: number) => void }) {
+  const dialog = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
-  const closeBtn = useRef<HTMLButtonElement>(null);
   const [active, setActive] = useState(start);
   const count = images.length;
+  useDialog(dialog, true, () => onClose(active));
 
   useEffect(() => {
     const el = track.current;
     if (el) el.scrollLeft = start * el.clientWidth;
-    closeBtn.current?.focus();
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
   }, [start]);
 
   useEffect(() => {
@@ -44,7 +41,6 @@ export function Lightbox({ images, alt, start, onClose }: { images: string[]; al
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose(active);
       if (e.key === "ArrowRight") go(active + 1);
       if (e.key === "ArrowLeft") go(active - 1);
     };
@@ -53,10 +49,10 @@ export function Lightbox({ images, alt, start, onClose }: { images: string[]; al
   });
 
   return createPortal(
-    <div role="dialog" aria-modal="true" aria-label={`Photos de ${alt}`} className="fixed inset-0 z-[60] flex flex-col bg-black text-white">
+    <div ref={dialog} role="dialog" aria-modal="true" aria-label={`Photos de ${alt}`} className="fixed inset-0 z-[60] flex flex-col bg-black text-white">
       <div className="flex items-center justify-between px-3 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2">
         <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-semibold tabular-nums" aria-live="polite">{active + 1} / {count}</span>
-        <button ref={closeBtn} type="button" onClick={() => onClose(active)} aria-label="Fermer" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20"><CloseIcon className="h-6 w-6" /></button>
+        <button type="button" onClick={() => onClose(active)} aria-label="Fermer" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20"><CloseIcon className="h-6 w-6" /></button>
       </div>
       <div className="relative min-h-0 flex-1">
         <div ref={track} className="flex h-full snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -79,7 +75,7 @@ export function Lightbox({ images, alt, start, onClose }: { images: string[]; al
           {images.map((src, i) => (
             <button key={src} type="button" onClick={() => go(i)} aria-label={`Photo ${i + 1}`} aria-current={i === active} className={`aspect-[4/3] w-16 shrink-0 overflow-hidden rounded-md border-2 transition-opacity duration-200 ${i === active ? "border-orange opacity-100" : "border-transparent opacity-50 hover:opacity-90"}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src.replace(/(vehicles-\d+-[a-f0-9]+)\.(jpg|png|webp|gif)$/, "$1-t.jpg")} alt="" loading="lazy" className="h-full w-full object-cover" />
+              <img src={thumbUrl(src)} alt="" loading="lazy" className="h-full w-full object-cover" />
             </button>
           ))}
         </div>

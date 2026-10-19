@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SearchIcon } from "@/components/Icons";
+import { CloseIcon, SearchIcon } from "@/components/Icons";
 import { Pagination } from "@/components/Pagination";
 import { VehicleCard } from "@/components/VehicleCard";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
@@ -103,7 +103,7 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
               {chips.map(([k, v]) => (
                 <li key={k}>
                   <Link href={href(base, { [k]: "" })} className="chip min-h-10 px-3.5 bg-ink/90 text-white hover:bg-ink" aria-label={`Retirer le filtre ${v}`}>
-                    {(CHIP_LABEL[k] ?? ((x: string) => x))(v)} <span aria-hidden="true">×</span>
+                    {(CHIP_LABEL[k] ?? ((x: string) => x))(v)} <CloseIcon className="h-3.5 w-3.5" />
                   </Link>
                 </li>
               ))}

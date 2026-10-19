@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CloseIcon, MenuIcon } from "../Icons";
 
 export function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
   const [open, setOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const [prevPath, setPrevPath] = useState(pathname);
   if (pathname !== prevPath) {
@@ -16,11 +17,19 @@ export function MobileMenu({ links }: { links: { href: string; label: string }[]
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    // A tap anywhere else on the page closes the menu.
+    const onPointer = (e: PointerEvent) => {
+      if (!root.current?.closest("header")?.contains(e.target as Node)) setOpen(false);
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
   }, [open]);
   return (
-    <div className="lg:hidden">
+    <div ref={root} className="lg:hidden">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

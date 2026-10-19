@@ -15,8 +15,9 @@ export function ShareButton({ title, url }: { title: string; url: string }) {
           try {
             await navigator.share({ title, url });
             return;
-          } catch {
-            // Cancelled or refused: fall back to copying.
+          } catch (err) {
+            // Closed by the visitor: nothing to do. Refused (no permission): copy instead.
+            if ((err as Error).name === "AbortError") return;
           }
         }
         try {
