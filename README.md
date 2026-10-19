@@ -21,9 +21,10 @@ Un véhicule ne peut pas être mis en ligne sans au moins une photo.
 ## Pages publiques
 
 Mise en page « photos d'abord », pensée pour le téléphone (inspirée des places de marché comme Autowini), vérifiée
-de 360 px à 1440 px.
+de 320 px à 1920 px, téléphone en paysage compris.
 
-- **Accueil** : grande bannière photo des véhicules mis en avant (défilement automatique, swipe), recherche,
+- **Accueil** : bannière photo plein écran sous un en-tête transparent (défilement automatique avec barre de
+  progression, swipe, photos chargées une diapositive à l'avance), recherche,
   pastilles de disponibilité, icônes par type de véhicule, ronds des marques (logos), rangées de véhicules à faire
   glisser (showroom, arrivage, sur commande, vendus), bannière **Ediat Facility** « Roulez aujourd'hui, payez à votre
   rythme ! », import en 4 icônes.
@@ -54,10 +55,18 @@ Chaque formulaire enregistre une **demande** dans le back-office, puis propose d
 - **Navigation** : barre d'onglets en bas d'écran sur téléphone et tablette (Accueil, Véhicules, Favoris, Facility,
   WhatsApp), remplacée sur la fiche véhicule par la barre Favori / Appeler / WhatsApp ; photos en plein écran
   (swipe, flèches, vignettes, Échap) ; bouton Partager (menu de partage du téléphone, sinon copie du lien).
-- Zones tactiles de 44 px, icônes SVG (aucun emoji dans l'interface), défilement doux.
+- **Mouvement** : transitions entre pages (fondu), photo de la carte qui « vole » jusqu'à la fiche, sections qui
+  apparaissent au défilement ; tout est coupé si l'appareil demande moins de mouvement.
+- **Photos** : affichées en entier (jamais recadrées) sur un fond flou de la même photo ; photos en hauteur prises
+  au téléphone placées à droite dans la bannière.
+- **Fenêtres** (plein écran photo, panneau Filtres) : focus gardé à l'intérieur, Échap ferme, retour au bouton
+  d'ouverture ; le menu mobile se ferme d'un tap à côté.
+- **iPhone** : barre d'état opaque une fois ajouté à l'écran d'accueil, barres du bas au-dessus de l'indicateur.
+- Zones tactiles de 44 px, texte de 11 px minimum, icônes SVG (aucun emoji ni caractère × ‹ › dans l'interface),
+  défilement doux, place de la barre de défilement réservée (pas de saut de mise en page).
 
 Le skill est installé dans `.claude/skills/ui-ux-pro-max/` (données et guide) ; le serveur MCP 21st.dev est déclaré
-dans `.mcp.json`.
+dans `.mcp.json` (il lit la clé dans la variable d'environnement `API_KEY_21ST`, à créer depuis 21st.dev/mcp).
 
 ## Back-office (`/admin`)
 
@@ -72,6 +81,8 @@ dans `.mcp.json`.
 - **Paramètres** : WhatsApp, téléphone, adresse, horaires, lien Google Maps, bandeau d'annonce, réseaux sociaux,
   délai et acompte des commandes, réglages **Ediat Facility** (apport minimum, taux annuel, durées, arrondi,
   conditions) avec exemple de calcul.
+
+Quitter une fiche véhicule avec des modifications non enregistrées demande une confirmation.
 
 ### Calcul de la mensualité
 
@@ -90,7 +101,8 @@ npm install
 npm run dev          # http://localhost:3000 — back-office : /admin (mot de passe local : ediat)
 ```
 
-En local, la base (PGlite) et les photos sont stockées dans `.data/`.
+En local, la base (PGlite) et les photos sont stockées dans `.data/` (jamais commité). Après une écriture directe
+dans la base (script), arrêter le serveur, supprimer `.next` puis relancer pour vider le cache du site.
 
 ## Mise en ligne sur Vercel
 
@@ -128,4 +140,6 @@ Next.js 16 (App Router, Server Actions), Tailwind CSS 4, Neon Postgres / PGlite,
 Le site public est servi depuis le cache (relu au plus une fois par heure, et immédiatement après chaque
 modification dans le back-office) : les visiteurs ne réveillent pas la base. Photos réduites dans le navigateur
 avant envoi (1600 px + miniature 720 px). Formulaires publics : champ piège anti-robots et 8 demandes / heure par
-connexion. Connexion au back-office limitée à 10 essais / 15 min.
+connexion. Connexion au back-office limitée à 10 essais / 15 min. En-têtes de sécurité sur toutes les pages
+(`next.config.ts`) : pas d'affichage dans un autre site, pas de détection de type, adresse complète non transmise
+aux sites externes, caméra / micro / position désactivés.
