@@ -8,11 +8,14 @@ import { isStatus, PUBLIC_DISPO, STATUSES, vehicleFullTitle, type Vehicle, type 
 import { toVehicle } from "./vehicles";
 
 // Everything the public site shows comes from this snapshot, kept in the
-// Next.js cache: visitors and crawlers do not wake the database. It is read
-// again at most once an hour, and at once after any back-office change
-// (refreshSite in admin/actions clears SITE_TAG).
+// Next.js cache: visitors and crawlers do not wake the database. Any
+// back-office change clears it at once (refreshSite in admin/actions clears
+// SITE_TAG), so the timer is only a safety net for direct database writes.
+// One day, not one hour: on Vercel each rewrite counts against the team's
+// cache-write quota, shared with Moto Import, whose free plan was paused for
+// exceeding it on 10/10/2026.
 export const SITE_TAG = "site";
-const snapshot = { tags: [SITE_TAG], revalidate: 3600 };
+const snapshot = { tags: [SITE_TAG], revalidate: 86400 };
 
 // Private columns (cost, notes) are never selected for the public site.
 const PUBLIC_COLUMNS = `id, ref, status, brand, model, version, year, mileage_km, fuel, gearbox, body, drive, engine,

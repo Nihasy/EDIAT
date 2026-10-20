@@ -137,8 +137,8 @@ Accessibilité et affichage contrôlés de 320 à 1920 px (axe-core, chevaucheme
 ## Technique
 
 Next.js 16 (App Router, Server Actions), Tailwind CSS 4, Neon Postgres / PGlite, Vercel Blob.
-Le site public est servi depuis le cache (relu au plus une fois par heure, et immédiatement après chaque
-modification dans le back-office) : les visiteurs ne réveillent pas la base. Photos réduites dans le navigateur
+Le site public est servi depuis le cache (vidé immédiatement après chaque modification dans le back-office, et
+sinon relu une fois par jour seulement, pour ménager le quota de cache Vercel partagé avec Moto Import) : les visiteurs ne réveillent pas la base. Photos réduites dans le navigateur
 avant envoi (1600 px + miniature 720 px). Formulaires publics : champ piège anti-robots et 8 demandes / heure par
 connexion. Connexion au back-office limitée à 10 essais / 15 min. En-têtes de sécurité sur toutes les pages
 (`next.config.ts`) : pas d'affichage dans un autre site, pas de détection de type, adresse complète non transmise

@@ -3,7 +3,8 @@ import { publicVehicles } from "@/lib/catalog";
 import { siteUrl } from "@/lib/site";
 import { vehicleHref } from "@/lib/vehicle";
 
-export const revalidate = 3600;
+// Same one-day delay as the catalogue snapshot (lib/catalog).
+export const revalidate = 86400;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl();
