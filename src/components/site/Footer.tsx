@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { displayPhone, telLink, waLink } from "@/lib/format";
 import type { Settings } from "@/lib/settings-shared";
-import { FEATURED_BRANDS } from "@/lib/vehicle";
 import { ClockIcon, PhoneIcon, PinIcon } from "../Icons";
 import { Logo } from "../Logo";
 import { SocialLinks } from "../SocialLinks";
@@ -31,9 +30,6 @@ export function Footer({ settings }: { settings: Settings }) {
             <li><Link href="/voitures?dispo=showroom" className="hover:text-white">Disponibles au showroom</Link></li>
             <li><Link href="/voitures?dispo=arrivage" className="hover:text-white">En cours d&apos;arrivage</Link></li>
             <li><Link href="/voitures?dispo=sur_commande" className="hover:text-white">Catalogue sur commande</Link></li>
-            {FEATURED_BRANDS.map((b) => (
-              <li key={b}><Link href={`/voitures?marque=${encodeURIComponent(b)}`} className="hover:text-white">{b} d&apos;occasion</Link></li>
-            ))}
           </ul>
         </div>
         <div>

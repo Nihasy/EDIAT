@@ -72,20 +72,7 @@ export const GEARBOXES = ["Automatique", "Manuelle"];
 export const BODIES = ["SUV", "4x4", "Berline", "Citadine", "Monospace", "Pick-up", "Utilitaire", "Minibus", "Break", "Coupé"];
 export const DRIVES = ["2 roues motrices", "4x4 / AWD"];
 // Suggestions only: any brand can be typed in.
-export const BRANDS = [
-  "Hyundai",
-  "Kia",
-  "SsangYong",
-  "Daewoo",
-  "Chevrolet",
-  "Genesis",
-  "Renault Samsung",
-  "Volkswagen",
-  "Audi",
-  "Mercedes-Benz",
-  "BMW",
-  "Toyota",
-];
+export { BRANDS } from "./brands";
 // Brands shown on the home page, in this order.
 export const FEATURED_BRANDS = ["Hyundai", "Kia", "SsangYong", "Daewoo"];
 

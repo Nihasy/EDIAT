@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { connection } from "next/server";
-import { ArrowRightIcon, DocIcon, KeyIcon, SearchIcon, ShieldIcon, ShipIcon, WalletIcon } from "@/components/Icons";
+import { ArrowRightIcon, DocIcon, KeyIcon, ShieldIcon, ShipIcon, WalletIcon } from "@/components/Icons";
 import { BodyIcon } from "@/components/site/BodyIcon";
+import { SearchBox } from "@/components/site/SearchBox";
 import { HeroCarousel, type Slide } from "@/components/site/HeroCarousel";
 import { Rail } from "@/components/site/Rail";
 import { VehicleCard } from "@/components/VehicleCard";
@@ -9,17 +10,11 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { publicVehicles, siteSettings } from "@/lib/catalog";
 import { fromMonthly } from "@/lib/finance";
 import { formatAr, formatNumber, waLink } from "@/lib/format";
+import { BRANDS, BRAND_LOGOS } from "@/lib/brands";
 import { BODIES, FEATURED_BRANDS, STATUSES, vehicleHref, vehicleTitle, type Vehicle } from "@/lib/vehicle";
 
 // Rendered on each visit from the cached catalogue (lib/catalog): the
 // database is not read, and a change made in the back-office shows at once.
-
-const BRAND_LOGOS: Record<string, string> = {
-  Hyundai: "/brands/hyundai.jpg",
-  Kia: "/brands/kia.jpg",
-  SsangYong: "/brands/ssangyong.jpg",
-  Daewoo: "/brands/daewoo.jpg",
-};
 
 function countBy(list: Vehicle[], key: (v: Vehicle) => string) {
   const map = new Map<string, number>();
@@ -54,7 +49,9 @@ export default async function HomePage() {
         status: v.status,
       };
     });
-  const brandList = [...new Set([...FEATURED_BRANDS, ...[...brands.keys()]])];
+  // Korean brands first, then the others in stock (most cars first), then every other brand A–Z.
+  const inStock = [...brands.keys()].sort((a, b) => (brands.get(b) ?? 0) - (brands.get(a) ?? 0));
+  const brandList = [...new Set([...FEATURED_BRANDS, ...inStock, ...BRANDS])];
   const bodyList = [...new Set([...[...bodies.keys()], ...BODIES.slice(0, 6)])].filter((b) => BODIES.includes(b)).slice(0, 8);
 
   return (
@@ -71,12 +68,11 @@ export default async function HomePage() {
       <div className="relative z-10 mx-auto -mt-3 max-w-7xl px-0 sm:-mt-10 sm:px-4 short:mt-4">
         <div className="rounded-t-3xl bg-paper px-4 pt-5 pb-1 sm:rounded-3xl sm:bg-white sm:p-5 sm:shadow-[0_24px_60px_-20px_rgba(31,34,36,0.45)] sm:ring-1 sm:ring-black/5">
           <h1 className="sr-only">Ediat Garage, véhicules d&apos;occasion importés de Corée à Antananarivo</h1>
-          <form action="/voitures" role="search" className="flex items-center gap-2 rounded-full bg-white py-1 pr-1 pl-4 shadow-sm ring-1 ring-black/10 focus-within:ring-2 focus-within:ring-cyan-deep sm:bg-paper sm:shadow-none">
-            <SearchIcon className="h-5 w-5 shrink-0 text-muted" />
-            <label htmlFor="home-q" className="sr-only">Rechercher un véhicule</label>
-            <input id="home-q" name="q" type="search" placeholder="Tucson, Sportage, Rexton…" className="min-w-0 flex-1 bg-transparent py-2.5 outline-none" />
-            <button type="submit" className="btn-primary px-5 py-2.5">Chercher</button>
-          </form>
+          <SearchBox
+            popularBrands={[...brands.entries()].sort((x, y) => y[1] - x[1]).slice(0, 6).map(([name, n]) => ({ name, n }))}
+            whatsappHref={waLink(settings.whatsapp, "Bonjour Ediat Garage, je cherche un véhicule : ")}
+            placeholder="Tucson, Sportage, Rexton, diesel…"
+          />
           <nav aria-label="Disponibilité" className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
             {[
               { href: "/voitures?dispo=showroom", label: "Dispo de suite", n: showroom.length, dot: "bg-emerald-500" },
@@ -98,7 +94,7 @@ export default async function HomePage() {
           {bodyList.map((b) => (
             <li key={b} className="shrink-0">
               <Link href={`/voitures?carrosserie=${encodeURIComponent(b)}`} className="group/body flex w-[84px] flex-col items-center gap-1 rounded-2xl bg-white px-2 py-3 text-center ring-1 ring-black/5 transition-[color,box-shadow,transform] duration-300 ease-(--ease-out) hover:text-orange-deep hover:shadow-lg hover:ring-orange-deep md:w-auto [@media(hover:hover)]:hover:-translate-y-0.5">
-                <BodyIcon type={b} className="h-7 w-14 text-ink/80 transition-colors duration-300 group-hover/body:text-orange-deep" />
+                <BodyIcon type={b} className="h-[26px] w-[70px] text-ink/80 transition-colors duration-300 group-hover/body:text-orange-deep" />
                 <span className="text-xs font-semibold">{b}</span>
                 <span className="text-xs text-muted tabular-nums">{bodies.get(b) ?? 0}</span>
               </Link>
@@ -110,18 +106,18 @@ export default async function HomePage() {
       {/* BRANDS */}
       <section aria-label="Par marque" className="reveal mx-auto max-w-7xl pt-5">
         <ul className="flex gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden">
-          {brandList.map((b) => (
+          {brandList.map((b, i) => (
             <li key={b} className="shrink-0">
               <Link href={`/voitures?marque=${encodeURIComponent(b)}`} className="group flex w-[76px] flex-col items-center gap-1.5 sm:w-24">
                 <span className="relative flex h-[72px] w-[72px] items-center justify-center overflow-hidden rounded-full bg-white shadow-sm ring-2 ring-cyan/60 transition-[box-shadow,transform] duration-300 ease-(--ease-out) group-hover:shadow-lg group-hover:ring-orange sm:h-24 sm:w-24 [@media(hover:hover)]:group-hover:-translate-y-0.5">
                   {BRAND_LOGOS[b] ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={BRAND_LOGOS[b]} alt="" className="h-full w-full object-cover" />
+                    <img src={BRAND_LOGOS[b]} alt="" loading={i < 8 ? "eager" : "lazy"} decoding="async" className="h-full w-full object-cover" />
                   ) : (
                     <span className="font-display px-1 text-center text-sm leading-tight font-bold text-ink">{b}</span>
                   )}
                 </span>
-                <span className="text-xs font-semibold">{b} <span className="font-normal text-muted">{brands.get(b) ?? 0}</span></span>
+                <span className="text-xs font-semibold">{b}{brands.get(b) ? <> <span className="font-normal text-muted">{brands.get(b)}</span></> : null}</span>
               </Link>
             </li>
           ))}

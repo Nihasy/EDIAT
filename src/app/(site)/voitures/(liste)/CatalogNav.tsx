@@ -38,22 +38,3 @@ export function PendingResults({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-// Availability chips of the toolbar.
-export function NavChip({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
-  const { navigate } = useCatalogNav();
-  return (
-    <a
-      href={href}
-      aria-current={active ? "true" : undefined}
-      onClick={(e) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-        e.preventDefault();
-        navigate(href);
-      }}
-      className={`flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-semibold ring-1 transition-colors duration-200 ${active ? "bg-orange-deep text-white ring-orange-deep" : "bg-white ring-black/10 hover:ring-ink"}`}
-    >
-      {children}
-    </a>
-  );
-}

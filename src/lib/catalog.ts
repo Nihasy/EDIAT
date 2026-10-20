@@ -2,9 +2,13 @@ import "server-only";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { queryStatic } from "./db";
-import { fold } from "./format";
+import { BRANDS } from "./brands";
+import { matchFilters, num, SORTS, toFilterable, type Filters } from "./catalog-filter";
+import { formatNumber } from "./format";
+import { thumbUrl } from "./images";
+import { BODY_WORDS, BRAND_NICKNAMES, normalize, scoreTexts, searchList } from "./search";
 import { parseSettings } from "./settings-shared";
-import { isStatus, PUBLIC_DISPO, STATUSES, vehicleFullTitle, type Vehicle, type VehicleStatus } from "./vehicle";
+import { BODIES, PUBLIC_DISPO, STATUSES, vehicleTitle, type Vehicle, type VehicleStatus } from "./vehicle";
 import { toVehicle } from "./vehicles";
 
 // Everything the public site shows comes from this snapshot, kept in the
@@ -51,97 +55,60 @@ export async function publicVehicle(id: number) {
   return (await publicVehicles()).find((v) => v.id === id) ?? null;
 }
 
-export const SORTS = [
-  { id: "", label: "Disponibilité" },
-  { id: "recent", label: "Nouveautés" },
-  { id: "prix_asc", label: "Prix croissant" },
-  { id: "prix_desc", label: "Prix décroissant" },
-  { id: "km_asc", label: "Kilométrage" },
-  { id: "annee_desc", label: "Année récente" },
-] as const;
-
-export const FILTER_KEYS = ["q", "dispo", "marque", "carrosserie", "carburant", "boite", "prix_max", "annee_min", "km_max", "tri", "page"] as const;
-export type FilterKey = (typeof FILTER_KEYS)[number];
-export type Filters = Partial<Record<FilterKey, string>>;
-
-export function readFilters(sp: Record<string, string | string[] | undefined>): Filters {
-  const out: Filters = {};
-  for (const k of FILTER_KEYS) {
-    const v = sp[k];
-    const s = (Array.isArray(v) ? v[0] : v)?.trim().slice(0, 60);
-    if (s) out[k] = s;
-  }
-  return out;
-}
-
-const num = (v?: string) => {
-  const n = Number(v?.replace(/\s/g, ""));
-  return v && Number.isFinite(n) && n > 0 ? n : undefined;
-};
-
-function matchesText(v: Vehicle, q: string) {
-  const hay = fold([vehicleFullTitle(v), v.ref, v.fuel, v.gearbox, v.body, v.engine, v.color].join(" "));
-  return fold(q)
-    .split(/\s+/)
-    .filter(Boolean)
-    .every((w) => hay.includes(w));
-}
-
-type Facet = "dispo" | "marque" | "carrosserie" | "carburant" | "boite";
-
-function matches(v: Vehicle, f: Filters, skip?: Facet) {
-  const dispo = isStatus(f.dispo) ? (f.dispo as VehicleStatus) : null;
-  if (skip !== "dispo") {
-    if (dispo ? v.status !== dispo : !STATUSES[v.status].listed) return false;
-  } else if (!STATUSES[v.status].listed) return false;
-  if (skip !== "marque" && f.marque && fold(v.brand) !== fold(f.marque)) return false;
-  if (skip !== "carrosserie" && f.carrosserie && v.body !== f.carrosserie) return false;
-  if (skip !== "carburant" && f.carburant && v.fuel !== f.carburant) return false;
-  if (skip !== "boite" && f.boite && v.gearbox !== f.boite) return false;
-  const max = num(f.prix_max);
-  if (max && (v.price == null || v.price > max)) return false;
-  const year = num(f.annee_min);
-  if (year && (v.year == null || v.year < year)) return false;
-  const km = num(f.km_max);
-  if (km && (v.mileageKm == null || v.mileageKm > km)) return false;
-  if (f.q && !matchesText(v, f.q)) return false;
-  return true;
-}
-
 function count(list: Vehicle[], key: (v: Vehicle) => string) {
   const map = new Map<string, number>();
   for (const v of list) {
     const k = key(v);
     if (k) map.set(k, (map.get(k) ?? 0) + 1);
   }
-  return [...map.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([value, n]) => ({ value, n }));
+  return map;
 }
 
 export const PAGE_SIZE = 18;
 
-export async function searchVehicles(f: Filters) {
-  const all = await publicVehicles();
-  let results = all.filter((v) => matches(v, f));
-  const by = <T,>(fn: (v: Vehicle) => T | null, dir: 1 | -1) =>
-    (a: Vehicle, b: Vehicle) => {
-      const x = fn(a), y = fn(b);
-      if (x == null) return y == null ? 0 : 1;
-      if (y == null) return -1;
-      return x < y ? -dir : x > y ? dir : 0;
-    };
-  if (f.tri === "prix_asc") results = results.sort(by((v) => v.price, 1));
-  if (f.tri === "prix_desc") results = results.sort(by((v) => v.price, -1));
-  if (f.tri === "km_asc") results = results.sort(by((v) => v.mileageKm, 1));
-  if (f.tri === "annee_desc") results = results.sort(by((v) => v.year, -1));
-  if (f.tri === "recent") results = results.sort(by((v) => v.publishedAt ?? v.createdAt, -1));
-
-  const facets = {
-    dispo: PUBLIC_DISPO.map((s) => ({ value: s, n: all.filter((v) => v.status === s && matches(v, f, "dispo")).length })),
-    marque: count(all.filter((v) => matches(v, f, "marque")), (v) => v.brand),
-    carrosserie: count(all.filter((v) => matches(v, f, "carrosserie")), (v) => v.body),
-    carburant: count(all.filter((v) => matches(v, f, "carburant")), (v) => v.fuel),
-    boite: count(all.filter((v) => matches(v, f, "boite")), (v) => v.gearbox),
+type Key<T> = (v: Vehicle) => T | null;
+const by =
+  <T,>(fn: Key<T>, dir: 1 | -1) =>
+  (a: Vehicle, b: Vehicle) => {
+    const x = fn(a), y = fn(b);
+    if (x == null) return y == null ? 0 : 1;
+    if (y == null) return -1;
+    return x < y ? -dir : x > y ? dir : 0;
   };
+const SORT_KEYS: Record<string, Key<number | string>> = {
+  recent: (v) => v.publishedAt ?? v.createdAt,
+  prix: (v) => v.price,
+  km: (v) => v.mileageKm,
+  annee: (v) => v.year,
+};
+
+export async function searchVehicles(f: Filters) {
+  const listed = (await publicVehicles()).filter((v) => STATUSES[v.status].listed);
+  // Text first: the filter panel counts its results among these.
+  const { found, approximate } = searchList(listed, f.q);
+  const scores = new Map(found.map((x) => [x.item.id, x.score]));
+  const textHits = found.map((x) => x.item);
+  let results = textHits.filter((v) => matchFilters(v, f));
+
+  const sort = f.tri ?? (f.q ? "pertinence" : "");
+  if (sort === "pertinence" && f.q) {
+    // Availability still comes first: a sold-out match never beats one on sale.
+    results = [...results].sort(
+      (a, b) => STATUSES[a.status].rank - STATUSES[b.status].rank || (scores.get(b.id) ?? 0) - (scores.get(a.id) ?? 0),
+    );
+  } else if (SORT_KEYS[sort]) {
+    const def = SORTS.find((s) => s.id === sort)?.dir ?? "desc";
+    const dir = (f.ordre === "asc" || f.ordre === "desc" ? f.ordre : def) === "asc" ? 1 : -1;
+    results = [...results].sort(by(SORT_KEYS[sort], dir));
+  }
+
+  const dispo = PUBLIC_DISPO.map((s) => ({
+    value: s,
+    n: textHits.filter((v) => v.status === s && matchFilters(v, f, "dispo")).length,
+  }));
+  const dispoAll = textHits.filter((v) => matchFilters(v, f, "dispo")).length;
+  const bodies = count(textHits.filter((v) => matchFilters(v, f, "carrosserie")), (v) => v.body);
+  const brands = count(listed, (v) => v.brand);
 
   const pages = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
   const page = Math.min(pages, Math.max(1, Math.floor(num(f.page) ?? 1)));
@@ -150,8 +117,57 @@ export async function searchVehicles(f: Filters) {
     page,
     pages,
     items: results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
-    facets,
+    approximate,
+    sort,
+    dispo,
+    dispoAll,
+    bodies: Object.fromEntries(bodies),
+    // Brands in stock first (most cars first), then every other brand A–Z.
+    brands: [
+      ...[...brands.entries()].sort((a, b) => b[1] - a[1]).map(([name, n]) => ({ name, n })),
+      ...BRANDS.filter((b) => !brands.has(b)).map((name) => ({ name, n: 0 })),
+    ],
+    // Light list for the filter panel's live count.
+    pool: textHits.map(toFilterable),
   };
+}
+
+export type Suggestions = {
+  total: number;
+  approximate: boolean;
+  brands: { name: string; n: number }[];
+  bodies: { name: string; n: number }[];
+  vehicles: { slug: string; title: string; detail: string; price: number | null; status: VehicleStatus; image: string | null }[];
+};
+
+// Search-as-you-type: brands and types the query names, then the best vehicles.
+export async function suggest(q: string): Promise<Suggestions> {
+  const listed = (await publicVehicles()).filter((v) => STATUSES[v.status].listed);
+  const { found, approximate } = searchList(listed, q);
+  const stock = count(listed, (v) => v.brand);
+  const brands = BRANDS.map((name) => ({ name, n: stock.get(name) ?? 0, s: scoreTexts([name, BRAND_NICKNAMES[normalize(name)] ?? ""], q) }))
+    .filter((b) => b.s >= 0.8 || (b.s > 0 && b.n > 0))
+    .sort((a, b) => b.s - a.s || b.n - a.n)
+    .slice(0, 3)
+    .map(({ name, n }) => ({ name, n }));
+  const bodyCount = count(listed, (v) => v.body);
+  const bodies = BODIES.map((name) => ({ name, n: bodyCount.get(name) ?? 0, s: scoreTexts([name, BODY_WORDS[name] ?? ""], q) }))
+    .filter((b) => b.s > 0 && b.n > 0)
+    .sort((a, b) => b.s - a.s)
+    .slice(0, 2)
+    .map(({ name, n }) => ({ name, n }));
+  const vehicles = [...found]
+    .sort((a, b) => STATUSES[a.item.status].rank - STATUSES[b.item.status].rank || b.score - a.score)
+    .slice(0, 6)
+    .map(({ item: v }) => ({
+      slug: v.slug,
+      title: vehicleTitle(v) + (v.version ? ` ${v.version}` : ""),
+      detail: [v.year, v.mileageKm != null ? `${formatNumber(v.mileageKm)} km` : "", v.fuel, v.gearbox].filter(Boolean).join(" · "),
+      price: v.price,
+      status: v.status,
+      image: v.images[0] ? thumbUrl(v.images[0]) : null,
+    }));
+  return { total: found.length, approximate, brands, bodies, vehicles };
 }
 
 export async function similarVehicles(v: Vehicle, n = 4) {

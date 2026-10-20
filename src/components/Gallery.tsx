@@ -6,9 +6,10 @@ import { ChevronLeftIcon, ChevronRightIcon, ExpandIcon } from "./Icons";
 import { Lightbox } from "./Lightbox";
 import { PhotoBackdrop } from "./ui/PhotoBackdrop";
 import { Img } from "./ui/Img";
+import { Watermark } from "./ui/Watermark";
 
-// Vehicle photo gallery: swipe (native scroll-snap), arrows, dots, a "2 / 5"
-// counter, keyboard arrows and light thumbnails. Only the first photo loads
+// Vehicle photo gallery: swipe (native scroll-snap), see-through arrows, dots,
+// a watermark on each photo, keyboard arrows and light thumbnails. Only the first photo loads
 // eagerly; the others load as they come into view.
 // `morphName`: the first photo shares this view-transition name with the
 // vehicle card, so the card photo flies into place on navigation.
@@ -17,7 +18,7 @@ export function Gallery({ images, alt, overlay, morphName }: { images: string[];
   const [active, setActive] = useState(0);
   const [viewer, setViewer] = useState<number | null>(null);
   // Photo we are animating to: while set, intermediate scroll positions are
-  // ignored (no flickering counter, and arrows pressed mid-animation start
+  // ignored (no flickering dots, and arrows pressed mid-animation start
   // from the photo being shown, not from one passed on the way).
   const target = useRef<number | null>(null);
   const count = images.length;
@@ -122,6 +123,7 @@ export function Gallery({ images, alt, overlay, morphName }: { images: string[];
                   className="relative h-full w-full object-contain"
                 />
               )}
+              <Watermark />
             </div>
           ))}
         </div>
@@ -132,7 +134,7 @@ export function Gallery({ images, alt, overlay, morphName }: { images: string[];
           onClick={() => setViewer(active)}
           className="absolute right-3 bottom-3 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-black/60 px-3.5 text-sm font-semibold text-white backdrop-blur transition-colors duration-200 hover:bg-black/80"
         >
-          <ExpandIcon className="h-4 w-4" /> {count > 1 ? `${count} photos` : "Agrandir"}
+          <ExpandIcon className="h-4 w-4" /> Agrandir
         </button>
         {count > 1 && (
           <>
@@ -140,7 +142,7 @@ export function Gallery({ images, alt, overlay, morphName }: { images: string[];
               type="button"
               onClick={() => go(active - 1)}
               aria-label="Photo précédente"
-              className="absolute top-1/2 left-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-ink shadow-md transition hover:bg-white [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
+              className="absolute top-1/2 left-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-xl text-white ring-1 ring-white/25 backdrop-blur-[2px] transition hover:bg-black/40 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
             >
               <ChevronLeftIcon className="h-5 w-5" />
             </button>
@@ -148,13 +150,10 @@ export function Gallery({ images, alt, overlay, morphName }: { images: string[];
               type="button"
               onClick={() => go(active + 1)}
               aria-label="Photo suivante"
-              className="absolute top-1/2 right-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-ink shadow-md transition hover:bg-white [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
+              className="absolute top-1/2 right-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-xl text-white ring-1 ring-white/25 backdrop-blur-[2px] transition hover:bg-black/40 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
             >
               <ChevronRightIcon className="h-5 w-5" />
             </button>
-            <span className="absolute bottom-3 left-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white tabular-nums backdrop-blur" aria-live="polite">
-              {active + 1} / {count}
-            </span>
             <div className="absolute inset-x-0 bottom-5 flex justify-center gap-1.5 sm:hidden" aria-hidden="true">
               {images.map((src, i) => (
                 <span key={src} className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${i === active ? "w-5 bg-white" : "w-1.5 bg-white/50"}`} />
