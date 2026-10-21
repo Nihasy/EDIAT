@@ -48,7 +48,7 @@ export default async function FinancePage() {
                 `${f.product} de la ${f.partner}, notre partenaire bancaire`,
                 `Prêt de ${formatAr(f.minLoan)} à ${formatAr(f.maxLoan)}`,
                 `Mensualités fixes sur ${f.durations.join(", ")} mois`,
-                f.minDownPct > 0 ? `Apport à partir de ${f.minDownPct} % du prix` : `Frais de dossier ${formatNumber(f.feePct)} %, inclus dans le prêt`,
+                f.minDownPct > 0 ? `Apport à partir de ${f.minDownPct} % du prix` : `Frais de dossier ${formatNumber(f.feePct)} %, inclus dans le prêt`,
               ].map((t) => (
                 <li key={t} className="flex items-center gap-2"><CheckIcon className="h-5 w-5 text-cyan-deep" /> {t}</li>
               ))}

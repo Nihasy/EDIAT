@@ -102,7 +102,7 @@ export function FinanceSimulator({
           price > 0 && (
             <p className="rounded-xl bg-paper px-4 py-3 text-sm text-black/75" role="status">
               Le {settings.product} {settings.partner} finance de {formatAr(settings.minLoan)} à {formatAr(settings.maxLoan)}
-              {settings.minDownPct > 0 ? `, après un apport d'au moins ${settings.minDownPct} %` : ""}. Pour ce montant, parlons-en : nous trouverons une solution.
+              {settings.minDownPct > 0 ? `, après un apport d'au moins ${settings.minDownPct} %` : ""}. Pour ce montant, parlons-en : nous trouverons une solution.
             </p>
           )
         )}
@@ -117,7 +117,7 @@ export function FinanceSimulator({
           <dl className="mt-4 space-y-1 border-t border-white/25 pt-3 text-sm">
             <div className="flex justify-between gap-4"><dt className="text-white/80">Apport</dt><dd className="font-semibold">{formatAr(down)}</dd></div>
             <div className="flex justify-between gap-4"><dt className="text-white/80">Emprunté</dt><dd className="font-semibold">{formatAr(plan.loan)}</dd></div>
-            <div className="flex justify-between gap-4"><dt className="text-white/80">Frais de dossier ({settings.feePct} %)</dt><dd className="font-semibold">{formatAr(plan.fee)}</dd></div>
+            <div className="flex justify-between gap-4"><dt className="text-white/80">Frais de dossier ({settings.feePct} %)</dt><dd className="font-semibold">{formatAr(plan.fee)}</dd></div>
             <div className="flex justify-between gap-4"><dt className="text-white/80">Coût total</dt><dd className="font-semibold">{formatAr(plan.total)}</dd></div>
           </dl>
         )}

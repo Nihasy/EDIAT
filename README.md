@@ -173,6 +173,12 @@ absence de « Corée », « reprise » et « papiers en règle », pages publiqu
 véhicule de test. Les limites anti-abus fonctionnent (8 demandes / heure, 10 connexions / 15 min, en mémoire :
 redémarrer le serveur local entre deux recettes).
 
+Audit mobile (360 et 390 px) : aucune page ni fenêtre (menu Trier, panneau Filtres, menu, suggestions de
+recherche, plein écran photo) ne dépasse de l'écran, pas de défilement horizontal, pas de texte sous 11 px.
+Corrigés : menu Trier qui sortait à gauche, suggestions de recherche cachées sous la barre du bas (la recherche
+remonte sous l'en-tête au toucher), engagements de l'accueil en lignes compactes, « % » jamais seul en début de
+ligne, espaces de « à partir de … / mois ».
+
 Recette précédente :
 
 Parcours vérifiés de bout en bout (Playwright, base neuve avec 24 véhicules, 158 contrôles) : catalogue (filtres,

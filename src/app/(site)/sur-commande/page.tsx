@@ -42,7 +42,7 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
           {[
             { icon: <DocIcon className="h-6 w-6" />, t: "1. Votre cahier des charges", d: "Modèle, année, budget. Gratuit." },
             { icon: <ShieldIcon className="h-6 w-6" />, t: "2. Propositions contrôlées", d: "Photos et rapport d'état des véhicules trouvés." },
-            { icon: <ShipIcon className="h-6 w-6" />, t: `3. Acompte de ${settings.orderDepositPct} % & expédition`, d: "Vous validez, on achète et on expédie." },
+            { icon: <ShipIcon className="h-6 w-6" />, t: `3. Acompte de ${settings.orderDepositPct} % & expédition`, d: "Vous validez, on achète et on expédie." },
             { icon: <KeyIcon className="h-6 w-6" />, t: "4. Remise des clés", d: "Votre véhicule vous attend à Antananarivo." },
           ].map((s) => (
             <li key={s.t} className="card p-4 sm:p-6">

@@ -12,6 +12,13 @@ import { useCatalogNav } from "./CatalogNav";
 export function SortSelect({ current, sort }: { current: Filters; sort: string }) {
   const { navigate } = useCatalogNav();
   const [open, setOpen] = useState(false);
+  // The panel opens towards the side with room (the button moves between left and right with the width).
+  const [alignRight, setAlignRight] = useState(false);
+  const toggle = () => {
+    const r = box.current?.getBoundingClientRect();
+    if (r) setAlignRight(r.left + 240 > window.innerWidth - 16);
+    setOpen((v) => !v);
+  };
   const box = useRef<HTMLDivElement>(null);
   const criteria = SORTS.filter((s) => s.id !== "pertinence" || current.q);
   const crit = SORTS.find((s) => s.id === sort) ?? SORTS[0];
@@ -44,7 +51,7 @@ export function SortSelect({ current, sort }: { current: Filters; sort: string }
     <div ref={box} className="relative">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggle}
         aria-expanded={open}
         aria-haspopup="true"
         className={`flex min-h-11 items-center gap-1.5 rounded-full border bg-white px-4 text-sm font-semibold transition-colors ${open ? "border-ink" : "border-black/10 hover:border-ink"}`}
@@ -58,7 +65,7 @@ export function SortSelect({ current, sort }: { current: Filters; sort: string }
       </button>
 
       {open && (
-        <div className="absolute right-0 z-40 mt-2 w-60 overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/10">
+        <div className={`absolute z-40 mt-2 w-60 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-black/10 ${alignRight ? "right-0" : "left-0"}`}>
           <ul role="listbox" aria-label="Critère de tri" className="py-1">
             {criteria.map((s) => {
               const on = s.id === crit.id;

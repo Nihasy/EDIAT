@@ -168,7 +168,7 @@ export default async function HomePage() {
       <section className="mt-4 bg-ink py-2 text-white">
         {onOrder.length > 0 && (
           <div>
-            <Rail dark id="commande" kicker={`Import sur commande · ${settings.orderDelay}`} title="Sur commande" count={onOrder.length} href="/voitures?dispo=sur_commande">
+            <Rail dark id="commande" kicker={`Délai ${settings.orderDelay}`} title="Sur commande" count={onOrder.length} href="/voitures?dispo=sur_commande">
               {onOrder.slice(0, 10).map((v) => <VehicleCard key={v.id} v={v} {...card} />)}
             </Rail>
           </div>
@@ -194,7 +194,7 @@ export default async function HomePage() {
           </ol>
           <div className="mt-7 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-4">
             <Link href="/sur-commande#demande" className="btn-primary w-full sm:w-auto">Faire importer mon véhicule</Link>
-            <p className="text-xs text-white/65">Délai {settings.orderDelay} · acompte {settings.orderDepositPct} %</p>
+            <p className="text-xs text-white/65">Délai {settings.orderDelay} · acompte {settings.orderDepositPct} %</p>
           </div>
         </div>
       </section>
@@ -208,10 +208,12 @@ export default async function HomePage() {
             { icon: <ShieldIcon className="h-5 w-5" />, t: "Véhicules contrôlés", d: "Inspectés avant l'expédition." },
             { icon: <WalletIcon className="h-5 w-5" />, t: "Paiement échelonné", d: `${settings.finance.name}, avec la ${settings.finance.partner}.` },
           ].map((x) => (
-            <li key={x.t} className="rounded-2xl bg-white p-4 ring-1 ring-black/5 sm:p-5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan/10 text-cyan-deep">{x.icon}</span>
-              <p className="mt-3 text-sm leading-tight font-bold sm:text-base">{x.t}</p>
-              <p className="mt-1 text-xs leading-snug text-muted sm:text-sm">{x.d}</p>
+            <li key={x.t} className="flex items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-black/5 sm:block sm:p-5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan/10 text-cyan-deep">{x.icon}</span>
+              <div className="min-w-0">
+                <p className="text-sm leading-tight font-bold sm:mt-3 sm:text-base">{x.t}</p>
+                <p className="mt-1 text-xs leading-snug text-muted sm:text-sm">{x.d}</p>
+              </div>
             </li>
           ))}
         </ul>

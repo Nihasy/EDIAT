@@ -209,9 +209,17 @@ export function SearchBox({
             setOpen(true);
             if (!e.target.value.trim()) setData(null);
           }}
-          onFocus={() => {
+          onFocus={(e) => {
             setRecent(readRecent());
             setOpen(true);
+            // Phones: the suggestions open under the box; lift it just below the header.
+            if (window.matchMedia("(max-width: 767px)").matches) {
+              const top = e.currentTarget.getBoundingClientRect().top;
+              if (top > window.innerHeight * 0.35) {
+                const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                window.scrollBy({ top: top - 88, behavior: smooth ? "smooth" : "auto" });
+              }
+            }
           }}
           onKeyDown={onKeyDown}
           placeholder={placeholder}

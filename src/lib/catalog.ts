@@ -28,7 +28,7 @@ const PUBLIC_COLUMNS = `id, ref, status, brand, model, version, year, mileage_km
 
 const readVehicles = unstable_cache(
   async () => queryStatic(`SELECT ${PUBLIC_COLUMNS} FROM vehicles WHERE status <> 'brouillon'`),
-  ["site-vehicles"],
+  ["site-vehicles-v2"], // bump to force a fresh read after a change of columns or a direct database fix
   snapshot,
 );
 

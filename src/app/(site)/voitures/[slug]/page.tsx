@@ -180,7 +180,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
               <p className={`font-display text-3xl font-bold ${closed ? "text-muted" : ""}`}>{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
               {monthly && !closed && (
                 <a href="#financement" className="bg-orange-gradient mt-2 block rounded-full px-4 py-3 text-center text-sm text-white">
-                  à partir de <strong>{formatAr(monthly)}</strong> / mois
+                  <span>à partir de <strong>{formatAr(monthly)}</strong> / mois</span>
                 </a>
               )}
               <p className="mt-3 text-sm text-black/75">
@@ -261,13 +261,13 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
                 <p className={`font-display text-4xl font-bold ${closed ? "text-muted" : ""}`}>{v.price ? formatAr(v.price) : "Prix sur demande"}</p>
                 {monthly && !closed && (
                   <a href="#financement" className="bg-orange-gradient mt-3 flex min-h-11 items-center justify-center rounded-full px-4 text-center text-sm text-white">
-                    à partir de <strong>{formatAr(monthly)}</strong> / mois
+                    <span>à partir de <strong>{formatAr(monthly)}</strong> / mois</span>
                   </a>
                 )}
                 <p className="mt-4 rounded-xl bg-paper px-4 py-3 text-sm text-black/75">
                   {STATUSES[v.status].hint}
                   {v.status === "sur_commande" && (
-                    <><br /><strong className="text-ink">Délai : {v.eta || settings.orderDelay}</strong> · acompte {settings.orderDepositPct} %</>
+                    <><br /><strong className="text-ink">Délai : {v.eta || settings.orderDelay}</strong> · acompte {settings.orderDepositPct} %</>
                   )}
                   {v.status === "arrivage" && v.eta && <><br /><strong className="text-ink">Arrivée prévue : {v.eta}</strong></>}
                 </p>
