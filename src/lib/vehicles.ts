@@ -54,6 +54,7 @@ export function toVehicle(r: Row): Vehicle {
     createdAt: iso(r.created_at)!,
     updatedAt: iso(r.updated_at)!,
     publishedAt: iso(r.published_at),
+    soldAt: iso(r.sold_at),
   };
 }
 

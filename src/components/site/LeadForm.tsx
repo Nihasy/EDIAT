@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import { submitLead, type LeadState } from "@/app/actions";
 import { waLink } from "@/lib/format";
 import type { LeadKind } from "@/lib/leads-shared";
+import { trackLead } from "@/lib/track";
 import { useFormAction } from "../useFormAction";
 import { Button } from "../ui/Button";
 import { FormMessage } from "../ui/FormMessage";
@@ -39,6 +41,10 @@ export function LeadForm({
   dark?: boolean;
 }) {
   const [state, onSubmit, pending] = useFormAction<LeadState>(submitLead, undefined);
+  const sent = Boolean(state?.ok);
+  useEffect(() => {
+    if (sent) trackLead(kind);
+  }, [sent, kind]);
 
   if (state?.ok) {
     return (

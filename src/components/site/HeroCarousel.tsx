@@ -72,7 +72,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
   }
 
   const arrow =
-    "absolute top-1/2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/30 backdrop-blur-md transition-colors duration-200 hover:bg-white hover:text-ink md:flex";
+    "absolute top-1/2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/30 backdrop-blur-sm transition-colors duration-200 hover:bg-white hover:text-ink md:flex";
 
   return (
     <section
@@ -106,17 +106,17 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent lg:bg-gradient-to-r lg:from-black/85 lg:via-black/35 lg:to-transparent" aria-hidden="true" />
             <div className="absolute inset-x-0 bottom-0 mx-auto flex max-w-7xl flex-col items-start px-4 pb-16 text-white sm:pb-28 md:px-20 lg:top-0 min-[1400px]:px-4 short:pb-14 lg:short:top-auto lg:justify-center lg:pb-0">
               <StatusBadge status={s.status} className="hero-in" />
-              <p className="hero-in font-display mt-3 max-w-3xl text-[40px] leading-[0.95] font-bold text-balance drop-shadow-lg sm:text-6xl lg:text-7xl short:text-4xl">{s.title}</p>
+              <p className="hero-in font-display mt-3 max-w-3xl text-[40px] leading-[0.95] font-bold text-balance sm:text-6xl lg:text-7xl short:text-4xl">{s.title}</p>
               <p className="hero-in mt-2 text-sm text-white/85 sm:text-base">{s.subtitle}</p>
               <div className="hero-in mt-4 flex flex-wrap items-center gap-3">
                 <span className="font-display text-3xl font-bold tabular-nums sm:text-4xl">{s.price}</span>
                 {s.monthly && (
-                  <span className="rounded-full bg-orange-deep px-3 py-1.5 text-sm text-white shadow-md shadow-black/20">
+                  <span className="rounded-full bg-orange-deep px-3 py-1.5 text-sm text-white">
                     dès <strong>{s.monthly}</strong>/mois
                   </span>
                 )}
               </div>
-              <span className="hero-in mt-6 hidden items-center short:hidden! gap-2 rounded-full bg-orange-deep px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/30 transition-colors duration-200 group-hover:bg-[#9c360b] lg:inline-flex">
+              <span className="hero-in mt-6 hidden items-center short:hidden! gap-2 rounded-full bg-orange-deep px-6 py-3.5 text-sm font-semibold text-white transition-colors duration-200 group-hover:bg-[#9c360b] lg:inline-flex">
                 {s.status === "showroom" ? "Voir le véhicule" : STATUSES[s.status].short}
                 <ChevronRightIcon className="h-4 w-4" />
               </span>

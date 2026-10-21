@@ -1,4 +1,4 @@
-// Car brands: Korean imports first (the core of the stock), then the rest A–Z.
+// Car brands: the core of the stock first, then the rest A–Z.
 // Logos are 256×256 on white, shown in the round brand buttons of the home page.
 
 export const BRANDS = [

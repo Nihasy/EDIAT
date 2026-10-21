@@ -63,9 +63,9 @@ export function Gallery({ images, alt, overlay, morphName }: { images: string[];
 
   if (!count) {
     return (
-      <div className="bg-brand-gradient flex aspect-[4/3] items-center justify-center md:rounded-2xl">
+      <div className="flex aspect-[4/3] items-center justify-center bg-[#eef0f1] md:rounded-2xl">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/eg-mark.png" alt="" className="h-1/2 opacity-40" />
+        <img src="/brand/ediat-logo.webp" alt="" width={480} height={201} className="w-1/3 max-w-xs opacity-80" />
       </div>
     );
   }

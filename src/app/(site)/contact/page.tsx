@@ -3,35 +3,28 @@ import { ClockIcon, PhoneIcon, PinIcon } from "@/components/Icons";
 import { LeadForm } from "@/components/site/LeadForm";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { siteSettings } from "@/lib/catalog";
+import { pageMeta } from "@/lib/seo";
 import { displayPhone, telLink, waLink } from "@/lib/format";
 
-export const metadata: Metadata = {
-  title: "Contact & showroom",
-  description: "Contactez Ediat Garage à Antananarivo : showroom, essai, reprise de votre véhicule, import sur commande.",
-};
+export const metadata: Metadata = pageMeta({
+  title: "Contact & showroom à Antananarivo",
+  description: "Contactez Ediat Garage à Antananarivo : visite du showroom, essai d'une voiture d'occasion, financement, import sur commande. Réponse rapide par WhatsApp.",
+  path: "/contact",
+});
 
-export default async function ContactPage(props: PageProps<"/contact">) {
-  const sp = await props.searchParams;
+export default async function ContactPage() {
   const settings = await siteSettings();
-  const reprise = sp.sujet === "reprise";
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
-      <h1 className="font-display text-4xl font-bold sm:text-5xl">{reprise ? "Faire reprendre votre véhicule" : "Contact & showroom"}</h1>
+      <h1 className="font-display text-4xl font-bold sm:text-5xl">Contact & showroom</h1>
       <p className="mt-2 max-w-2xl text-muted">
-        {reprise
-          ? "Décrivez votre véhicule actuel : nous vous faisons une offre de reprise, à déduire de votre prochain achat."
-          : "Une question, un essai, une visite du showroom ? Écrivez-nous ou passez nous voir."}
+        Une question, un essai, une visite du showroom ? Écrivez-nous ou passez nous voir.
       </p>
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_380px]">
         <div className="card p-5 sm:p-7">
           <LeadForm
-            kind={reprise ? "reprise" : "contact"}
-            extra={
-              reprise
-                ? [{ name: "vehicule_client", label: "Votre véhicule (marque, modèle, année, km)", required: true }]
-                : [{ name: "sujet", label: "Sujet", options: ["Visite du showroom", "Essai d'un véhicule", "Reprise de mon véhicule", "Financement", "Autre"] }]
-            }
-            hidden={reprise ? { sujet: "Reprise" } : {}}
+            kind="contact"
+            extra={[{ name: "sujet", label: "Sujet", options: ["Visite du showroom", "Essai d'un véhicule", "Financement", "Import sur commande", "Autre"] }]}
             whatsapp={settings.whatsapp}
             whatsappText="Bonjour Ediat Garage, je viens de vous envoyer un message depuis le site."
           />

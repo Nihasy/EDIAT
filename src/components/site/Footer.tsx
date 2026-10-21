@@ -13,7 +13,7 @@ export function Footer({ settings }: { settings: Settings }) {
         <div>
           <Logo />
           <p className="mt-4 text-sm leading-relaxed">
-            Importateur de véhicules d&apos;occasion de Corée. Disponibles au showroom, en arrivage ou importés sur commande.
+            Importateur de voitures d&apos;occasion à Antananarivo. Disponibles au showroom, en arrivage ou importés sur commande.
           </p>
           <div className="mt-5">
             <SocialLinks
@@ -37,7 +37,6 @@ export function Footer({ settings }: { settings: Settings }) {
           <ul className="mt-2 text-sm [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center">
             <li><Link href="/sur-commande" className="hover:text-white">Import sur commande</Link></li>
             <li><Link href="/financement" className="hover:text-white">{settings.finance.name} : payez à votre rythme</Link></li>
-            <li><Link href="/contact?sujet=reprise" className="hover:text-white">Reprise de votre véhicule</Link></li>
             <li><Link href="/contact" className="hover:text-white">Prendre rendez-vous</Link></li>
           </ul>
         </div>

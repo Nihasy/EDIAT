@@ -175,7 +175,7 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
           <Field label="Année"><input name="year" inputMode="numeric" defaultValue={vehicle?.year ?? ""} className="input" placeholder="2015" /></Field>
           <Field label="Kilométrage (km)"><input name="mileage_km" inputMode="numeric" defaultValue={vehicle?.mileageKm != null ? formatNumber(vehicle.mileageKm) : ""} className="input" placeholder="85 000" /></Field>
           <Field label="Couleur"><input name="color" defaultValue={vehicle?.color} className="input" placeholder="Gris argent" /></Field>
-          <Field label="Provenance"><input name="origin" defaultValue={vehicle?.origin ?? "Corée du Sud"} className="input" /></Field>
+          <Field label="Provenance"><input name="origin" defaultValue={vehicle?.origin ?? ""} className="input" /></Field>
         </div>
       </Section>
 
@@ -222,7 +222,7 @@ export function VehicleForm({ vehicle, finance, orderDelay }: { vehicle?: AdminV
             <Field
               label="Mensualité affichée (optionnel)"
               className="sm:col-span-2"
-              hint={autoMonthly ? `Calcul automatique : ${formatAr(autoMonthly)} / mois (${finance.minDownPct} % d'apport, ${Math.max(...finance.durations)} mois). Saisissez un montant pour l'imposer, ex. celui de votre affiche.` : "Renseignez le prix pour voir le calcul."}
+              hint={autoMonthly ? `Calcul ${finance.product} ${finance.partner} : ${formatAr(autoMonthly)} / mois (${finance.minDownPct ? `${finance.minDownPct} % d'apport` : "sans apport"}, ${Math.max(...finance.durations)} mois, frais ${finance.feePct} % inclus). Saisissez un montant pour l'imposer, ex. celui de votre affiche.` : priceN ? `Non finançable : le ${finance.product} ${finance.partner} prête de ${formatAr(finance.minLoan)} à ${formatAr(finance.maxLoan)}. Rien ne sera affiché.` : "Renseignez le prix pour voir le calcul."}
             >
               <input name="monthly_override" inputMode="numeric" value={monthlyOverride} onChange={(e) => setMonthlyOverride(e.target.value)} className="input" placeholder={autoMonthly ? formatNumber(autoMonthly) : ""} />
             </Field>

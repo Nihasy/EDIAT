@@ -24,7 +24,7 @@ const snapshot = { tags: [SITE_TAG], revalidate: 86400 };
 // Private columns (cost, notes) are never selected for the public site.
 const PUBLIC_COLUMNS = `id, ref, status, brand, model, version, year, mileage_km, fuel, gearbox, body, drive, engine,
   power_hp, seats, doors, color, origin, price, old_price, monthly_override, financing, eta, featured,
-  description, equipment, images, created_at, updated_at, published_at`;
+  description, equipment, images, created_at, updated_at, published_at, sold_at`;
 
 const readVehicles = unstable_cache(
   async () => queryStatic(`SELECT ${PUBLIC_COLUMNS} FROM vehicles WHERE status <> 'brouillon'`),

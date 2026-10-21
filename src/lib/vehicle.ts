@@ -23,7 +23,7 @@ export const STATUSES = {
   sur_commande: {
     label: "Sur commande",
     short: "Sur commande",
-    hint: "Importé de Corée pour vous : choisi, contrôlé, expédié et dédouané par Ediat Garage.",
+    hint: "Importé pour vous : choisi, contrôlé et expédié par Ediat Garage.",
     isPublic: true,
     listed: true,
     rank: 2,
@@ -108,6 +108,7 @@ export type Vehicle = {
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
+  soldAt: string | null;
 };
 
 // Back-office only: never sent to the public pages.

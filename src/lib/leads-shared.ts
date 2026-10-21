@@ -4,7 +4,7 @@ export const LEAD_KINDS = {
   vehicule: { label: "Intérêt pour un véhicule" },
   essai: { label: "Demande d'essai / visite" },
   sur_commande: { label: "Recherche sur commande" },
-  financement: { label: "Demande Ediat Facility" },
+  financement: { label: "Demande Ediat Facility (PAMF)" },
   reprise: { label: "Reprise de véhicule" },
   contact: { label: "Message" },
 } as const;
@@ -39,6 +39,7 @@ export const DETAIL_LABELS: Record<string, string> = {
   boite: "Boîte",
   date: "Date souhaitée",
   apport: "Apport",
+  emprunt: "Montant emprunté",
   duree: "Durée",
   mensualite: "Mensualité estimée",
   vehicule_client: "Véhicule à reprendre",

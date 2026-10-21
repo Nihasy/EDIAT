@@ -1,4 +1,4 @@
-import type { FinanceSettings } from "./finance";
+import { FINANCE_VERSION, type FinanceSettings } from "./finance";
 
 export type Settings = {
   whatsapp: string; // international format without +, e.g. 261340000000
@@ -30,14 +30,20 @@ export const DEFAULT_SETTINGS: Settings = {
   instagramUrl: "",
   tiktokUrl: "",
   finance: {
+    version: FINANCE_VERSION,
     enabled: true,
     name: "Ediat Facility",
-    minDownPct: 30,
-    annualRatePct: 18,
-    durations: [6, 12, 18, 24],
-    roundTo: 5000,
+    partner: "PAMF",
+    product: "Crédit PME",
+    minDownPct: 0,
+    annualRatePct: 32,
+    feePct: 3,
+    minLoan: 15_000_001,
+    maxLoan: 600_000_000,
+    durations: [12, 24, 36],
+    roundTo: 1,
     conditions:
-      "Simulation indicative, sous réserve d'acceptation du dossier. Pièces demandées : CIN, justificatif de domicile et de revenus. Le véhicule reste la propriété d'Ediat Garage jusqu'au dernier paiement.",
+      "Simulation indicative, sans valeur contractuelle : le taux, les frais et l'accord du prêt sont fixés par la PAMF après étude du dossier. Crédit PME de 15 000 001 à 600 000 000 Ar, jusqu'à 36 mois. Conditions PAMF : nationalité malgache ou résident permanent, 21 à 67 ans, activité exercée depuis au moins un an, aucun crédit en cours dans un autre établissement. Pièces : CIN de chaque signataire, RCS / NIF / STAT, statuts certifiés, lettre de pouvoir des signataires.",
   },
 };
 
@@ -45,8 +51,17 @@ export function parseSettings(value: string | null | undefined): Settings {
   if (!value) return DEFAULT_SETTINGS;
   try {
     const saved = JSON.parse(value) as Partial<Settings>;
-    return { ...DEFAULT_SETTINGS, ...saved, finance: { ...DEFAULT_SETTINGS.finance, ...saved.finance } };
+    return { ...DEFAULT_SETTINGS, ...saved, finance: parseFinance(saved.finance) };
   } catch {
     return DEFAULT_SETTINGS;
   }
+}
+
+// Settings saved before the PAMF partnership (in-house plan at 18 %) are reset
+// to the PAMF defaults; only the on/off switch and the offer name are kept.
+function parseFinance(saved: Partial<FinanceSettings> | undefined): FinanceSettings {
+  const d = DEFAULT_SETTINGS.finance;
+  if (!saved) return d;
+  if (saved.version !== FINANCE_VERSION) return { ...d, enabled: saved.enabled ?? d.enabled, name: saved.name || d.name };
+  return { ...d, ...saved };
 }

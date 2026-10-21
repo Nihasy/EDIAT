@@ -8,25 +8,50 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { searchVehicles, siteSettings } from "@/lib/catalog";
 import { catalogHref, list, num, readFilters, type Filters } from "@/lib/catalog-filter";
 import { formatAr, formatNumber, waLink } from "@/lib/format";
+import { pageMeta } from "@/lib/seo";
 import { isStatus, STATUSES } from "@/lib/vehicle";
 import { CatalogNav, PendingResults } from "./CatalogNav";
 import { FilterSheet } from "./FilterSheet";
 import { QuickBar } from "./QuickBar";
 import { SortSelect } from "./SortSelect";
 
+const DISPO_TITLES: Record<string, string> = {
+  showroom: "Voitures d'occasion disponibles au showroom",
+  arrivage: "Voitures d'occasion en arrivage",
+  sur_commande: "Voitures d'occasion sur commande",
+};
+
 function title(f: Filters) {
   const brands = list(f.marque);
   const dispo = isStatus(f.dispo) ? STATUSES[f.dispo].label : "";
   if (brands.length) return `${brands.join(", ")} d'occasion`;
   if (f.carrosserie) return `${f.carrosserie} d'occasion`;
-  if (dispo) return dispo;
-  return "Nos véhicules";
+  if (dispo) return DISPO_TITLES[f.dispo!] ?? dispo;
+  return "Voitures d'occasion";
+}
+
+// Landing pages for Google: the whole stock, one brand, one body type or one
+// availability (plus their pages). Any other combination is kept out of the
+// index, so search results never show near-duplicate lists.
+function landing(f: Filters) {
+  const keys = Object.keys(f).filter((k) => k !== "page");
+  if (keys.length > 1 || (keys[0] && list(f[keys[0] as keyof Filters]).length !== 1)) return null;
+  if (keys[0] && !["marque", "carrosserie", "dispo"].includes(keys[0])) return null;
+  if (keys[0] === "dispo" && !isStatus(f.dispo)) return null;
+  const page = Number(f.page) > 1 ? String(Number(f.page)) : "";
+  return catalogHref(keys[0] ? { [keys[0]]: f[keys[0] as keyof Filters], page } : { page }, { page });
 }
 
 export async function generateMetadata(props: PageProps<"/voitures">): Promise<Metadata> {
   const f = readFilters(await props.searchParams);
-  const filtered = Object.keys(f).some((k) => !["dispo", "marque"].includes(k)) || list(f.marque).length > 1;
-  return { title: title(f), robots: filtered ? { index: false } : undefined };
+  const path = landing(f);
+  const t = title(f);
+  const what = list(f.marque)[0] ?? f.carrosserie ?? (isStatus(f.dispo) ? f.dispo : "");
+  const description = what
+    ? `${t} à Antananarivo chez Ediat Garage : prix en Ariary, photos, kilométrage et financement. ${list(f.marque)[0] || f.carrosserie ? "Disponibles au showroom, en arrivage ou sur commande." : ""}`.trim()
+    : "Toutes nos voitures d'occasion à Antananarivo : SUV, 4x4, berlines, utilitaires. Prix en Ariary, photos, kilométrage, financement Ediat Facility.";
+  if (!path) return { title: t, robots: { index: false, follow: true } };
+  return pageMeta({ title: `${t} à Antananarivo`, description, path });
 }
 
 const short = (n: number) => (n >= 1_000_000 ? `${formatNumber(Math.round(n / 100_000) / 10).replace(".", ",")} M Ar` : formatAr(n));
@@ -135,7 +160,7 @@ export default async function CatalogPage(props: PageProps<"/voitures">) {
             ) : (
               <div className="rounded-2xl bg-white px-6 py-12 text-center ring-1 ring-black/5">
                 <p className="font-display text-2xl font-semibold">Aucun véhicule pour l&apos;instant</p>
-                <p className="mt-1 text-muted">Dites-nous ce que vous cherchez : on l&apos;importe de Corée pour vous.</p>
+                <p className="mt-1 text-muted">Dites-nous ce que vous cherchez : on l&apos;importe pour vous.</p>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
                   <Link href={`/sur-commande?${importQuery}#demande`} className="btn-primary">
                     Le faire importer

@@ -27,7 +27,7 @@ export default async function LeadsAdmin(props: PageProps<"/admin/demandes">) {
   return (
     <div>
       <h1 className="font-display text-3xl font-bold">Demandes clients</h1>
-      <p className="mt-1 text-sm text-muted">Tous les formulaires du site arrivent ici : intérêt, essai, import sur commande, financement, reprise, contact.</p>
+      <p className="mt-1 text-sm text-muted">Tous les formulaires du site arrivent ici : intérêt, essai, import sur commande, financement, contact.</p>
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <Link href={href({ statut: "", page: "" })} aria-current={!statut ? "page" : undefined} className={`flex min-h-11 items-center rounded-full px-3.5 text-sm ${!statut ? "bg-ink font-semibold text-white" : "bg-white hover:bg-black/5"}`}>
           Toutes <span className="opacity-80">{all}</span>

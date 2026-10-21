@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { checkPassword, endSession, requireAdmin, startSession } from "@/lib/auth";
 import { SITE_TAG } from "@/lib/catalog";
 import { isDbId } from "@/lib/db";
-import { parseDurations } from "@/lib/finance";
+import { FINANCE_VERSION, MAX_MONTHS, parseDurations } from "@/lib/finance";
 import { isValidPhone, normalizePhone, parseAmount } from "@/lib/format";
 import { isAllowedImageUrl, MAX_IMAGES } from "@/lib/images";
 import { deleteLead, updateLead } from "@/lib/leads";
@@ -263,9 +263,13 @@ export async function updateSettings(_prev: FormState, form: FormData): Promise<
   const annualRatePct = pct("annualRatePct", 100);
   const orderDepositPct = pct("orderDepositPct", 100);
   const roundTo = pct("roundTo", 1_000_000);
+  const feePct = pct("feePct", 20);
   const durations = parseDurations(str(form, "durations", 100));
-  if ([minDownPct, annualRatePct, orderDepositPct, roundTo].some(Number.isNaN)) return { error: "Un pourcentage ou un arrondi est invalide." };
-  if (!durations.length) return { error: "Indiquez au moins une durée de financement (ex. 6, 12, 18, 24)." };
+  const minLoan = parseAmount(str(form, "minLoan", 20)) || 0;
+  const maxLoan = parseAmount(str(form, "maxLoan", 20)) || 0;
+  if ([minDownPct, annualRatePct, orderDepositPct, roundTo, feePct].some(Number.isNaN)) return { error: "Un pourcentage ou un arrondi est invalide." };
+  if (!durations.length) return { error: `Indiquez au moins une durée de financement, ${MAX_MONTHS} mois au plus (ex. 12, 24, 36).` };
+  if (!maxLoan || minLoan > maxLoan) return { error: "Le prêt maximum doit être supérieur au prêt minimum." };
 
   const next: Settings = {
     ...current,
@@ -280,9 +284,15 @@ export async function updateSettings(_prev: FormState, form: FormData): Promise<
     ...links,
     finance: {
       enabled: form.get("financeEnabled") === "on",
+      version: FINANCE_VERSION,
       name: str(form, "financeName", 40) || "Ediat Facility",
+      partner: str(form, "financePartner", 40) || "PAMF",
+      product: str(form, "financeProduct", 40) || "Crédit PME",
       minDownPct,
       annualRatePct,
+      feePct,
+      minLoan,
+      maxLoan,
       durations,
       roundTo: Math.max(1, roundTo),
       conditions: str(form, "conditions", 1000),

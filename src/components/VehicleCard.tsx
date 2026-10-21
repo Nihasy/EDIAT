@@ -31,13 +31,13 @@ export function VehicleCard({
   const delay = v.status === "sur_commande" ? v.eta || orderDelay : v.status === "arrivage" ? v.eta : "";
   const title = vehicleTitle(v);
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-xl bg-white text-ink shadow-[0_1px_3px_rgba(0,0,0,0.08)] ring-1 ring-black/5 transition-[box-shadow,transform] duration-300 ease-(--ease-out) sm:rounded-2xl [@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:shadow-[0_18px_40px_-12px_rgba(31,34,36,0.35)]">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-xl bg-white text-ink ring-1 ring-black/[0.08] transition-shadow duration-200 sm:rounded-2xl [@media(hover:hover)]:hover:shadow-[0_6px_20px_-10px_rgba(31,34,36,0.25)]">
       <div className="shimmer relative aspect-[4/3] overflow-hidden">
         {photo ? (
           <>
             {/* Same name as the first photo of the vehicle page: it flies there. */}
             <ViewTransition name={`vehicle-photo-${v.id}`} share="morph" default="none">
-              <span className="absolute inset-0 transition-transform duration-500 ease-(--ease-out) [@media(hover:hover)]:group-hover:scale-105">
+              <span className="absolute inset-0 transition-transform duration-500 ease-(--ease-out) [@media(hover:hover)]:group-hover:scale-[1.03]">
                 <Img
                   src={thumbUrl(photo)}
                   fallback={photo}
@@ -48,15 +48,15 @@ export function VehicleCard({
               </span>
             </ViewTransition>
             {second && !closed && (
-              <span className="pointer-events-none absolute inset-0 hidden transition-[opacity,scale] duration-500 ease-(--ease-out) [@media(hover:hover)]:block [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:scale-105 [@media(hover:hover)]:group-hover:opacity-100">
+              <span className="pointer-events-none absolute inset-0 hidden transition-[opacity,scale] duration-500 ease-(--ease-out) [@media(hover:hover)]:block [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:scale-[1.03] [@media(hover:hover)]:group-hover:opacity-100">
                 <Img src={thumbUrl(second)} fallback={second} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
               </span>
             )}
           </>
         ) : (
-          <span className="bg-brand-gradient absolute inset-0 flex items-center justify-center">
+          <span className="absolute inset-0 flex items-center justify-center bg-[#eef0f1]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/eg-mark.png" alt="" className="h-1/2 opacity-30" />
+            <img src="/brand/ediat-logo.webp" alt="" loading="lazy" width={480} height={201} className="w-2/5 opacity-80" />
           </span>
         )}
         <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent" aria-hidden="true" />

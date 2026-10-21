@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Ediat Garage",
     short_name: "Ediat Garage",
-    description: "Véhicules d'occasion importés de Corée, à Antananarivo.",
+    description: "Voitures d'occasion importées, à Antananarivo.",
     start_url: "/",
     display: "standalone",
     background_color: "#1f2224",

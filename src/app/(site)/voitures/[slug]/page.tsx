@@ -16,6 +16,7 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { publicVehicle, similarVehicles, siteSettings } from "@/lib/catalog";
 import { fromMonthly } from "@/lib/finance";
 import { formatAr, formatKm, formatNumber, telLink, waLink } from "@/lib/format";
+import { breadcrumbJsonLd, ldJson, pageMeta } from "@/lib/seo";
 import { siteUrl } from "@/lib/site";
 import { idFromSlug, STATUSES, vehicleFullTitle, vehicleHref, vehicleTitle } from "@/lib/vehicle";
 
@@ -31,11 +32,16 @@ export async function generateMetadata(props: PageProps<"/voitures/[slug]">): Pr
   const v = await load((await props.params).slug);
   if (!v) return {};
   const facts = [v.year, v.mileageKm != null ? formatKm(v.mileageKm) : "", v.fuel, v.gearbox].filter(Boolean).join(" · ");
+  const price = v.price ? ` à ${formatAr(v.price)}` : "";
   return {
-    title: `${vehicleFullTitle(v)} — ${v.price ? formatAr(v.price) : STATUSES[v.status].label}`,
-    description: `${vehicleFullTitle(v)} d'occasion, ${facts}. ${STATUSES[v.status].label} chez Ediat Garage, Antananarivo.`,
-    alternates: { canonical: vehicleHref(v) },
-    openGraph: { images: v.images.slice(0, 1) },
+    ...pageMeta({
+      title: `${vehicleFullTitle(v)} d'occasion${price}`,
+      description: `${vehicleFullTitle(v)} d'occasion${price}, ${facts}. ${STATUSES[v.status].label} chez Ediat Garage, Antananarivo. Essai, financement et réservation par WhatsApp.`,
+      path: vehicleHref(v),
+      images: v.images.slice(0, 1),
+    }),
+    // Sold vehicles stay reachable from old links but leave Google's results.
+    ...(v.status === "vendu" ? { robots: { index: false, follow: true } } : {}),
   };
 }
 
@@ -65,14 +71,21 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
     ["Places", v.seats ? String(v.seats) : ""],
     ["Portes", v.doors ? String(v.doors) : ""],
     ["Couleur", v.color],
-    ["Provenance", v.origin],
     ["Référence", v.ref],
   ].filter(([, value]) => value);
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Car",
+    "@id": `${url}#vehicle`,
     name: title,
+    description: v.description || `${title} d'occasion chez Ediat Garage, Antananarivo.`,
+    sku: v.ref,
+    bodyType: v.body || undefined,
+    numberOfDoors: v.doors ?? undefined,
+    seatingCapacity: v.seats ?? undefined,
+    driveWheelConfiguration: v.drive || undefined,
+    vehicleEngine: v.engine || v.powerHp ? { "@type": "EngineSpecification", name: v.engine || undefined, enginePower: v.powerHp ? { "@type": "QuantitativeValue", value: v.powerHp, unitCode: "BHP" } : undefined } : undefined,
     brand: { "@type": "Brand", name: v.brand },
     model: v.model,
     vehicleModelDate: v.year ?? undefined,
@@ -88,6 +101,9 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
           "@type": "Offer",
           price: v.price,
           priceCurrency: "MGA",
+          url,
+          itemCondition: "https://schema.org/UsedCondition",
+          seller: { "@id": `${siteUrl()}/#garage` },
           availability: closed ? "https://schema.org/SoldOut" : v.status === "showroom" ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
         }
       : undefined,
@@ -95,7 +111,18 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
 
   return (
     <div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={ldJson([
+          jsonLd,
+          breadcrumbJsonLd([
+            { name: "Accueil", path: "/" },
+            { name: "Véhicules", path: "/voitures" },
+            { name: v.brand, path: `/voitures?marque=${encodeURIComponent(v.brand)}` },
+            { name: title, path: vehicleHref(v) },
+          ]),
+        ])}
+      />
       <div className="mx-auto max-w-7xl px-4 pt-4">
         <nav aria-label="Fil d'Ariane" className="text-sm text-muted [&_a]:inline-block [&_a]:min-w-11 [&_a]:px-1 [&_a]:py-3 [&_a]:text-center">
           <ol className="flex flex-wrap items-center gap-1.5">
@@ -198,6 +225,7 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
               <section id="financement" aria-labelledby="fin" className="reveal mt-10 scroll-mt-4 rounded-2xl border border-black/10 bg-white p-5 sm:p-6">
                 <h2 id="fin" className="font-display text-2xl font-semibold">
                   Payez à votre rythme avec <span className="text-orange-deep">{settings.finance.name}</span>
+                  <span className="mt-1 block text-sm font-normal text-muted">{settings.finance.product} de la {settings.finance.partner}, notre partenaire</span>
                 </h2>
                 <div className="mt-5">
                   <FinanceSimulator settings={settings.finance} price={v.price} vehicleLabel={`${title} (${v.ref})`} whatsapp={settings.whatsapp} />
@@ -254,8 +282,6 @@ export default async function VehiclePage(props: PageProps<"/voitures/[slug]">) 
             </div>
             <ul className="card space-y-2 p-5 text-sm text-black/75">
               <li className="flex gap-2"><CheckIcon className="h-4 w-4 shrink-0 text-cyan-deep" /> Importé et contrôlé par Ediat Garage</li>
-              <li className="flex gap-2"><CheckIcon className="h-4 w-4 shrink-0 text-cyan-deep" /> Dédouanement et papiers en règle</li>
-              <li className="flex gap-2"><CheckIcon className="h-4 w-4 shrink-0 text-cyan-deep" /> Reprise de votre véhicule possible</li>
             </ul>
           </div>
         </aside>

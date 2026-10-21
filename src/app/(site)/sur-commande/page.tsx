@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { DocIcon, ShieldIcon, ShipIcon, KeyIcon } from "@/components/Icons";
 import { LeadForm } from "@/components/site/LeadForm";
 import { Rail } from "@/components/site/Rail";
@@ -7,10 +8,11 @@ import { VehicleCard } from "@/components/VehicleCard";
 import { publicVehicles, siteSettings } from "@/lib/catalog";
 import { BODIES, BRANDS, FUELS, GEARBOXES } from "@/lib/vehicle";
 
-export const metadata: Metadata = {
-  title: "Import sur commande depuis la Corée",
-  description: "Faites importer le véhicule d'occasion de votre choix depuis la Corée : sélection, contrôle, expédition, dédouanement et carte grise par Ediat Garage.",
-};
+export const metadata: Metadata = pageMeta({
+  title: "Import de voiture sur commande à Madagascar",
+  description: "Faites importer la voiture d'occasion de votre choix à Madagascar : recherche, contrôle avant achat et expédition jusqu'à Antananarivo par Ediat Garage. Délai et prix annoncés avant l'acompte.",
+  path: "/sur-commande",
+});
 
 export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
   const sp = await props.searchParams;
@@ -24,7 +26,7 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
         <div className="mx-auto max-w-7xl px-4 py-12 lg:py-16">
           <p className="text-sm font-bold tracking-[0.2em] text-cyan uppercase">Import sur commande</p>
           <h1 className="font-display mt-3 max-w-3xl text-5xl leading-[0.95] font-bold sm:text-6xl">
-            Le véhicule que vous voulez, <span className="text-orange">importé de Corée pour vous.</span>
+            Le véhicule que vous voulez, <span className="text-orange">importé pour vous.</span>
           </h1>
           <p className="mt-4 text-lg text-white/80">Délai habituel : <strong className="text-white">{settings.orderDelay}</strong></p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -41,7 +43,7 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
             { icon: <DocIcon className="h-6 w-6" />, t: "1. Votre cahier des charges", d: "Modèle, année, budget. Gratuit." },
             { icon: <ShieldIcon className="h-6 w-6" />, t: "2. Propositions contrôlées", d: "Photos et rapport d'état des véhicules trouvés." },
             { icon: <ShipIcon className="h-6 w-6" />, t: `3. Acompte de ${settings.orderDepositPct} % & expédition`, d: "Vous validez, on achète et on expédie." },
-            { icon: <KeyIcon className="h-6 w-6" />, t: "4. Remise des clés", d: "Dédouané, immatriculé, prêt à rouler." },
+            { icon: <KeyIcon className="h-6 w-6" />, t: "4. Remise des clés", d: "Votre véhicule vous attend à Antananarivo." },
           ].map((s) => (
             <li key={s.t} className="card p-4 sm:p-6">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange/10 text-orange-deep">{s.icon}</span>
@@ -60,7 +62,7 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
             <ul className="mt-6 space-y-3 text-sm text-black/75">
               <li>✔ Spécialistes Hyundai, Kia, SsangYong, Daewoo, Chevrolet…</li>
               <li>✔ Prix tout compris annoncé avant l&apos;acompte</li>
-              <li>✔ Paiement échelonné possible avec {settings.finance.name}</li>
+              <li>✔ Paiement échelonné possible avec {settings.finance.name} ({settings.finance.product} {settings.finance.partner})</li>
             </ul>
           </div>
           <div className="card p-5 sm:p-7">
@@ -97,9 +99,9 @@ export default async function OnOrderPage(props: PageProps<"/sur-commande">) {
         <div className="divide-y divide-black/10 rounded-2xl border border-black/10 bg-white">
           {[
             ["Combien de temps faut-il ?", `En général ${settings.orderDelay} entre l'acompte et la remise des clés, selon les bateaux et le dédouanement.`],
-            ["Le prix annoncé comprend quoi ?", "Le véhicule, le transport jusqu'à Madagascar, le dédouanement et les démarches de carte grise. Tout est détaillé avant l'acompte."],
+            ["Le prix annoncé comprend quoi ?", "Le véhicule et son transport jusqu'à Madagascar. Le détail complet vous est donné avant l'acompte."],
             ["Et si le véhicule ne me plaît pas ?", "Vous validez sur photos et rapport d'état avant l'achat. Tant que vous n'avez pas validé, rien n'est acheté."],
-            ["Puis-je payer en plusieurs fois ?", `Oui : avec ${settings.finance.name}, apport puis mensualités, y compris pour une commande.`],
+            ["Puis-je payer en plusieurs fois ?", `Oui : avec ${settings.finance.name}, un ${settings.finance.product} de la ${settings.finance.partner}, notre partenaire, remboursé en mensualités fixes jusqu'à ${Math.max(...settings.finance.durations)} mois. Le dossier est étudié par la ${settings.finance.partner}.`],
             ["Les véhicules sont-ils à volant à gauche ?", "Oui, uniquement des véhicules conduite à gauche, conformes à l'immatriculation à Madagascar."],
           ].map(([q, a]) => (
             <details key={q} className="group px-5">
