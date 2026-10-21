@@ -1,0 +1,9 @@
+# Fichiers jamais envoyés à Vercel lors d'un déploiement en ligne de commande
+.env*
+.data
+.next
+node_modules
+.claude
+LOGO
+IMAGE.jpg
+*.tmp
